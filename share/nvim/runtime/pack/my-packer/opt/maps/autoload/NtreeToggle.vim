@@ -45,7 +45,7 @@ fu! NtreeToggle#GoSearchFname(fname)
     let s:ntree_bufnr = bufnr()
   endtry
   norm iii
-  call search(a:fname)
+  call search(escape(a:fname, '.'))
   let width = NtreeToggle#GetWidth()
   call nvim_win_set_width(0, width)
 endfu
@@ -56,5 +56,14 @@ fu! NtreeToggle#Toggle()
     call NtreeToggle#GoAndQuit(ntree_winid)
   else
     call NtreeToggle#GoSearchFname('')
+  endif
+endfu
+
+fu! NtreeToggle#ToggleSearch()
+  let ntree_winid = NtreeToggle#GetNetrwWinId()
+  if ntree_winid != -1
+    call NtreeToggle#GoAndQuit(ntree_winid)
+  else
+    call NtreeToggle#GoSearchFname(bufname("%"))
   endif
 endfu
