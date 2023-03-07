@@ -36,7 +36,7 @@ fu! NtreeToggle#GetWidth()
   return max([columns + 4, 24])
 endfu
 
-fu! NtreeToggle#Go()
+fu! NtreeToggle#GoSearchFname(fname)
   leftabove vsplit
   try
     exe printf("b%d", s:ntree_bufnr)
@@ -45,8 +45,9 @@ fu! NtreeToggle#Go()
     let s:ntree_bufnr = bufnr()
   endtry
   norm iii
+  call search(a:fname)
   let width = NtreeToggle#GetWidth()
-  call nvim_win_set_width(0, 24)
+  call nvim_win_set_width(0, width)
 endfu
 
 fu! NtreeToggle#Toggle()
@@ -54,6 +55,6 @@ fu! NtreeToggle#Toggle()
   if ntree_winid != -1
     call NtreeToggle#GoAndQuit(ntree_winid)
   else
-    call NtreeToggle#Go()
+    call NtreeToggle#GoSearchFname('')
   endif
 endfu
