@@ -25,8 +25,10 @@ endfu
 fu! BufferJump#Miximize(enable)
   if a:enable
     let s:bufferjump_miximize = 1
+    wincmd _
   else
     let s:bufferjump_miximize = 0
+    wincmd =
   endif
 endfu
 
