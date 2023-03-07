@@ -3,6 +3,7 @@ vim.g.mapleader = ' '
 eof
 
 packadd init
-packadd core
+packadd options
+packadd colorscheme
+packadd maps
 packadd plugins
-packadd my-plugins

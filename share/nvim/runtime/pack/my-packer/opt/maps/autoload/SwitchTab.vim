@@ -1,4 +1,4 @@
-fu! LeaderEnter#space_cr()
+fu! SwitchTab#SpaceCr()
   if !exists('g:lasttab')
     echomsg '2222222'
     return
