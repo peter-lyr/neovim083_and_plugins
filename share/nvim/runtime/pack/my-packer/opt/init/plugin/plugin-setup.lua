@@ -33,6 +33,8 @@ local plugins = function(use)
   use('EdenEast/nightfox.nvim')
   use('folke/tokyonight.nvim')
 
+  use({ 'nvim-telescope/telescope.nvim', branch = '0.1.x' })
+
 end
 
 return packer.startup(function(use)
