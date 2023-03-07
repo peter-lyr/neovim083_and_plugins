@@ -12,7 +12,7 @@ fu! NtreeToggle#GoAndQuit(winid)
   if &ft == 'netrw'
     wincmd p
   endif
-  let cur_winid = win_getid(bufwinnr(bufnr()))
+  let cur_winid = win_getid(winnr())
   call win_gotoid(a:winid)
   if winnr('$') > 1
     hide
