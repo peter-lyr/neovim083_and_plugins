@@ -1,9 +1,11 @@
 local status, telescope = pcall(require, 'telescope')
 if not status then
+  print('no telescope')
   return
 end
 local status2, actions = pcall(require, 'telescope.actions')
 if not status2 then
+  print('no telescope.actions')
   return
 end
 local s = vim.keymap.set
@@ -74,10 +76,12 @@ s({'n', 'v'}, '<a-Q>', '<esc>:Telescope quickfixhistory<cr>', {silent = true})
 
 local status, project_nvim = pcall(require, "project_nvim")
 if not status then
+  print('no project_nvim')
   return
 end
 local status, projects = pcall(telescope.load_extension, "projects")
 if not status then
+  print('no projects')
   return
 end
 project_nvim.setup({
@@ -97,6 +101,7 @@ s({'n', 'v'}, '<a-s-k>', '<esc>:Telescope projects<cr>', {silent = true})
 
 local status, vim_bookmarks = pcall(telescope.load_extension, "vim_bookmarks")
 if not status then
+  print('no vim_bookmarks')
   return
 end
 s({'n', 'v'}, '<a-m>', '<esc>:Telescope vim_bookmarks current_file<cr>', {silent = true})
