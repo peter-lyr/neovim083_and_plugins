@@ -43,3 +43,19 @@ endfu
 fu! BufferJump#MaxWidth()
   wincmd |
 endfu
+
+fu! BufferJump#WinFixHeight()
+  set winfixheight
+endfu
+
+fu! BufferJump#NoWinFixHeight()
+  set nowinfixheight
+endfu
+
+fu! BufferJump#WinFixWidth()
+  set winfixwidth
+endfu
+
+fu! BufferJump#NoWinFixWidth()
+  set nowinfixwidth
+endfu
