@@ -36,14 +36,24 @@ fu! NtreeToggle#GetWidth()
   return max([columns + 4, 24])
 endfu
 
-fu! NtreeToggle#GoSearchFname(fname)
+fu! NtreeToggle#GoSearch(dirname, fname)
   leftabove vsplit
   try
     exe printf("b%d", s:ntree_bufnr)
   catch
     Ntree
-    let s:ntree_bufnr = bufnr()
   endtry
+  if len(a:dirname) > 0
+    exe printf("Ntree %s", getcwd())
+  endif
+  let bufnr = bufnr()
+  if exists("s:ntree_bufnr") && bufnr != s:ntree_bufnr
+    try
+      exe printf("%dbw", s:ntree_bufnr)
+    catch
+    endtry
+  endif
+  let s:ntree_bufnr = bufnr
   norm iii
   call search(escape(a:fname, '.'))
   let width = NtreeToggle#GetWidth()
@@ -55,15 +65,24 @@ fu! NtreeToggle#Toggle()
   if ntree_winid != -1
     call NtreeToggle#GoAndQuit(ntree_winid)
   else
-    call NtreeToggle#GoSearchFname('')
+    call NtreeToggle#GoSearch('', '')
   endif
 endfu
 
-fu! NtreeToggle#ToggleSearch()
+fu! NtreeToggle#ToggleSearchFname()
   let ntree_winid = NtreeToggle#GetNetrwWinId()
   if ntree_winid != -1
     call NtreeToggle#GoAndQuit(ntree_winid)
   else
-    call NtreeToggle#GoSearchFname(bufname("%"))
+    call NtreeToggle#GoSearch('', bufname("%"))
+  endif
+endfu
+
+fu! NtreeToggle#ToggleSearchDirnameFname()
+  let ntree_winid = NtreeToggle#GetNetrwWinId()
+  if ntree_winid != -1
+    call NtreeToggle#GoAndQuit(ntree_winid)
+  else
+    call NtreeToggle#GoSearch(getcwd(), bufname("%"))
   endif
 endfu
