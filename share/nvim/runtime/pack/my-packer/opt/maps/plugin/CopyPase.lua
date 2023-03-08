@@ -12,3 +12,11 @@ s({ 't',     }, '<a-=>', '<c-\\><c-n>"+pi', {silent = true})
 s({ 'n', 'v' }, '<a-z>', '"zy', {silent = true})
 s({ 'c', 'i' }, '<a-z>', '<c-r>z', {silent = true})
 s({ 't',     }, '<a-z>', '<c-\\><c-n>"zpi', {silent = true})
+
+local buf_leave = function()
+  vim.g.word = vim.fn['expand']('<cword>')
+end
+
+vim.api.nvim_create_autocmd({"BufLeave"}, {
+  callback = buf_leave,
+})
