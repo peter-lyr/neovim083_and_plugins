@@ -16,33 +16,31 @@ fu! NtreeToggle#NextDir(next)
   let item = getbufvar(bufnr(), 'netrw_curdir')
   let l = len(s:ntree_list)
   let i = 0
-  try
-    let idx = index(s:ntree_list, item)
-    if idx != -1
-      let i = idx
-      if a:next == 1
-        if idx < l - 1
-          let idx += 1
-        else
-          let idx = 0
-        endif
+  let idx = index(s:ntree_list, item)
+  if idx != -1
+    let i = idx
+    if a:next == 1
+      if idx < l - 1
+        let idx += 1
       else
-        if idx > 0
-          let idx -= 1
-        else
-          let idx = l - 1
-        endif
+        let idx = 0
       endif
-      if i == idx
-        return
+    else
+      if idx > 0
+        let idx -= 1
+      else
+        let idx = l - 1
       endif
     endif
-  catch
-  endtry
+    if i == idx
+      return
+    endif
+  else
+    let idx = 0
+  endif
   exe printf("Ntree %s", s:ntree_list[idx])
   ec printf("Ntree %s", s:ntree_list[idx])
-  nnoremap <nowait><buffer> > :call NtreeToggle#NextDir(1)<cr>
-  nnoremap <nowait><buffer> < :call NtreeToggle#NextDir(0)<cr>
+  call NtreeToggle#NextDirMap()
 endfu
 
 fu! NtreeToggle#GetNetrwWinId()
@@ -91,7 +89,7 @@ endfu
 "   call nvim_win_set_width(0, res)
 " endfu
 
-fu! NtreeToggle#UpdateList()
+fu! NtreeToggle#UpdateList(remove_only)
   if !exists("s:ntree_list")
     let s:ntree_list = []
   endif
@@ -103,7 +101,9 @@ fu! NtreeToggle#UpdateList()
     endif
   catch
   endtry
-  call insert(s:ntree_list, item)
+  if !a:remove_only
+    let s:ntree_list += [item]
+  endif
 endfu
 
 fu! NtreeToggle#SearchFname(text)
@@ -115,20 +115,28 @@ fu! NtreeToggle#SearchFname(text)
   endif
 endfu
 
+fu! NtreeToggle#NextDirMap()
+  if &ft == 'netrw'
+    nnoremap <silent><nowait><buffer> > :call NtreeToggle#NextDir(1)<cr>
+    nnoremap <silent><nowait><buffer> < :call NtreeToggle#NextDir(0)<cr>
+    nnoremap <silent><nowait><buffer> J :call NtreeToggle#UpdateList(1)<cr>
+    nnoremap <silent><nowait><buffer> K :call NtreeToggle#UpdateList(0)<cr>
+  endif
+endfu
+
 fu! NtreeToggle#OpenDir(dirname)
   Ntree
   if len(a:dirname) > 0
     exe printf("Ntree %s", a:dirname)
   endif
   norm i
-  nnoremap <nowait><buffer> > :call NtreeToggle#NextDir(1)<cr>
-  nnoremap <nowait><buffer> < :call NtreeToggle#NextDir(0)<cr>
+  call NtreeToggle#NextDirMap()
 endfu
 
 fu! NtreeToggle#GoSearch(dirname, fname)
   leftabove split
   call NtreeToggle#OpenDir(a:dirname)
-  call NtreeToggle#UpdateList()
+  call NtreeToggle#UpdateList(0)
   call NtreeToggle#SearchFname(a:fname)
   " call NtreeToggle#SetWidth()
 endfu
