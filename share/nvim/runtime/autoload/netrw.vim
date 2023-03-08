@@ -7747,7 +7747,7 @@ fun! s:NetrwMarkFileMove(islocal)
      let movecmd     = netrw#WinPath(movecmd).movecmdargs
 "     call Decho("windows exception: movecmd<".movecmd."> (#1: had a space)",'~'.expand("<slnum>"))
     else
-     let movecmd = netrw#WinPath(movecmd)
+     let movecmd = g:netrw_localmovecmd
 "     call Decho("windows exception: movecmd<".movecmd."> (#2: no space)",'~'.expand("<slnum>"))
     endif
    else
