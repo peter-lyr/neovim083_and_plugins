@@ -68,7 +68,7 @@ fu! NtreeToggle#GoSearch(dirname, fname)
   if len(a:dirname) > 0
     exe printf("Ntree %s", getcwd())
   endif
-  norm iii
+  norm i
   if !exists("s:ntree_list")
     let s:ntree_list = []
   endif
