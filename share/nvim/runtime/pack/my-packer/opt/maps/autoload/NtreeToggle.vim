@@ -38,35 +38,25 @@ endfu
 
 fu! NtreeToggle#GoSearch(dirname, fname)
   leftabove vsplit
-  try
-    exe printf("b%d", s:ntree_bufnr)
-  catch
-    Ntree
-  endtry
+  Ntree
   if len(a:dirname) > 0
     exe printf("Ntree %s", getcwd())
   endif
-  let bufnr = bufnr()
-  if exists("s:ntree_bufnr") && bufnr != s:ntree_bufnr
-    try
-      exe printf("%dbw", s:ntree_bufnr)
-    catch
-    endtry
-  endif
-  let s:ntree_bufnr = bufnr
   norm iii
   call search(escape(a:fname, '.'))
   let width = NtreeToggle#GetWidth()
   call nvim_win_set_width(0, width)
 endfu
 
-fu! NtreeToggle#Toggle()
-  let ntree_winid = NtreeToggle#GetNetrwWinId()
-  if ntree_winid != -1
-    call NtreeToggle#GoAndQuit(ntree_winid)
-  else
-    call NtreeToggle#GoSearch('', '')
-  endif
+fu! NtreeToggle#GetFname()
+  let fname = bufname("%")
+  let fname = substitute(fname, '\', '/', 'g')
+  try
+    let fname = split(fname, '/')[-1]
+    return fname
+  catch
+    return ''
+  endtry
 endfu
 
 fu! NtreeToggle#ToggleSearchFname()
@@ -74,7 +64,8 @@ fu! NtreeToggle#ToggleSearchFname()
   if ntree_winid != -1
     call NtreeToggle#GoAndQuit(ntree_winid)
   else
-    call NtreeToggle#GoSearch('', bufname("%"))
+    let fname = NtreeToggle#GetFname()
+    call NtreeToggle#GoSearch('', fname)
   endif
 endfu
 
@@ -83,6 +74,7 @@ fu! NtreeToggle#ToggleSearchDirnameFname()
   if ntree_winid != -1
     call NtreeToggle#GoAndQuit(ntree_winid)
   else
-    call NtreeToggle#GoSearch(getcwd(), bufname("%"))
+    let fname = NtreeToggle#GetFname()
+    call NtreeToggle#GoSearch(getcwd(), fname)
   endif
 endfu
