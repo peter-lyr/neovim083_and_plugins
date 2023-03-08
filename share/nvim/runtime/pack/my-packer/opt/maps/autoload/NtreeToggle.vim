@@ -1,3 +1,17 @@
+fu! NtreeToggle#GetNetrwInfo()
+  let g:t = ""
+  if getbufvar(bufnr(), '&filetype') == 'netrw'
+    for [k, v] in items(getbufvar(bufnr(), "&"))
+      let g:t .= printf("%s: %s\n", k, string(v))
+    endfor
+    let g:t .= "---------\n"
+    for [k, v] in items(getbufvar(bufnr(), ""))
+      let g:t .= printf("%s: %s\n", k, string(v))
+    endfor
+    let g:t .= "=========\n"
+  endif
+endfu
+
 fu! NtreeToggle#GetNetrwWinId()
   for i in range(1, winnr('$'))
     let bufnr = winbufnr(i)
@@ -36,6 +50,18 @@ fu! NtreeToggle#GetWidth()
   return max([columns + 4, 24])
 endfu
 
+fu! NtreeToggle#UpdateList()
+  let item = getbufvar(bufnr(), 'netrw_curdir')
+  try
+    let idx = index(s:ntree_list, item)
+    if idx != -1
+      call remove(s:ntree_list, idx)
+    endif
+  catch
+  endtry
+  call insert(s:ntree_list, item)
+endfu
+
 fu! NtreeToggle#GoSearch(dirname, fname)
   leftabove vsplit
   Ntree
@@ -43,7 +69,14 @@ fu! NtreeToggle#GoSearch(dirname, fname)
     exe printf("Ntree %s", getcwd())
   endif
   norm iii
+  if !exists("s:ntree_list")
+    let s:ntree_list = []
+  endif
+  call NtreeToggle#UpdateList()
   call search(escape(a:fname, '.'))
+  if line('.') < 8
+    norm 8gg0
+  endif
   let width = NtreeToggle#GetWidth()
   call nvim_win_set_width(0, width)
 endfu
