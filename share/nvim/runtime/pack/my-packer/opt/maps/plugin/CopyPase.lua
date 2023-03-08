@@ -1,17 +1,17 @@
 local s = vim.keymap.set
 
-s({'n', 'v'}, '<a-y>', '"+y', {silent = true})
-s({'n', 'v'}, '<a-p>', '"+p', {silent = true})
-s({'n', 'v'}, '<a-s-p>', '"+P', {silent = true})
+s({'n', 'v'}, '<a-y>', '"+y')
+s({'n', 'v'}, '<a-p>', '"+p')
+s({'n', 'v'}, '<a-s-p>', '"+P')
 
-s({ 'c', 'i' }, '<a-w>', '<c-r>=g:word<cr>', {silent = true})
-s({ 'c', 'i' }, '<a-v>', '<c-r>"', {silent = true})
-s({ 't',     }, '<a-v>', '<c-\\><c-n>pi', {silent = true})
-s({ 'c', 'i' }, '<a-=>', '<c-r>+', {silent = true})
-s({ 't',     }, '<a-=>', '<c-\\><c-n>"+pi', {silent = true})
-s({ 'n', 'v' }, '<a-z>', '"zy', {silent = true})
-s({ 'c', 'i' }, '<a-z>', '<c-r>z', {silent = true})
-s({ 't',     }, '<a-z>', '<c-\\><c-n>"zpi', {silent = true})
+s({ 'c', 'i' }, '<a-w>', '<c-r>=g:word<cr>')
+s({ 'c', 'i' }, '<a-v>', '<c-r>"')
+s({ 't',     }, '<a-v>', '<c-\\><c-n>pi')
+s({ 'c', 'i' }, '<a-=>', '<c-r>+')
+s({ 't',     }, '<a-=>', '<c-\\><c-n>"+pi')
+s({ 'n', 'v' }, '<a-z>', '"zy')
+s({ 'c', 'i' }, '<a-z>', '<c-r>z')
+s({ 't',     }, '<a-z>', '<c-\\><c-n>"zpi')
 
 local buf_leave = function()
   vim.g.word = vim.fn['expand']('<cword>')
