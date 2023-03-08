@@ -1,4 +1,4 @@
-" fu! NtreeToggle#GetNetrwInfo()
+" fu! Ntree#GetNetrwInfo()
 "   let g:t = ""
 "   if getbufvar(bufnr(), '&filetype') == 'netrw'
 "     for [k, v] in items(getbufvar(bufnr(), "&"))
@@ -12,7 +12,7 @@
 "   endif
 " endfu
 
-fu! NtreeToggle#NextDir(next)
+fu! Ntree#NextDir(next)
   let item = getbufvar(bufnr(), 'netrw_curdir')
   let l = len(s:ntree_list)
   let i = 0
@@ -40,10 +40,10 @@ fu! NtreeToggle#NextDir(next)
   endif
   exe printf("Ntree %s", s:ntree_list[idx])
   ec printf("Ntree %s", s:ntree_list[idx])
-  call NtreeToggle#NextDirMap()
+  call Ntree#NextDirMap()
 endfu
 
-fu! NtreeToggle#GetNetrwWinId()
+fu! Ntree#GetNetrwWinId()
   for i in range(1, winnr('$'))
     let bufnr = winbufnr(i)
     if getbufvar(bufnr, '&filetype') == 'netrw'
@@ -53,7 +53,7 @@ fu! NtreeToggle#GetNetrwWinId()
   return -1
 endfu
 
-fu! NtreeToggle#GoAndQuit(winid)
+fu! Ntree#GoAndQuit(winid)
   if &ft == 'netrw'
     wincmd p
   endif
@@ -65,7 +65,7 @@ fu! NtreeToggle#GoAndQuit(winid)
   call win_gotoid(cur_winid)
 endfu
 
-" fu! NtreeToggle#SetWidth()
+" fu! Ntree#SetWidth()
 "   let MaxWidth = &columns
 "   let MaxWidth /= 2
 "   let columns = 0
@@ -89,7 +89,7 @@ endfu
 "   call nvim_win_set_width(0, res)
 " endfu
 
-fu! NtreeToggle#UpdateList(remove_only)
+fu! Ntree#UpdateList(remove_only)
   if !exists("s:ntree_list")
     let s:ntree_list = []
   endif
@@ -106,7 +106,7 @@ fu! NtreeToggle#UpdateList(remove_only)
   endif
 endfu
 
-fu! NtreeToggle#SearchFname(text)
+fu! Ntree#SearchFname(text)
   call search(escape(a:text, '.'))
   if getline(1)[0:2] != '../'
     if line('.') < 8
@@ -115,33 +115,33 @@ fu! NtreeToggle#SearchFname(text)
   endif
 endfu
 
-fu! NtreeToggle#NextDirMap()
+fu! Ntree#NextDirMap()
   if &ft == 'netrw'
-    nnoremap <silent><nowait><buffer> > :call NtreeToggle#NextDir(1)<cr>
-    nnoremap <silent><nowait><buffer> < :call NtreeToggle#NextDir(0)<cr>
-    nnoremap <silent><nowait><buffer> J :call NtreeToggle#UpdateList(1)<cr>
-    nnoremap <silent><nowait><buffer> K :call NtreeToggle#UpdateList(0)<cr>
+    nnoremap <silent><nowait><buffer> > :call Ntree#NextDir(1)<cr>
+    nnoremap <silent><nowait><buffer> < :call Ntree#NextDir(0)<cr>
+    nnoremap <silent><nowait><buffer> J :call Ntree#UpdateList(1)<cr>
+    nnoremap <silent><nowait><buffer> K :call Ntree#UpdateList(0)<cr>
   endif
 endfu
 
-fu! NtreeToggle#OpenDir(dirname)
+fu! Ntree#OpenDir(dirname)
   Ntree
   if len(a:dirname) > 0
     exe printf("Ntree %s", a:dirname)
   endif
   norm i
-  call NtreeToggle#NextDirMap()
+  call Ntree#NextDirMap()
 endfu
 
-fu! NtreeToggle#GoSearch(dirname, fname)
+fu! Ntree#GoSearch(dirname, fname)
   leftabove split
-  call NtreeToggle#OpenDir(a:dirname)
-  call NtreeToggle#UpdateList(0)
-  call NtreeToggle#SearchFname(a:fname)
-  " call NtreeToggle#SetWidth()
+  call Ntree#OpenDir(a:dirname)
+  call Ntree#UpdateList(0)
+  call Ntree#SearchFname(a:fname)
+  " call Ntree#SetWidth()
 endfu
 
-fu! NtreeToggle#GetDirname()
+fu! Ntree#GetDirname()
   let fname = nvim_buf_get_name(0)
   let fname = substitute(fname, '\', '/', 'g')
   try
@@ -152,7 +152,7 @@ fu! NtreeToggle#GetDirname()
   endtry
 endfu
 
-fu! NtreeToggle#GetFname()
+fu! Ntree#GetFname()
   let fname = bufname("%")
   let fname = substitute(fname, '\', '/', 'g')
   try
@@ -163,24 +163,24 @@ fu! NtreeToggle#GetFname()
   endtry
 endfu
 
-fu! NtreeToggle#ToggleSearchFname()
-  let ntree_winid = NtreeToggle#GetNetrwWinId()
+fu! Ntree#ToggleSearchFname()
+  let ntree_winid = Ntree#GetNetrwWinId()
   if ntree_winid != -1
-    call NtreeToggle#GoAndQuit(ntree_winid)
+    call Ntree#GoAndQuit(ntree_winid)
   else
-    let dirname = NtreeToggle#GetDirname()
-    let fname = NtreeToggle#GetFname()
-    call NtreeToggle#GoSearch(dirname, fname)
+    let dirname = Ntree#GetDirname()
+    let fname = Ntree#GetFname()
+    call Ntree#GoSearch(dirname, fname)
   endif
 endfu
 
-fu! NtreeToggle#ToggleSearchDirnameFname()
-  let ntree_winid = NtreeToggle#GetNetrwWinId()
+fu! Ntree#ToggleSearchDirnameFname()
+  let ntree_winid = Ntree#GetNetrwWinId()
   if ntree_winid != -1
-    call NtreeToggle#GoAndQuit(ntree_winid)
+    call Ntree#GoAndQuit(ntree_winid)
   else
     let dirname = getcwd()
-    let fname = NtreeToggle#GetFname()
-    call NtreeToggle#GoSearch(dirname, fname)
+    let fname = Ntree#GetFname()
+    call Ntree#GoSearch(dirname, fname)
   endif
 endfu
