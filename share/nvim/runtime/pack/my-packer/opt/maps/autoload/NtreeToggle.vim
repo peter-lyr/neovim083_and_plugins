@@ -12,6 +12,39 @@
 "   endif
 " endfu
 
+fu! NtreeToggle#NextDir(next)
+  let item = getbufvar(bufnr(), 'netrw_curdir')
+  let l = len(s:ntree_list)
+  let i = 0
+  try
+    let idx = index(s:ntree_list, item)
+    if idx != -1
+      let i = idx
+      if a:next == 1
+        if idx < l - 1
+          let idx += 1
+        else
+          let idx = 0
+        endif
+      else
+        if idx > 0
+          let idx -= 1
+        else
+          let idx = l - 1
+        endif
+      endif
+      if i == idx
+        return
+      endif
+    endif
+  catch
+  endtry
+  exe printf("Ntree %s", s:ntree_list[idx])
+  ec printf("Ntree %s", s:ntree_list[idx])
+  nnoremap <nowait><buffer> > :call NtreeToggle#NextDir(1)<cr>
+  nnoremap <nowait><buffer> < :call NtreeToggle#NextDir(0)<cr>
+endfu
+
 fu! NtreeToggle#GetNetrwWinId()
   for i in range(1, winnr('$'))
     let bufnr = winbufnr(i)
@@ -88,6 +121,8 @@ fu! NtreeToggle#OpenDir(dirname)
     exe printf("Ntree %s", a:dirname)
   endif
   norm i
+  nnoremap <nowait><buffer> > :call NtreeToggle#NextDir(1)<cr>
+  nnoremap <nowait><buffer> < :call NtreeToggle#NextDir(0)<cr>
 endfu
 
 fu! NtreeToggle#GoSearch(dirname, fname)
@@ -141,9 +176,3 @@ fu! NtreeToggle#ToggleSearchDirnameFname()
     call NtreeToggle#GoSearch(dirname, fname)
   endif
 endfu
-
-fu! NtreeToggle#Test()
-  echomsg s:ntree_list
-endfu
-
-nnoremap <F7> :call NtreeToggle#Test()<cr>
