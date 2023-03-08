@@ -53,41 +53,63 @@ fu! Ntree#GetNetrwWinId()
   return -1
 endfu
 
+let s:ntree_fixed = 0
+
+fu! Ntree#Fix(do)
+  if a:do == 1
+    let s:ntree_fixed = 1 - s:ntree_fixed
+  endif
+  if s:ntree_fixed == 1
+    echo "Ntree Fixed"
+    let ntree_winid = Ntree#GetNetrwWinId()
+    if ntree_winid != -1
+      call Ntree#GoAndQuit(ntree_winid)
+      wincmd H
+      call Ntree#SetWidth()
+      set winfixwidth
+    endif
+  else
+    echo "Ntree Hide Enable"
+  endif
+endfu
+
 fu! Ntree#GoAndQuit(winid)
   if &ft == 'netrw'
     wincmd p
   endif
   let cur_winid = win_getid(winnr())
   call win_gotoid(a:winid)
-  if winnr('$') > 1
-    hide
+  if s:ntree_fixed == 0
+    if winnr('$') > 1
+      hide
+    endif
+    call win_gotoid(cur_winid)
   endif
-  call win_gotoid(cur_winid)
 endfu
 
-" fu! Ntree#SetWidth()
-"   let MaxWidth = &columns
-"   let MaxWidth /= 2
-"   let columns = 0
-"   let res = 0
-"   if getline(1)[0:2] == '../'
-"     let start = 1
-"   else
-"     let start = 8
-"   endif
-"   for i in range(start, line('$'))
-"     let width = strwidth(getline(i))
-"     if width >= MaxWidth - 4
-"       let res = MaxWidth
-"       break
-"     endif
-"     if width >= columns
-"       let columns = width
-"     endif
-"   endfor
-"   let res = max([columns + 4, 24])
-"   call nvim_win_set_width(0, res)
-" endfu
+fu! Ntree#SetWidth()
+  let MaxWidth = &columns
+  let MaxWidth /= 2
+  let columns = 0
+  let res = 0
+  if getline(1)[0:2] == '../'
+    let start = 1
+  else
+    let start = 8
+  endif
+  for i in range(start, line('$'))
+    let width = strwidth(getline(i))
+    if width >= MaxWidth - 4
+      let res = MaxWidth
+      break
+    endif
+    if width >= columns
+      let columns = width
+    endif
+  endfor
+  let res = max([columns + 4, 24])
+  call nvim_win_set_width(0, res)
+endfu
 
 fu! Ntree#UpdateList(remove_only)
   if !exists("s:ntree_list")
