@@ -121,6 +121,8 @@ fu! Ntree#NextDirMap()
     nnoremap <silent><nowait><buffer> < :call Ntree#NextDir(0)<cr>
     nnoremap <silent><nowait><buffer> J :call Ntree#UpdateList(1)<cr>
     nnoremap <silent><nowait><buffer> K :call Ntree#UpdateList(0)<cr>
+    nnoremap <silent><nowait><buffer> y :call Ntree#CopyFname()<cr>
+    nnoremap <silent><nowait><buffer> gy :call Ntree#CopyFullPath()<cr>
   endif
 endfu
 
@@ -129,7 +131,6 @@ fu! Ntree#OpenDir(dirname)
   if len(a:dirname) > 0
     exe printf("Ntree %s", a:dirname)
   endif
-  norm i
   call Ntree#NextDirMap()
 endfu
 
@@ -182,5 +183,21 @@ fu! Ntree#ToggleSearchDirnameFname()
     let dirname = getcwd()
     let fname = Ntree#GetFname()
     call Ntree#GoSearch(dirname, fname)
+  endif
+endfu
+
+fu! Ntree#CopyFname()
+  let @+ = netrw#Call("NetrwGetWord")
+endfu
+
+fu! Ntree#CopyFullPath()
+  let dir = netrw#Call("NetrwTreeDir", 0)
+  let fname = netrw#Call("NetrwGetWord")
+  let line = getline('.')
+  let l = len(line)
+  if line[l-1] == '/'
+    let @+ = dir
+  else
+    let @+ = dir . fname
   endif
 endfu
