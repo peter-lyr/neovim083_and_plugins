@@ -22,3 +22,4 @@ o.mousemodel = "extend"
 o.swapfile = false
 o.iskeyword = '@,48-57,_,192-255'
 o.fileformats = 'dos'
+o.foldmethod = "indent"
