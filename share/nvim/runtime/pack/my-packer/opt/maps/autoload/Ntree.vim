@@ -137,7 +137,10 @@ fu! Ntree#UpdateList(remove_only)
 endfu
 
 fu! Ntree#SearchFname(text)
-  call search(escape(a:text, '.'))
+  let text = escape(a:text, '.')
+  if len(text) > 0
+    call search(text)
+  endif
   if getline(1)[0:2] != '../'
     if line('.') < 8
       norm 8gg0
