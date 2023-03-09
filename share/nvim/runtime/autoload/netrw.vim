@@ -70,6 +70,7 @@ setl cpo&vim
 "          (this function can optionally take a list of messages)
 "  Dec 2, 2019 : max errnum currently is 106
 fun! netrw#ErrorMsg(level,msg,errnum)
+  return
 "  call Dfunc("netrw#ErrorMsg(level=".a:level." msg<".a:msg."> errnum=".a:errnum.") g:netrw_use_errorwindow=".g:netrw_use_errorwindow)
 
   if a:level < g:netrw_errorlvl
