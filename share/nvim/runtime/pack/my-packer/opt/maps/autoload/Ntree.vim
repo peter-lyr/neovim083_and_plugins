@@ -63,10 +63,18 @@ fu! Ntree#Fix(do)
     echo "Ntree Fixed"
     let ntree_winid = Ntree#GetNetrwWinId()
     if ntree_winid != -1
-      call Ntree#GoAndQuit(ntree_winid)
-      wincmd H
-      call Ntree#SetWidth()
-      set winfixwidth
+      if a:do == 2
+        call Ntree#GoAndQuit(ntree_winid)
+        wincmd H
+        call nvim_win_set_width(0, 1)
+        set winfixwidth
+        wincmd p
+      else
+        call Ntree#GoAndQuit(ntree_winid)
+        wincmd H
+        call Ntree#SetWidth()
+        set winfixwidth
+      endif
     endif
   else
     echo "Ntree Hide Enable"
