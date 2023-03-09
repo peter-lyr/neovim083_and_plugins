@@ -60,7 +60,7 @@ fu! Ntree#Fix(do)
     let s:ntree_fixed = 1 - s:ntree_fixed
   endif
   if s:ntree_fixed == 1
-    echo "Ntree Fixed"
+    ec "Ntree Fixed"
     let ntree_winid = Ntree#GetNetrwWinId()
     if ntree_winid != -1
       if a:do == 2
@@ -77,7 +77,7 @@ fu! Ntree#Fix(do)
       endif
     endif
   else
-    echo "Ntree Hide Enable"
+    ec "Ntree Hide Enable"
   endif
 endfu
 
@@ -167,8 +167,39 @@ fu! Ntree#OpenDir(dirname)
   call Ntree#NextDirMap()
 endfu
 
+fu! Ntree#SplitChangeDirection()
+  let s:ntree_direction += 1
+  if s:ntree_direction >= 4
+    let s:ntree_direction = 0
+  endif
+  if s:ntree_direction == 0
+    ec 'Up'
+  elseif s:ntree_direction == 1
+    ec 'Right'
+  elseif s:ntree_direction == 2
+    ec 'Down'
+  elseif s:ntree_direction == 3
+    ec 'Left'
+  endif
+endfu
+
+fu! Ntree#Split()
+  if !exists('s:ntree_direction')
+    let s:ntree_direction = 0
+  endif
+  if s:ntree_direction == 0
+    leftabove split
+  elseif s:ntree_direction == 1
+    rightbelow vsplit
+  elseif s:ntree_direction == 2
+    rightbelow split
+  elseif s:ntree_direction == 3
+    leftabove vsplit
+  endif
+endfu
+
 fu! Ntree#GoSearch(dirname, fname)
-  leftabove split
+  call Ntree#Split()
   call Ntree#OpenDir(a:dirname)
   call Ntree#UpdateList(0)
   call Ntree#SearchFname(a:fname)
@@ -221,6 +252,7 @@ endfu
 
 fu! Ntree#CopyFname()
   let @+ = netrw#Call("NetrwGetWord")
+  ec printf("copy: %s", @+)
 endfu
 
 fu! Ntree#CopyFullPath()
@@ -233,4 +265,5 @@ fu! Ntree#CopyFullPath()
   else
     let @+ = dir . fname
   endif
+  ec printf("copy: %s", @+)
 endfu
