@@ -1,5 +1,7 @@
 local s = vim.keymap.set
 
+s({'n', 'v'}, '<leader>p', '<c-w>p', {silent = true})
+
 s({'n', 'v'}, '<leader>w', '<cmd>:call BufferJump#Up()<cr>', {silent = true})
 s({'n', 'v'}, '<leader>s', '<cmd>:call BufferJump#Down()<cr>', {silent = true})
 s({'n', 'v'}, '<leader>a', '<cmd>:call BufferJump#Left()<cr>', {silent = true})
