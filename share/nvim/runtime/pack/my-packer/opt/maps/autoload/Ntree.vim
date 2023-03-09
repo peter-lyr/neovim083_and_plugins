@@ -129,6 +129,10 @@ fu! Ntree#UpdateList(remove_only)
   endif
   let item = getbufvar(bufnr(), 'netrw_curdir')
   let item = substitute(item, '\', '/', 'g')
+  let item = trim(item)
+  if len(item) == 0
+    return
+  endif
   try
     let idx = index(s:ntree_list, item)
     if idx != -1
