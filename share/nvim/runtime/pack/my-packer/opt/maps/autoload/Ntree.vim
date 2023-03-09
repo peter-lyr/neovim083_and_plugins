@@ -86,12 +86,15 @@ fu! Ntree#GoAndQuit(winid)
     wincmd p
   endif
   let cur_winid = win_getid(winnr())
+  let fname = Ntree#GetFname()
   call win_gotoid(a:winid)
   if s:ntree_fixed == 0
     if winnr('$') > 1
       hide
     endif
     call win_gotoid(cur_winid)
+  else
+    call Ntree#SearchFname(fname)
   endif
 endfu
 
@@ -124,6 +127,7 @@ fu! Ntree#UpdateList(remove_only)
     let s:ntree_list = []
   endif
   let item = getbufvar(bufnr(), 'netrw_curdir')
+  let item = substitute(item, '\', '/', 'g')
   try
     let idx = index(s:ntree_list, item)
     if idx != -1
