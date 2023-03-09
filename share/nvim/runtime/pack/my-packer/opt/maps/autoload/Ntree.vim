@@ -168,6 +168,9 @@ fu! Ntree#OpenDir(dirname)
 endfu
 
 fu! Ntree#SplitChangeDirection()
+  if !exists('s:ntree_direction')
+    let s:ntree_direction = 0
+  endif
   let s:ntree_direction += 1
   if s:ntree_direction >= 4
     let s:ntree_direction = 0
