@@ -90,6 +90,7 @@ fu! Ntree#GoAndQuit(winid)
   call win_gotoid(a:winid)
   if s:ntree_fixed == 0
     if winnr('$') > 1
+      autocmd! ntree_autocmd_map
       hide
     endif
     call win_gotoid(cur_winid)
@@ -242,6 +243,7 @@ fu! Ntree#ToggleSearchFname()
   else
     let dirname = Ntree#GetDirname()
     let fname = Ntree#GetFname()
+    call Ntree#AutocmdMap()
     call Ntree#GoSearch(dirname, fname)
   endif
 endfu
@@ -253,6 +255,7 @@ fu! Ntree#ToggleSearchDirnameFname()
   else
     let dirname = getcwd()
     let fname = Ntree#GetFname()
+    call Ntree#AutocmdMap()
     call Ntree#GoSearch(dirname, fname)
   endif
 endfu
@@ -273,4 +276,11 @@ fu! Ntree#CopyFullPath()
     let @+ = dir . fname
   endif
   ec printf("copy: %s", @+)
+endfu
+
+fu! Ntree#AutocmdMap()
+  augroup ntree_autocmd_map
+    autocmd!
+    autocmd CursorHold * call Ntree#NextDirMap()
+  augroup END
 endfu
