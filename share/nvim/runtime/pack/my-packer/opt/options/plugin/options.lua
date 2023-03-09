@@ -1,6 +1,7 @@
 local o = vim.opt
 
 o.number = true
+o.numberwidth = 1
 o.relativenumber = true
 o.title = true
 o.updatetime = 0
