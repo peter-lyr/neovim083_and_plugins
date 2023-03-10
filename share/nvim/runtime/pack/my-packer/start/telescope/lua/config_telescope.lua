@@ -8,7 +8,6 @@ if not status2 then
   print('no telescope.actions')
   return
 end
-local s = vim.keymap.set
 telescope.setup({
   defaults = {
     mappings = {
@@ -55,23 +54,6 @@ telescope.setup({
     wrap_results = true,
   },
 })
-s({'n', 'v'}, '<leader>fa', '<esc>:Telescope builtin<cr>', {silent = true})
-s({'n', 'v'}, '<leader>fo', '<esc>:Telescope oldfiles<cr>', {silent = true})
-s({'n', 'v'}, '<leader>fh', '<esc>:Telescope help_tags<cr>', {silent = true})
-s({'n', 'v'}, '<leader>fl', '<esc>:Telescope colorscheme<cr>', {silent = true})
-s({'n', 'v'}, '<leader>fc', '<esc>:Telescope command_history<cr>', {silent = true})
-s({'n', 'v'}, '<leader>fg', '<esc>:Telescope commands<cr>', {silent = true})
-s({'n', 'v'}, '<leader>gf', '<esc>:Telescope git_files<cr>', {silent = true})
-s({'n', 'v'}, '<leader>gc', '<esc>:Telescope git_commits<cr>', {silent = true})
-s({'n', 'v'}, '<leader>gb', '<esc>:Telescope git_bcommits<cr>', {silent = true})
-s({'n', 'v'}, '<leader>gh', '<esc>:Telescope git_branches<cr>', {silent = true})
-s({'n', 'v'}, '<leader>gj', '<esc>:Telescope git_status<cr>', {silent = true})
-s({'n', 'v'}, '<a-o>', '<esc>:Telescope live_grep<cr>', {silent = true})
-s({'n', 'v'}, '<a-i>', '<esc>:Telescope grep_string<cr>', {silent = true})
-s({'n', 'v'}, '<a-k>', '<esc>:Telescope find_files<cr>', {silent = true})
-s({'n', 'v'}, '<a-b>', '<esc>:Telescope buffers<cr>', {silent = true})
-s({'n', 'v'}, '<a-q>', '<esc>:Telescope quickfix<cr>', {silent = true})
-s({'n', 'v'}, '<a-Q>', '<esc>:Telescope quickfixhistory<cr>', {silent = true})
 
 
 local status, project_nvim = pcall(require, "project_nvim")
@@ -96,7 +78,6 @@ project_nvim.setup({
     ".svn",
   }
 })
-s({'n', 'v'}, '<a-s-k>', '<esc>:Telescope projects<cr>', {silent = true})
 
 
 local status, vim_bookmarks = pcall(telescope.load_extension, "vim_bookmarks")
@@ -104,5 +85,3 @@ if not status then
   print('no vim_bookmarks')
   return
 end
-s({'n', 'v'}, '<a-m>', '<esc>:Telescope vim_bookmarks current_file<cr>', {silent = true})
-s({'n', 'v'}, '<a-M>', '<esc>:Telescope vim_bookmarks all<cr>', {silent = true})
