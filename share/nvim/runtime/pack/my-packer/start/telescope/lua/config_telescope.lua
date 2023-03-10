@@ -1,5 +1,5 @@
-local status, telescope = pcall(require, 'telescope')
-if not status then
+local sta, telescope = pcall(require, 'telescope')
+if not sta then
   print('no telescope')
   return
 end
@@ -56,13 +56,13 @@ telescope.setup({
 })
 
 
-local status, project_nvim = pcall(require, "project_nvim")
-if not status then
+local sta, project_nvim = pcall(require, "project_nvim")
+if not sta then
   print('no project_nvim')
   return
 end
-local status, projects = pcall(telescope.load_extension, "projects")
-if not status then
+local sta, projects = pcall(telescope.load_extension, "projects")
+if not sta then
   print('no projects')
   return
 end
@@ -80,8 +80,8 @@ project_nvim.setup({
 })
 
 
-local status, vim_bookmarks = pcall(telescope.load_extension, "vim_bookmarks")
-if not status then
+local sta, vim_bookmarks = pcall(telescope.load_extension, "vim_bookmarks")
+if not sta then
   print('no vim_bookmarks')
   return
 end

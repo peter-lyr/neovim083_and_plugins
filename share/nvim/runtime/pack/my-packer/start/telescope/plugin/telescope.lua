@@ -2,10 +2,10 @@ local s = vim.keymap.set
 
 
 local telescope_exe = function(cmd)
-  if not vim.g.loaded_telescope_config then
-    vim.g.loaded_telescope_config = 1
-    local status, config_telescope = pcall(require, 'config_telescope')
-    if not status then
+  if not vim.g.loaded_config_telescope then
+    vim.g.loaded_config_telescope = 1
+    local sta, config_telescope = pcall(require, 'config_telescope')
+    if not sta then
       print('no config_telescope')
       return
     end

@@ -13,8 +13,8 @@ local ensure_packer = function()
 end
 local packer_bootstrap = ensure_packer()
 
-local status, packer = pcall(require, 'packer')
-if not status then
+local sta, packer = pcall(require, 'packer')
+if not sta then
   return
 end
 
