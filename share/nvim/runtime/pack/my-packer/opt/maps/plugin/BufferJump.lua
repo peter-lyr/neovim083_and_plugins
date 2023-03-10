@@ -16,5 +16,5 @@ s({'n', 'v'}, '<leader><leader>i', '<cmd>:call BufferJump#Miximize(0)<cr>', {sil
 
 s({'n', 'v'}, '<leader><leader>w', '<cmd>:call BufferJump#WinFixHeight()<cr>', {silent = true})
 s({'n', 'v'}, '<leader><leader>s', '<cmd>:call BufferJump#NoWinFixHeight()<cr>', {silent = true})
-s({'n', 'v'}, '<leader><leader>a', '<cmd>:call BufferJump#WinFixWidth()<cr>', {silent = true})
-s({'n', 'v'}, '<leader><leader>d', '<cmd>:call BufferJump#NoWinFixWidth()<cr>', {silent = true})
+s({'n', 'v'}, '<leader><leader>d', '<cmd>:call BufferJump#WinFixWidth()<cr>', {silent = true})
+s({'n', 'v'}, '<leader><leader>a', '<cmd>:call BufferJump#NoWinFixWidth()<cr>', {silent = true})
