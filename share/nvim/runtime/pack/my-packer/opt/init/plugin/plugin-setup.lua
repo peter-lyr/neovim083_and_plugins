@@ -35,6 +35,8 @@ local plugins = function(use)
 
   use({ 'nvim-telescope/telescope.nvim', branch = '0.1.x' })
 
+  use("dstein64/vim-startuptime")
+
 end
 
 return packer.startup(function(use)
