@@ -9470,16 +9470,19 @@ fun! s:NetrwRefreshTreeDict(dir)
    return
   endif
 
+  if index(keys(w:netrw_treedict), a:dir) == -1
+    return
+  endif
   for entry in w:netrw_treedict[a:dir]
    let direntry= substitute(a:dir.'/'.entry,'[@/]$','','e')
 "   call Decho("a:dir<".a:dir."> entry<".entry."> direntry<".direntry.">",'~'.expand("<slnum>"))
 
    if entry =~ '/$' && has_key(w:netrw_treedict,direntry)
 "    call Decho("<".direntry."> is a key in treedict - display subtree for it",'~'.expand("<slnum>"))
-    NetrwKeepj call s:NetrwRefreshTreeDict(direntry)
-    let liststar                   = s:NetrwGlob(direntry,'*',1)
-    let listdotstar                = s:NetrwGlob(direntry,'.*',1)
-    let w:netrw_treedict[direntry] = liststar + listdotstar
+    " NetrwKeepj call s:NetrwRefreshTreeDict(direntry)
+    " let liststar                   = s:NetrwGlob(direntry,'*',1)
+    " let listdotstar                = s:NetrwGlob(direntry,'.*',1)
+    " let w:netrw_treedict[direntry] = liststar + listdotstar
 "    call Decho("updating w:netrw_treedict[".direntry.']='.string(w:netrw_treedict[direntry]),'~'.expand("<slnum>"))
 
    elseif entry =~ '/$' && has_key(w:netrw_treedict,direntry.'/')
