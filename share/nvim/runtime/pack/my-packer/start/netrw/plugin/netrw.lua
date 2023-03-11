@@ -25,6 +25,12 @@ end
 
 
 local s = vim.keymap.set
+local g = vim.g
+
+
+g.netrw_mousemaps = 0
+g.netrw_liststyle = 3
+g.netrw_sizestyle = "H"
 
 
 s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_only") end, {silent = true})
