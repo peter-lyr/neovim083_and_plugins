@@ -2,15 +2,21 @@ let s:bufferjump_miximize = 1
 
 fu! BufferJump#Up()
   wincmd k
-  if s:bufferjump_miximize
+  if s:bufferjump_miximize && &winfixheight == 0
     wincmd _
+  endif
+  if &winfixheight == 1
+    call nvim_win_set_height(0, 12)
   endif
 endfu
 
 fu! BufferJump#Down()
   wincmd j
-  if s:bufferjump_miximize
+  if s:bufferjump_miximize && &winfixwidth == 0
     wincmd _
+  endif
+  if &winfixwidth == 1
+    call nvim_win_set_width(0, 36)
   endif
 endfu
 
@@ -38,6 +44,27 @@ endfu
 
 fu! BufferJump#SameWidthHeight()
   wincmd =
+  if &winfixheight == 1
+    set nowinfixheight
+    wincmd =
+    set winfixheight
+  endif
+endfu
+
+fu! BufferJump#SameWidthHeightFix()
+  wincmd =
+  let cur_winid = win_getid(winnr())
+  for i in range(1, winnr('$'))
+    let bufnr = winbufnr(i)
+    call win_gotoid(win_getid(bufwinnr(bufnr)))
+    if &winfixheight == 1
+      call nvim_win_set_height(0, 12)
+    endif
+    if &winfixwidth == 1
+      call nvim_win_set_width(0, 36)
+    endif
+  endfor
+  call win_gotoid(cur_winid)
 endfu
 
 fu! BufferJump#MaxWidth()

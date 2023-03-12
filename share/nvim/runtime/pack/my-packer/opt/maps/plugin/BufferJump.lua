@@ -14,6 +14,8 @@ s({'n', 'v'}, '<leader>u', '<cmd>:call BufferJump#MaxWidth()<cr>', {silent = tru
 s({'n', 'v'}, '<leader><leader>o', '<cmd>:call BufferJump#Miximize(1)<cr>', {silent = true})
 s({'n', 'v'}, '<leader><leader>i', '<cmd>:call BufferJump#Miximize(0)<cr>', {silent = true})
 
+s({'n', 'v'}, '<leader><leader><leader>i', '<cmd>:call BufferJump#SameWidthHeightFix()<cr>', {silent = true})
+
 s({'n', 'v'}, '<leader><leader>w', '<cmd>:call BufferJump#WinFixHeight()<cr>', {silent = true})
 s({'n', 'v'}, '<leader><leader>s', '<cmd>:call BufferJump#NoWinFixHeight()<cr>', {silent = true})
 s({'n', 'v'}, '<leader><leader>d', '<cmd>:call BufferJump#WinFixWidth()<cr>', {silent = true})
