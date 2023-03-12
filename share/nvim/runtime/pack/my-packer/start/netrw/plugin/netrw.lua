@@ -28,6 +28,7 @@ local s = vim.keymap.set
 local g = vim.g
 
 
+g.netrw_mousemaps = 0
 g.netrw_liststyle = 3
 g.netrw_sizestyle = "H"
 

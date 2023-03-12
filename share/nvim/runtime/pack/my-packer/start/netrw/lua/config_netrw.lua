@@ -13,9 +13,16 @@ local test = function(payload)
   print(vim.inspect(payload))
 end
 
+local f = vim.fn
+
+local list_style = function(payload)
+  f['netrw#Call']("NetrwListStyle", 1)
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
-    ['<F9>'] = function(payload) test(payload) end,
+    ['(f9)'] = function(payload) list_style(payload) end,
+    ['(2-Leftmouse)'] = function(payload) list_style(payload) end,
   },
 }
