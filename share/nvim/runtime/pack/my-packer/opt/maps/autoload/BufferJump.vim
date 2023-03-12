@@ -52,7 +52,6 @@ fu! BufferJump#SameWidthHeight()
 endfu
 
 fu! BufferJump#SameWidthHeightFix()
-  wincmd =
   let cur_winid = win_getid(winnr())
   for i in range(1, winnr('$'))
     let bufnr = winbufnr(i)
@@ -64,6 +63,7 @@ fu! BufferJump#SameWidthHeightFix()
       call nvim_win_set_width(0, 36)
     endif
   endfor
+  wincmd =
   call win_gotoid(cur_winid)
 endfu
 
