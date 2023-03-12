@@ -132,7 +132,11 @@ function M.toggle(mode)
                 end
               end
             else
+              local cur_winid = f['win_getid']()
               c'wincmd p'
+              if cur_winid == f['win_getid']() then
+                c'wincmd w'
+              end
             end
           else
             for _, v in ipairs(M.netrw_winids_fix) do
