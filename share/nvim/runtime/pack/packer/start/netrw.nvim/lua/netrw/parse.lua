@@ -19,6 +19,7 @@ M.get_node = function(line)
   end
 
   local curdir = vim.b.netrw_curdir
+  local line = string.gsub(line, "| ", "")
 
   local _, _, node, link = string.find(line, "^(.+)@\t%s*%-%->%s*(.+)")
   if node then
