@@ -14,15 +14,53 @@ local test = function(payload)
 end
 
 local f = vim.fn
+local c = vim.cmd
 
-local list_style = function(payload)
-  f['netrw#Call']("NetrwListStyle", 1)
+-- local list_style = function()
+--   f['netrw#Call']("NetrwListStyle", 1)
+-- end
+
+local is_up_dir = function()
+  if string.sub(f['getline'](f['line']('.')), 1, 3) == '../' then
+    return 1
+  end
+  return nil
+end
+
+local is_cur_dir = function(payload)
+  if f['line']('.') > 1 and string.sub(f['getline'](f['line']('.')-1), 1, 3) == '../' then
+    return 1
+  end
+  return nil
+end
+
+local preview = function(payload)
+  if not payload or vim.b.netrw_liststyle == 2 then
+    return nil
+  end
+  if is_up_dir() or is_cur_dir() then
+    return nil
+  end
+  if payload['type'] == 1 then
+    f['netrw#Call']("NetrwPreview", f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1))
+    return 1
+  else
+    c[[ call feedkeys("\<cr>") ]]
+  end
+  return nil
+end
+
+local preview_go = function(payload)
+  if preview(payload) then
+    c[[ wincmd p ]]
+  end
 end
 
 netrw.setup{
   use_devicons = true,
   mappings = {
-    -- ['(cr)'] = function(payload) test(payload) end,
-    ['(2-LeftMouse)'] = function(payload) list_style(payload) end,
+    ['(f9)'] = function(payload) test(payload) end,
+    ['(tab)'] = function(payload) preview(payload) end,
+    ['(s-tab)'] = function(payload) preview_go(payload) end,
   },
 }
