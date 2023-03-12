@@ -41,7 +41,7 @@ function M.get_netrw_winids()
   return nil
 end
 
-local is_winfix = function(payload)
+local is_winfix = function()
   if o.winfixheight:get() or o.winfixwidth:get() then
     return 1
   end
