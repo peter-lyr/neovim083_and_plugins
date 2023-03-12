@@ -2,6 +2,8 @@ local M = {}
 
 local f = vim.fn
 local c = vim.cmd
+local o = vim.opt
+local a = vim.api
 
 M.split = 'up'
 M.step = 1
@@ -14,6 +16,9 @@ end
 
 -- Return the first index with the given value (or nil if not found).
 function index_of(arr, val)
+  if not arr then
+    return nil
+  end
   for i, v in ipairs(arr) do
     if v == val then
       return i
@@ -27,7 +32,7 @@ function M.get_netrw_winids()
   for i = 1, f['winnr']('$') do
     local bufnr = f['winbufnr'](i)
     if f['getbufvar'](bufnr, '&filetype') == 'netrw' then
-      table.insert(netrw_winids, f['win_getid'](f['bufwinnr'](bufnr)))
+      table.insert(netrw_winids, f['win_getid'](i))
     end
   end
   if #netrw_winids > 0 then
@@ -36,16 +41,125 @@ function M.get_netrw_winids()
   return nil
 end
 
-function M.toggle_only()
+local is_winfix = function(payload)
+  if o.winfixheight:get() or o.winfixwidth:get() then
+    return 1
+  end
+  return nil
+end
+
+M.netrw_winids_fix = {}
+M.netrw_winids_unfix = {}
+
+function M.update_netrw_winids_fix(netrw_winids)
+  M.netrw_winids_fix = {}
+  M.netrw_winids_unfix = {}
+  local cur_winid = f['win_getid']()
+  for _, v in ipairs(netrw_winids) do
+    f['win_gotoid'](v)
+    if is_winfix() then
+      table.insert(M.netrw_winids_fix, v)
+    else
+      table.insert(M.netrw_winids_unfix, v)
+    end
+  end
+  f['win_gotoid'](cur_winid)
+end
+
+local Path = require "plenary.path"
+
+function M.get_dname()
+  local fname = string.gsub(a['nvim_buf_get_name'](0), "\\", '/')
+  local path = Path:new(fname)
+  if path:is_file() then
+    return path:parent()
+  end
+  return ''
+end
+
+function M.get_fname()
+  local fname = string.gsub(a['nvim_buf_get_name'](0), "\\", '/')
+  local path = Path:new(fname)
+  if path:is_file() then
+    local fname = path:_split()
+    return fname[#fname]
+  end
+  return ''
+end
+
+function M.toggle(mode)
+  new_unfix = nil
   local netrw_winids = M.get_netrw_winids()
   if netrw_winids then
-    local cur_winid = f['win_getid'](f['winnr']())
-    local cur_winid_idx = index_of(netrw_winids, cur_winid)
-    if cur_winid_idx then
+    M.update_netrw_winids_fix(netrw_winids)
+    if #M.netrw_winids_unfix > 0 then
+      if f['winnr']('$') > 1 then
+        a.nvim_win_hide(M.netrw_winids_unfix[1])
+      end
     else
+      if mode == 'cur_fname' or mode == 'cwd' then
+        new_unfix = 1
+      else
+        if #M.netrw_winids_fix > 0 then
+          back_fix = nil
+          local cur_winid = f['win_getid']()
+          cur_winid_idx_fix = index_of(M.netrw_winids_fix, cur_winid)
+          if cur_winid_idx_fix then
+            if #M.netrw_winids_fix > 1 then
+              cur_winid_idx_fix = cur_winid_idx_fix + 1
+              if cur_winid_idx_fix > #M.netrw_winids_fix then
+                back_fix = 1
+              end
+            else
+              back_fix = 1
+            end
+          else
+            cur_winid_idx_fix = 1
+          end
+          if back_fix then
+            if o.winfixheight:get() then
+              a.nvim_win_set_height(0, 0)
+            end
+            if o.winfixwidth:get() then
+              a.nvim_win_set_width(0, 0)
+            end
+            if #M.netrw_winids_fix > 1 then
+              local netrw_winids = {}
+              for i = 1, f['winnr']('$') do
+                local bufnr = f['winbufnr'](i)
+                if f['getbufvar'](bufnr, '&filetype') ~= 'netrw' then
+                  f['win_gotoid'](f['win_getid'](i))
+                end
+              end
+            else
+              c'wincmd p'
+            end
+          else
+            for _, v in ipairs(M.netrw_winids_fix) do
+              if o.winfixheight:get() then
+                a.nvim_win_set_height(v, 0)
+              end
+              if o.winfixwidth:get() then
+                a.nvim_win_set_width(0, 0)
+              end
+            end
+            f['win_gotoid'](M.netrw_winids_fix[cur_winid_idx_fix])
+            if o.winfixheight:get() then
+              a.nvim_win_set_height(0, 12)
+            end
+            if o.winfixwidth:get() then
+              a.nvim_win_set_width(0, 36)
+            end
+          end
+        else
+          new_unfix = 1
+        end
+      end
     end
-    -- M._show_array(netrw_winids)
   else
+    new_unfix = 1
+  end
+  if new_unfix then
     if M.split == 'up' then
       c'leftabove split'
     elseif M.split == 'right' then
@@ -55,14 +169,15 @@ function M.toggle_only()
     elseif M.split == 'left' then
       c'leftabove vsplit'
     end
-    c'Ntree'
+    if mode == 'cur_fname' then
+      c(string.format('Ntree %s', M.get_dname()))
+      f['search'](M.get_fname())
+    elseif mode == 'cwd' then
+      c(string.format('Ntree %s', f['getcwd']()))
+    else
+      c'Ntree'
+    end
   end
-end
-
-function M.toggle_search_fname()
-end
-
-function M.toggle_search_cwd()
 end
 
 return M

@@ -64,6 +64,8 @@ local is_winfix = function(payload)
   return nil
 end
 
+local toggle_netrw = require('toggle_netrw')
+
 local open = function(payload, direction)
   if payload['type'] == 0 then
     c[[ call feedkeys("\<cr>") ]]
@@ -76,10 +78,19 @@ local open = function(payload, direction)
       if f['winnr']('$') == 1 then
         c[[ wincmd n ]]
       else
-        local cur_winid = f['win_getid'](f['winnr']())
+        local cur_winid = f['win_getid']()
         c[[ wincmd p ]]
-        if cur_winid == f['win_getid'](f['winnr']()) then
-          c[[ wincmd n ]]
+        local netrw_winids = toggle_netrw.get_netrw_winids()
+        toggle_netrw.update_netrw_winids_fix(netrw_winids)
+        cur_winid_idx_fix = index_of(toggle_netrw.netrw_winids_fix, cur_winid)
+        if cur_winid_idx_fix then
+          for i = 1, f['winnr']('$') do
+            cur_winid_idx_fix = index_of(toggle_netrw.netrw_winids_fix, f['win_getid'](i))
+            if not cur_winid_idx_fix then
+              f['win_gotoid'](f['win_getid'](i))
+              break
+            end
+          end
         end
       end
     end

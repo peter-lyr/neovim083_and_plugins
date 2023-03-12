@@ -15,11 +15,11 @@ local netrw_exe = function(cmd)
     return
   end
   if cmd == 'toggle_only' then
-    toggle_netrw.toggle_only()
+    toggle_netrw.toggle('fix')
   elseif cmd == 'toggle_search_fname' then
-    toggle_netrw.toggle_search_fname()
+    toggle_netrw.toggle('cur_fname')
   elseif cmd == 'toggle_search_cwd' then
-    toggle_netrw.toggle_search_cwd()
+    toggle_netrw.toggle('cwd')
   end
 end
 
