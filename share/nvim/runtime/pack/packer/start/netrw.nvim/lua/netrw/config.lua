@@ -17,13 +17,13 @@ local o = {buffer = true}
 
 local mapclear_buffer = function()
 
-  p(d, {'n', 'v'}, '<RightMouse>', o)
-  p(d, 'n', '<2-LeftMouse>', o)
-  p(d, 'n', '<C-LeftMouse>', o)
+  -- p(d, {'n', 'v'}, '<RightMouse>', o)
+  -- p(d, 'n', '<2-LeftMouse>', o)
+  -- p(d, 'n', '<C-LeftMouse>', o)
   -- p(d, 'n', '<LeftMouse>', o)
-  p(d, 'n', '<MiddleMouse>', o)
-  p(d, 'n', '<S-LeftDrag>', o)
-  p(d, 'n', '<S-LeftMouse>', o)
+  -- p(d, 'n', '<MiddleMouse>', o)
+  -- p(d, 'n', '<S-LeftDrag>', o)
+  -- p(d, 'n', '<S-LeftMouse>', o)
 
   p(d, 'n', 'mA', o)
   p(d, 'n', 'mB', o)
@@ -51,11 +51,11 @@ local mapclear_buffer = function()
   p(d, 'n', '%', o)
   p(d, 'n', '-', o)
   p(d, 'n', '<C-H>', o)
-  p(d, 'n', '<C-L>', o)
+  -- p(d, 'n', '<C-L>', o)
   p(d, 'n', '<C-R>', o)
   -- p(d, 'n', '<CR>', o)
   p(d, 'n', '<F1>', o)
-  p(d, 'n', '<S-CR>', o)
+  -- p(d, 'n', '<S-CR>', o)
   p(d, 'n', '<S-Down>', o)
   p(d, 'n', '<S-Up>', o)
   p(d, 'n', 'C', o)
@@ -118,13 +118,14 @@ function M.setup(options)
         return
       end
 
+      mapclear_buffer()
+
       if vim.b.netrw_liststyle == 2 then
         return
       end
 
       local bufnr = vim.api.nvim_get_current_buf()
       require'netrw.ui'.embelish(bufnr)
-      mapclear_buffer()
       require'netrw.actions'.bind(bufnr)
     end,
     group = vim.api.nvim_create_augroup("netrw", {clear = false}),

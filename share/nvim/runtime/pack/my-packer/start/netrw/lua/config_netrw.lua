@@ -22,7 +22,7 @@ end
 netrw.setup{
   use_devicons = true,
   mappings = {
-    ['(f9)'] = function(payload) list_style(payload) end,
-    ['(2-Leftmouse)'] = function(payload) list_style(payload) end,
+    -- ['(cr)'] = function(payload) test(payload) end,
+    ['(2-LeftMouse)'] = function(payload) list_style(payload) end,
   },
 }
