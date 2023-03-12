@@ -15,6 +15,7 @@ end
 
 local f = vim.fn
 local c = vim.cmd
+local o = vim.opt
 
 -- local list_style = function()
 --   f['netrw#Call']("NetrwListStyle", 1)
@@ -56,11 +57,56 @@ local preview_go = function(payload)
   end
 end
 
+local is_winfix = function(payload)
+  if o.winfixheight:get() or o.winfixwidth:get() then
+    return 1
+  end
+  return nil
+end
+
+local open = function(payload, direction)
+  if payload['type'] == 0 then
+    c[[ call feedkeys("\<cr>") ]]
+    return
+  end
+  if direction == 'tab' then
+    c[[ tabnew ]]
+  else
+    if is_winfix() then
+      if f['winnr']('$') == 1 then
+        c[[ wincmd n ]]
+      else
+        local cur_winid = f['win_getid'](f['winnr']())
+        c[[ wincmd p ]]
+        if cur_winid == f['win_getid'](f['winnr']()) then
+          c[[ wincmd n ]]
+        end
+      end
+    end
+    if direction == 'up' then
+      c[[ leftabove new ]]
+    elseif direction == 'down' then
+      c[[ new ]]
+    elseif direction == 'left' then
+      c[[ leftabove vnew ]]
+    elseif direction == 'right' then
+      c[[ vnew ]]
+    end
+  end
+  c(string.format("e %s/%s", payload['dir'], payload['node']))
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
     ['(f9)'] = function(payload) test(payload) end,
     ['(tab)'] = function(payload) preview(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
+    ['do'] = function(payload) open(payload, 'here') end,
+    ['dk'] = function(payload) open(payload, 'up') end,
+    ['dj'] = function(payload) open(payload, 'down') end,
+    ['dh'] = function(payload) open(payload, 'left') end,
+    ['dl'] = function(payload) open(payload, 'right') end,
+    ['di'] = function(payload) open(payload, 'tab') end,
   },
 }
