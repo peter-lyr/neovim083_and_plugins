@@ -21,8 +21,14 @@ M.bind = function(bufnr)
   for k, _ in pairs(config.options.mappings) do
     local r = string.gsub(k, '%(', '<')
     local r = string.gsub(r, '%)', '>')
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', r, ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'v', r, ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
+    local mouse = ''
+    if r == "<leftmouse>" then
+      mouse = '<leftmouse>'
+    elseif r == "<rightmouse>" then
+      mouse = '<rightmouse>'
+    end
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', r, mouse .. ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'v', r, mouse .. ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
   end
 end
 

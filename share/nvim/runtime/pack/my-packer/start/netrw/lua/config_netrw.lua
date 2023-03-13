@@ -35,6 +35,13 @@ local is_cur_dir = function(payload)
   return nil
 end
 
+local get_fname = function(payload)
+  if payload['type'] == 1 then
+    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+  end
+  return ''
+end
+
 local preview = function(payload)
   if not payload or vim.b.netrw_liststyle == 2 then
     return nil
@@ -42,9 +49,12 @@ local preview = function(payload)
   if is_cur_dir() then
     return nil
   end
+  local fname = get_fname(payload)
   if payload['type'] == 1 then
-    f['netrw#Call']("NetrwPreview", f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1))
-    return 1
+    if f['filereadable'](fname) then
+      f['netrw#Call']("NetrwPreview", fname)
+      return 1
+    end
   else
     c[[ call feedkeys("\<cr>") ]]
   end
@@ -65,13 +75,6 @@ local is_winfix = function(payload)
 end
 
 local toggle_netrw = require('toggle_netrw')
-
-local get_fname = function(payload)
-  if payload['type'] == 1 then
-    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
-  end
-  return ''
-end
 
 local open = function(payload, direction)
   if payload['type'] == 0 then
@@ -120,6 +123,7 @@ netrw.setup{
   mappings = {
     ['(f1)'] = function(payload) test(payload) end,
     ['(tab)'] = function(payload) preview(payload) end,
+    ['(leftmouse)'] = function(payload) preview(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
     ['do'] = function(payload) open(payload, 'here') end,
     ['dk'] = function(payload) open(payload, 'up') end,
