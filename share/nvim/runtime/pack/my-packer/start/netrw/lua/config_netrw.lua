@@ -22,13 +22,6 @@ end
 --   f['netrw#Call']("NetrwListStyle", 1)
 -- end
 
-local is_cur_dir = function(payload)
-  if f['line']('.') > 1 and string.sub(f['getline'](f['line']('.')-1), 1, 3) == '../' then
-    return 1
-  end
-  return nil
-end
-
 local get_fname = function(payload)
   if payload['type'] == 1 then
     return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
