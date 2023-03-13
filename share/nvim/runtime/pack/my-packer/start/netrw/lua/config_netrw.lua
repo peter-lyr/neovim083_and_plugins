@@ -66,11 +66,19 @@ end
 
 local toggle_netrw = require('toggle_netrw')
 
+local get_fname = function(payload)
+  if payload['type'] == 1 then
+    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+  end
+  return ''
+end
+
 local open = function(payload, direction)
   if payload['type'] == 0 then
     c[[ call feedkeys("\<cr>") ]]
     return
   end
+  local fname = get_fname(payload)
   if direction == 'tab' then
     c[[ tabnew ]]
   else
@@ -104,7 +112,7 @@ local open = function(payload, direction)
       c[[ vnew ]]
     end
   end
-  c(string.format("e %s/%s", payload['dir'], payload['node']))
+  c(string.format("e %s", fname))
 end
 
 netrw.setup{
