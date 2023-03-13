@@ -46,6 +46,9 @@ local preview = function(payload)
   if not payload or vim.b.netrw_liststyle == 2 then
     return nil
   end
+  if o.ft:get() ~= 'netrw' then
+    return nil
+  end
   if is_cur_dir() then
     return nil
   end
