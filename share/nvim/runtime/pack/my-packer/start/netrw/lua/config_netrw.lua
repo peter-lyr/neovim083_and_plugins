@@ -39,7 +39,7 @@ local preview = function(payload)
   if not payload or vim.b.netrw_liststyle == 2 then
     return nil
   end
-  if is_up_dir() or is_cur_dir() then
+  if is_cur_dir() then
     return nil
   end
   if payload['type'] == 1 then
