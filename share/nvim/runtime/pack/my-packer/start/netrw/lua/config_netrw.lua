@@ -4,6 +4,10 @@ if not sta then
   return
 end
 
+local f = vim.fn
+local c = vim.cmd
+local o = vim.opt
+
 local test = function(payload)
   -- - dir: the current netrw directory (vim.b.netrw_curdir)
   -- - node: the name of the file or directory under the cursor
@@ -12,10 +16,6 @@ local test = function(payload)
   -- - type: the type of node under the cursor (0 = dir, 1 = file, 2 = symlink)
   print(vim.inspect(payload))
 end
-
-local f = vim.fn
-local c = vim.cmd
-local o = vim.opt
 
 -- local list_style = function()
 --   f['netrw#Call']("NetrwListStyle", 1)
@@ -110,7 +110,7 @@ end
 netrw.setup{
   use_devicons = true,
   mappings = {
-    ['(f9)'] = function(payload) test(payload) end,
+    ['(f1)'] = function(payload) test(payload) end,
     ['(tab)'] = function(payload) preview(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
     ['do'] = function(payload) open(payload, 'here') end,

@@ -33,7 +33,9 @@ local g = vim.g
 g.netrw_mousemaps = 0
 -- g.netrw_liststyle = 3
 g.netrw_sizestyle = "H"
-
+g.netrw_preview = 1
+g.netrw_alto = 0
+g.netrw_winsize = 120
 
 s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = true})
 s({'n', 'v'}, '<leader>L', function() netrw_exe("fix_unfix") end, {silent = true})
