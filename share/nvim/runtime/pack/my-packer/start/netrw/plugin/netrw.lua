@@ -14,7 +14,9 @@ local netrw_exe = function(cmd)
     print('no toggle_netrw')
     return
   end
-  if cmd == 'toggle_fix' then
+  if cmd == 'fix_unfix' then
+    toggle_netrw.fix_unfix('cwd')
+  elseif cmd == 'toggle_fix' then
     toggle_netrw.toggle('fix')
   elseif cmd == 'toggle_search_fname' then
     toggle_netrw.toggle('cur_fname')
@@ -34,5 +36,6 @@ g.netrw_sizestyle = "H"
 
 
 s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = true})
+s({'n', 'v'}, '<leader>L', function() netrw_exe("fix_unfix") end, {silent = true})
 s({'n', 'v'}, '<leader>;', function() netrw_exe("toggle_search_fname") end, {silent = true})
 s({'n', 'v'}, '<leader>\'', function() netrw_exe("toggle_search_cwd") end, {silent = true})

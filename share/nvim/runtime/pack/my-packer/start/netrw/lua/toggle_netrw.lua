@@ -152,7 +152,7 @@ function M.toggle(mode)
               a.nvim_win_set_height(0, 12)
             end
             if o.winfixwidth:get() then
-              a.nvim_win_set_width(0, 36)
+              M.netrw_fix_set_width()
             end
           end
         else
@@ -181,6 +181,52 @@ function M.toggle(mode)
     else
       c'Ntree'
     end
+  end
+end
+
+function M.netrw_fix_set_width()
+  local max_width = o.columns:get()
+  local max_width = max_width / 2
+  local columns = 0
+  res = 0
+  if string.sub(f['getline'](1), 1, 3) == '../' then
+    start = 1
+  else
+    start = 8
+  end
+  for i=start, f['line']('$') do
+    local width = f['strwidth'](f['getline'](i))
+    if width >= max_width - 4 then
+      res = max_width
+      break
+    end
+    if width >= columns then
+      columns = width
+    end
+  end
+  res = math.max(columns + 4, 24)
+  a['nvim_win_set_width'](0, res)
+end
+
+function M.fix_unfix(mode)
+  local netrw_winids = M.get_netrw_winids()
+  if not netrw_winids then
+    M.toggle(mode)
+  end
+  local netrw_winids = M.get_netrw_winids()
+  local cur_winid = f['win_getid']()
+  cur_winid_idx = index_of(netrw_winids, cur_winid)
+  if not cur_winid_idx then
+    f['win_gotoid'](netrw_winids[1])
+  end
+  if is_winfix() then
+    M.netrw_fix_set_width()
+    o.winfixwidth = false
+    o.winfixheight = false
+  else
+    o.winfixwidth = true
+    c'wincmd H'
+    M.netrw_fix_set_width()
   end
 end
 
