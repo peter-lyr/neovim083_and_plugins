@@ -121,6 +121,10 @@ local open = function(payload, direction)
   c(string.format("e %s", fname))
 end
 
+local updir = function()
+  c[[ call feedkeys("-") ]]
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -128,6 +132,7 @@ netrw.setup{
     ['(tab)'] = function(payload) preview(payload) end,
     ['(leftmouse)'] = function(payload) preview(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
+    ['q'] = function(payload) updir() end,
     ['do'] = function(payload) open(payload, 'here') end,
     ['dk'] = function(payload) open(payload, 'up') end,
     ['dj'] = function(payload) open(payload, 'down') end,
