@@ -7,6 +7,7 @@ end
 local f = vim.fn
 local c = vim.cmd
 local o = vim.opt
+local a = vim.api
 
 local test = function(payload)
   -- - dir: the current netrw directory (vim.b.netrw_curdir)
@@ -89,10 +90,10 @@ local open = function(payload, direction)
     c[[ tabnew ]]
   else
     if is_winfix() then
+      local cur_winid = f['win_getid']()
       if f['winnr']('$') == 1 then
         c[[ wincmd n ]]
       else
-        local cur_winid = f['win_getid']()
         c[[ wincmd p ]]
         local netrw_winids = toggle_netrw.get_netrw_winids()
         toggle_netrw.update_netrw_winids_fix(netrw_winids)
@@ -107,6 +108,7 @@ local open = function(payload, direction)
           end
         end
       end
+      a.nvim_win_set_width(cur_winid, 0)
     end
     if direction == 'up' then
       c[[ leftabove new ]]
@@ -133,6 +135,7 @@ netrw.setup{
     ['(leftmouse)'] = function(payload) preview(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
     ['q'] = function(payload) updir() end,
+    ['o'] = function(payload) open(payload, 'here') end,
     ['do'] = function(payload) open(payload, 'here') end,
     ['dk'] = function(payload) open(payload, 'up') end,
     ['dj'] = function(payload) open(payload, 'down') end,
