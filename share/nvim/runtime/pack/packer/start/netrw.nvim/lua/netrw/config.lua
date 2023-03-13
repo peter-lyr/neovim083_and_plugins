@@ -120,6 +120,9 @@ function M.setup(options)
 
       mapclear_buffer()
 
+      vim.opt.number = true
+      vim.opt.relativenumber = true
+
       if vim.b.netrw_liststyle == 2 then
         return
       end

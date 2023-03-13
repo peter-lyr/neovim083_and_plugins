@@ -193,7 +193,7 @@ function M.netrw_fix_set_width()
       end
     end
   end
-  res = math.max(res + 4, 24)
+  res = math.max(res + 7, 24)
   a['nvim_win_set_width'](0, res)
 end
 
