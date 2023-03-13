@@ -5,7 +5,7 @@ local c = vim.cmd
 local o = vim.opt
 local a = vim.api
 
-M.split = 'up'
+M.split = 'right'
 M.step = 1
 
 function M._show_array(arr)
