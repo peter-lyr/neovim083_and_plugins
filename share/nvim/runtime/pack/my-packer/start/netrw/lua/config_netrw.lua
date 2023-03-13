@@ -22,13 +22,6 @@ end
 --   f['netrw#Call']("NetrwListStyle", 1)
 -- end
 
-local is_up_dir = function()
-  if string.sub(f['getline'](f['line']('.')), 1, 3) == '../' then
-    return 1
-  end
-  return nil
-end
-
 local is_cur_dir = function(payload)
   if f['line']('.') > 1 and string.sub(f['getline'](f['line']('.')-1), 1, 3) == '../' then
     return 1
@@ -48,9 +41,6 @@ local preview = function(payload)
     return nil
   end
   if o.ft:get() ~= 'netrw' then
-    return nil
-  end
-  if is_cur_dir() then
     return nil
   end
   local fname = get_fname(payload)
