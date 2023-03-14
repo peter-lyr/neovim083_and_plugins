@@ -85,8 +85,8 @@ local preview_go = function(payload)
   end
 end
 
-local is_winfix = function(payload)
-  if o.winfixheight:get() or o.winfixwidth:get() then
+local is_winfixwidth = function(payload)
+  if o.winfixwidth:get() then
     return 1
   end
   return nil
@@ -103,7 +103,7 @@ local open = function(payload, direction)
   if direction == 'tab' then
     c[[ tabnew ]]
   else
-    if is_winfix() then
+    if is_winfixwidth() then
       local cur_winid = f['win_getid']()
       if f['winnr']('$') == 1 then
         c[[ wincmd n ]]
