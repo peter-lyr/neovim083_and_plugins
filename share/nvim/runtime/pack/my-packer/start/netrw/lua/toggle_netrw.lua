@@ -88,6 +88,7 @@ function M.get_fname()
 end
 
 function M.toggle(mode)
+  local fname = M.get_fname()
   new_unfix = nil
   local netrw_winids = M.get_netrw_winids()
   if netrw_winids then
@@ -167,7 +168,9 @@ function M.toggle(mode)
     end
     if mode == 'cur_fname' then
       c(string.format('Ntree %s', M.get_dname()))
-      f['search'](M.get_fname())
+      if fname ~= '' then
+        f['search'](fname)
+      end
     elseif mode == 'cwd' then
       c(string.format('Ntree %s', f['getcwd']()))
     else
@@ -192,6 +195,7 @@ function M.netrw_fix_set_width()
 end
 
 function M.fix_unfix(mode)
+  local fname = M.get_fname()
   local netrw_winids = M.get_netrw_winids()
   if not netrw_winids then
     M.toggle(mode)
@@ -210,6 +214,9 @@ function M.fix_unfix(mode)
     o.winfixwidth = true
     c'wincmd H'
     M.netrw_fix_set_width()
+    if fname ~= '' then
+      f['search'](fname)
+    end
   end
 end
 
