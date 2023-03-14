@@ -25,15 +25,35 @@ local get_fname = function(payload)
   return ''
 end
 
+local Path = require "plenary.path"
+
+local get_dtarget = function(payload)
+  local dname = get_dname(payload)
+  if #dname > 0 then
+    local dname = string.gsub(dname, '\\', '/')
+    return dname
+  end
+  local fname = get_fname(payload)
+  local fname = string.gsub(fname, '\\', '/')
+  local path = Path:new(fname)
+  if path:is_file() then
+    local fname = path:parent()['filename']
+    local fname = string.gsub(fname, '\\', '/')
+    return fname .. '/'
+  end
+  return ''
+end
+
 local test = function(payload)
   -- - dir: the current netrw directory (vim.b.netrw_curdir)
   -- - node: the name of the file or directory under the cursor
   -- - link: the referenced file if the node under the cursor is a symlink
   -- - extension: the file extension if the node under the cursor is a file
   -- - type: the type of node under the cursor (0 = dir, 1 = file, 2 = symlink)
-  print(vim.inspect(payload))
-  -- print('->', get_fname(payload))
-  -- print('->', get_dname(payload))
+  -- print(vim.inspect(payload))
+  print('fname:', get_fname(payload))
+  print('dname:', get_dname(payload))
+  print('dtarg:', get_dtarget(payload))
 end
 
 -- local list_style = function()
