@@ -117,9 +117,6 @@ function M.toggle(mode)
             cur_winid_idx_fix = 1
           end
           if back_fix then
-            if o.winfixheight:get() then
-              a.nvim_win_set_height(0, 0)
-            end
             if o.winfixwidth:get() then
               a.nvim_win_set_width(0, 0)
             end
@@ -143,9 +140,6 @@ function M.toggle(mode)
               a.nvim_win_set_width(v, 0)
             end
             f['win_gotoid'](M.netrw_winids_fix[cur_winid_idx_fix])
-            if o.winfixheight:get() then
-              a.nvim_win_set_height(0, 12)
-            end
             if o.winfixwidth:get() then
               if f['win_screenpos'](0)[1] > 2 then
                 c'wincmd H'
