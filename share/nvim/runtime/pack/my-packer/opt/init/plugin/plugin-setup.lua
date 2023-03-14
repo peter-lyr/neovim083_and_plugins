@@ -37,6 +37,8 @@ local plugins = function(use)
 
   use("dstein64/vim-startuptime")
 
+  use("nvim-tree/nvim-tree.lua")
+
 end
 
 return packer.startup(function(use)
