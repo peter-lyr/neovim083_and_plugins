@@ -84,8 +84,8 @@ local preview = function(payload)
   if o.ft:get() ~= 'netrw' then
     return nil
   end
-  local fname = get_fname(payload)
   if payload['type'] == 1 then
+    local fname = get_fname(payload)
     if f['filereadable'](fname) then
       f['netrw#Call']("NetrwPreview", fname)
       return 1
