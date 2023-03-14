@@ -160,17 +160,25 @@ end
 
 local copy_fname = function(payload)
   if payload['type'] == 0 then
-    c(string.format([[let @+ = "%s"]], get_fname_tail(get_dname(payload))))
+    local dname = get_fname_tail(get_dname(payload))
+    c(string.format([[let @+ = "%s"]], dname))
+    print(dname)
   else
-    c(string.format([[let @+ = "%s"]], get_fname_tail(get_fname(payload))))
+    local fname = get_fname_tail(get_fname(payload))
+    c(string.format([[let @+ = "%s"]], fname))
+    print(fname)
   end
 end
 
 local copy_fname_full = function(payload)
   if payload['type'] == 0 then
-    c(string.format([[let @+ = "%s"]], get_dname(payload)))
+    local dname = get_dname(payload)
+    c(string.format([[let @+ = "%s"]], dname))
+    print(dname)
   else
-    c(string.format([[let @+ = "%s"]], get_fname(payload)))
+    local fname = get_fname(payload)
+    c(string.format([[let @+ = "%s"]], fname))
+    print(fname)
   end
 end
 
