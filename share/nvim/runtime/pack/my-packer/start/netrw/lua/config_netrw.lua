@@ -216,7 +216,15 @@ local chg_dir = function(payload)
 end
 
 local explorer = function(payload)
-  c(string.format("!cd %s && start .", get_dtarget(payload)))
+  f['system'](string.format("cd %s && start .", get_dtarget(payload)))
+end
+
+local system_start = function(payload)
+  if payload['type'] == 1 then
+    f['system'](string.format("%s", get_fname(payload)))
+  else
+    f['system'](string.format("start %s", get_dname(payload)))
+  end
 end
 
 netrw.setup{
@@ -239,5 +247,6 @@ netrw.setup{
     ['gy'] = function(payload) copy_fname_full(payload) end,
     ['cd'] = function(payload) chg_dir(payload) end,
     ['X'] = function(payload) explorer(payload) end,
+    ['x'] = function(payload) system_start(payload) end,
   },
 }
