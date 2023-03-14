@@ -9,6 +9,22 @@ local c = vim.cmd
 local o = vim.opt
 local a = vim.api
 
+local get_dname = function(payload)
+  f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+  if payload['type'] == 0 then
+    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+  end
+  return ''
+end
+
+local get_fname = function(payload)
+  f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+  if payload['type'] == 1 then
+    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+  end
+  return ''
+end
+
 local test = function(payload)
   -- - dir: the current netrw directory (vim.b.netrw_curdir)
   -- - node: the name of the file or directory under the cursor
@@ -16,18 +32,13 @@ local test = function(payload)
   -- - extension: the file extension if the node under the cursor is a file
   -- - type: the type of node under the cursor (0 = dir, 1 = file, 2 = symlink)
   print(vim.inspect(payload))
+  -- print('->', get_fname(payload))
+  -- print('->', get_dname(payload))
 end
 
 -- local list_style = function()
 --   f['netrw#Call']("NetrwListStyle", 1)
 -- end
-
-local get_fname = function(payload)
-  if payload['type'] == 1 then
-    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
-  end
-  return ''
-end
 
 local preview = function(payload)
   if not payload or vim.b.netrw_liststyle == 2 then
