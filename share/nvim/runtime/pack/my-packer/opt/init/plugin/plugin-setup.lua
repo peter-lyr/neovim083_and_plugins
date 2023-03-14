@@ -39,6 +39,8 @@ local plugins = function(use)
 
   use("nvim-tree/nvim-tree.lua")
 
+  use("preservim/nerdcommenter")
+
 end
 
 return packer.startup(function(use)
