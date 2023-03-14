@@ -211,6 +211,11 @@ local preview_file = function(payload)
   end
 end
 
+local chg_dir = function(payload)
+  c(string.format("cd %s", get_dtarget(payload)))
+  print(f['getcwd']())
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -229,5 +234,6 @@ netrw.setup{
     ['di'] = function(payload) open(payload, 'tab') end,
     ['y'] = function(payload) copy_fname(payload) end,
     ['gy'] = function(payload) copy_fname_full(payload) end,
+    ['cd'] = function(payload) chg_dir(payload) end,
   },
 }
