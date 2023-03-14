@@ -189,7 +189,6 @@ local toggle_dir = function(payload)
   if o.ft:get() ~= 'netrw' then
     return nil
   end
-  local fname = get_fname(payload)
   if payload['type'] == 0 then
     c[[ call feedkeys("\<cr>") ]]
   end
@@ -216,6 +215,10 @@ local chg_dir = function(payload)
   print(f['getcwd']())
 end
 
+local explorer = function(payload)
+  c(string.format("!cd %s && start .", get_dtarget(payload)))
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -235,5 +238,6 @@ netrw.setup{
     ['y'] = function(payload) copy_fname(payload) end,
     ['gy'] = function(payload) copy_fname_full(payload) end,
     ['cd'] = function(payload) chg_dir(payload) end,
+    ['X'] = function(payload) explorer(payload) end,
   },
 }
