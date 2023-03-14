@@ -11,4 +11,5 @@
 **/packer/start/vim-misc
 **/packer/start/vim-session
 **/packer/start/vim-startuptime
+**/packer/start/nvim-tree.lua
 *.lnk
