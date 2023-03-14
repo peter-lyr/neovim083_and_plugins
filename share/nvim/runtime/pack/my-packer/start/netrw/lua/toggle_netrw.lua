@@ -77,7 +77,7 @@ function M.get_dname()
   return ''
 end
 
-function M.get_fname()
+function M.get_fname_tail()
   local fname = string.gsub(a['nvim_buf_get_name'](0), "\\", '/')
   local path = Path:new(fname)
   if path:is_file() then
@@ -88,7 +88,7 @@ function M.get_fname()
 end
 
 function M.toggle(mode)
-  local fname = M.get_fname()
+  local fname = M.get_fname_tail()
   new_unfix = nil
   local netrw_winids = M.get_netrw_winids()
   if netrw_winids then
@@ -198,7 +198,7 @@ function M.netrw_fix_set_width()
 end
 
 function M.fix_unfix(mode)
-  local fname = M.get_fname()
+  local fname = M.get_fname_tail()
   local netrw_winids = M.get_netrw_winids()
   if not netrw_winids then
     M.toggle(mode)

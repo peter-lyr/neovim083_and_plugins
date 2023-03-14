@@ -27,6 +27,23 @@ end
 
 local Path = require "plenary.path"
 
+local get_fname_tail = function(fname)
+  local fname = string.gsub(fname, "\\", '/')
+  local path = Path:new(fname)
+  if path:is_file() then
+    local fname = path:_split()
+    return fname[#fname]
+  elseif path:is_dir() then
+    local fname = path:_split()
+    if #fname[#fname] > 0 then
+      return fname[#fname]
+    else
+      return fname[#fname-1]
+    end
+  end
+  return ''
+end
+
 local get_dtarget = function(payload)
   local dname = get_dname(payload)
   if #dname > 0 then
@@ -141,6 +158,22 @@ local updir = function()
   c[[ call feedkeys("-") ]]
 end
 
+local copy_fname = function(payload)
+  if payload['type'] == 0 then
+    c(string.format([[let @+ = "%s"]], get_fname_tail(get_dname(payload))))
+  else
+    c(string.format([[let @+ = "%s"]], get_fname_tail(get_fname(payload))))
+  end
+end
+
+local copy_fname_full = function(payload)
+  if payload['type'] == 0 then
+    c(string.format([[let @+ = "%s"]], get_dname(payload)))
+  else
+    c(string.format([[let @+ = "%s"]], get_fname(payload)))
+  end
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -156,5 +189,7 @@ netrw.setup{
     ['dh'] = function(payload) open(payload, 'left') end,
     ['dl'] = function(payload) open(payload, 'right') end,
     ['di'] = function(payload) open(payload, 'tab') end,
+    ['y'] = function(payload) copy_fname(payload) end,
+    ['gy'] = function(payload) copy_fname_full(payload) end,
   },
 }
