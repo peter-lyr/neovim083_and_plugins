@@ -174,12 +174,36 @@ local copy_fname_full = function(payload)
   end
 end
 
+local toggle_dir = function(payload)
+  if payload['type'] == 0 then
+    c[[ call feedkeys("\<cr>") ]]
+  end
+end
+
+local preview_file = function(payload)
+  if not payload or vim.b.netrw_liststyle == 2 then
+    return nil
+  end
+  if o.ft:get() ~= 'netrw' then
+    return nil
+  end
+  local fname = get_fname(payload)
+  if payload['type'] == 1 then
+    if f['filereadable'](fname) then
+      f['netrw#Call']("NetrwPreview", fname)
+      return 1
+    end
+  end
+  return nil
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
     ['(f1)'] = function(payload) test(payload) end,
     ['(tab)'] = function(payload) preview(payload) end,
-    ['(leftmouse)'] = function(payload) preview(payload) end,
+    ['(leftmouse)'] = function(payload) toggle_dir(payload) end,
+    ['(2-leftmouse)'] = function(payload) preview_file(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
     ['q'] = function(payload) updir() end,
     ['o'] = function(payload) open(payload, 'here') end,
