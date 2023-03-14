@@ -41,6 +41,8 @@ local plugins = function(use)
 
   use("preservim/nerdcommenter")
 
+  use("jghauser/mkdir.nvim")
+
 end
 
 return packer.startup(function(use)
