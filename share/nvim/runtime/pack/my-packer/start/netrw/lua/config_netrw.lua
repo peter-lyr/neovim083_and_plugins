@@ -175,6 +175,13 @@ local copy_fname_full = function(payload)
 end
 
 local toggle_dir = function(payload)
+  if not payload or vim.b.netrw_liststyle == 2 then
+    return nil
+  end
+  if o.ft:get() ~= 'netrw' then
+    return nil
+  end
+  local fname = get_fname(payload)
   if payload['type'] == 0 then
     c[[ call feedkeys("\<cr>") ]]
   end
@@ -194,7 +201,6 @@ local preview_file = function(payload)
       return 1
     end
   end
-  return nil
 end
 
 netrw.setup{

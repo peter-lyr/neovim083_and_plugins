@@ -9,6 +9,10 @@ M.TYPE_SYMLINK = 2
 ---@param line string
 ---@return Word|nil
 M.get_node = function(line)
+  if vim.opt.filetype:get() ~= 'netrw' then
+    return nil
+  end
+
   if string.find(line, '^"') then
     return nil
   end
