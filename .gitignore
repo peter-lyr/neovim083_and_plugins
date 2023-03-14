@@ -1,15 +1,5 @@
 .git-nvim-win64-083
 **/packer/opt
-**/packer/start/awesome-vim-colorschemes
-**/packer/start/nightfox.nvim
-**/packer/start/nvim-web-devicons
-**/packer/start/packer.nvim
-**/packer/start/plenary.nvim
-**/packer/start/telescope.nvim
-**/packer/start/tokyonight.nvim
-**/packer/start/vim-auto-save
-**/packer/start/vim-misc
-**/packer/start/vim-session
-**/packer/start/vim-startuptime
-**/packer/start/nvim-tree.lua
+**/packer/start/*
+!**/packer/start/netrw.nvim
 *.lnk
