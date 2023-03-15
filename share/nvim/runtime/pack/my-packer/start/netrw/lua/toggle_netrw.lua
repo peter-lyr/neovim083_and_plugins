@@ -213,10 +213,12 @@ function M.fix_unfix(mode)
     M.netrw_fix_set_width()
     o.winfixwidth = false
     o.winfixheight = false
+    print('netrw not fix')
   else
     o.winfixwidth = true
     c'wincmd H'
     M.netrw_fix_set_width()
+    print('netrw fixed')
   end
 end
 
