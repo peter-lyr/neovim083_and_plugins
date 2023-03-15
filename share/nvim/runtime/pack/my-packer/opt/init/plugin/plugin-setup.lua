@@ -1,3 +1,6 @@
+local en = 0
+if en then
+else
 local fn = vim.fn
 
 local ensure_packer = function()
@@ -67,3 +70,4 @@ return packer.startup(function(use)
     print('sync done!')
   end
 end)
+end
