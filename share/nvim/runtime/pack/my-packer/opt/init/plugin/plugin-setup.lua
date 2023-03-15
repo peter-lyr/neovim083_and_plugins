@@ -47,6 +47,10 @@ local plugins = function(use)
 
   use("bitc/vim-bad-whitespace")
 
+  use("lewis6991/gitsigns.nvim")
+  use("tpope/vim-fugitive")
+  use("sindrets/diffview.nvim")
+
 end
 
 return packer.startup(function(use)
