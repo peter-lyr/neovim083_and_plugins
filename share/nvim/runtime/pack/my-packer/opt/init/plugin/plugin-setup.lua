@@ -48,7 +48,7 @@ local plugins = function(use)
 
   use("windwp/nvim-autopairs")
 
-  use("bitc/vim-bad-whitespace")
+  use({"bitc/vim-bad-whitespace", opt = true})
 
   use("lewis6991/gitsigns.nvim")
   use({"tpope/vim-fugitive", opt = true})
