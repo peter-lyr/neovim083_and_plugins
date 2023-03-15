@@ -1,6 +1,7 @@
+local g = vim.g
+local f = vim.fn
 local c = vim.cmd
 local s = vim.keymap.set
-local f = vim.fn
 
 local session_exe = function(cmd, mode)
   if not vim.g.loaded_config_session then
@@ -27,3 +28,9 @@ s({'n', 'v'}, '\\Ss', function() session_exe("SaveSession! ", 1) end, {silent = 
 s({'n', 'v'}, '\\St', function() session_exe("SaveTabSession! ", 1) end, {silent = true})
 s({'n', 'v'}, '\\SS', function() session_exe("OpenSession! ", 1) end, {silent = true})
 s({'n', 'v'}, '\\ST', function() session_exe("OpenTabSession! ", 1) end, {silent = true})
+
+g.auto_save = 1
+g.auto_save_silent = 1
+g.auto_save_events = {'InsertLeave', 'TextChanged', 'TextChangedI', 'CursorHold', 'CursorHoldI', 'CompleteDone'}
+g.session_autoload = 'no'
+g.session_autosave = 'yes'

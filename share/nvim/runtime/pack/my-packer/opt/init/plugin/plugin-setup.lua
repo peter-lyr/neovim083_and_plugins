@@ -38,7 +38,7 @@ local plugins = function(use)
 
   use({ 'nvim-telescope/telescope.nvim', branch = '0.1.x', opt = true })
 
-  use("dstein64/vim-startuptime")
+  use({"dstein64/vim-startuptime", opt = true})
 
   use("nvim-tree/nvim-tree.lua")
 
