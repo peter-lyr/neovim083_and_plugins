@@ -42,7 +42,7 @@ local plugins = function(use)
 
   use("nvim-tree/nvim-tree.lua")
 
-  use("preservim/nerdcommenter")
+  use({"preservim/nerdcommenter", opt = true})
 
   use("jghauser/mkdir.nvim")
 
