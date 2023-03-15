@@ -36,7 +36,7 @@ local plugins = function(use)
   use('EdenEast/nightfox.nvim')
   use('folke/tokyonight.nvim')
 
-  use({ 'nvim-telescope/telescope.nvim', branch = '0.1.x' })
+  use({ 'nvim-telescope/telescope.nvim', branch = '0.1.x', opt = true })
 
   use("dstein64/vim-startuptime")
 
