@@ -51,7 +51,7 @@ local plugins = function(use)
   use("bitc/vim-bad-whitespace")
 
   use("lewis6991/gitsigns.nvim")
-  use("tpope/vim-fugitive")
+  use({"tpope/vim-fugitive", opt = true})
   use({"sindrets/diffview.nvim", opt = true})
 
   use("kyazdani42/nvim-web-devicons")
