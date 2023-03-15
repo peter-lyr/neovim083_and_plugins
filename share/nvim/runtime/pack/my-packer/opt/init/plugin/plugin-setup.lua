@@ -43,6 +43,8 @@ local plugins = function(use)
 
   use("jghauser/mkdir.nvim")
 
+  use("windwp/nvim-autopairs")
+
 end
 
 return packer.startup(function(use)
