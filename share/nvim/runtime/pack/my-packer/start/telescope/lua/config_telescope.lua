@@ -67,7 +67,7 @@ if not sta then
   return
 end
 project_nvim.setup({
-  manual_mode = true,
+  manual_mode = false,
   datapath = vim.fn.expand("$VIMRUNTIME") .. "\\my-nvim-data",
   patterns = {
     ".cache",

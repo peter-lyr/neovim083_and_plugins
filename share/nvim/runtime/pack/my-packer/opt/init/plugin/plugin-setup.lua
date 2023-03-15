@@ -56,6 +56,8 @@ local plugins = function(use)
 
   use("kyazdani42/nvim-web-devicons")
 
+  use("ahmedkhalf/project.nvim")
+
 end
 
 return packer.startup(function(use)
