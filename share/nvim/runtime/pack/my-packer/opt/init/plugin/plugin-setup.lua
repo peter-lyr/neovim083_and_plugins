@@ -51,6 +51,8 @@ local plugins = function(use)
   use("tpope/vim-fugitive")
   use("sindrets/diffview.nvim")
 
+  use("kyazdani42/nvim-web-devicons")
+
 end
 
 return packer.startup(function(use)
