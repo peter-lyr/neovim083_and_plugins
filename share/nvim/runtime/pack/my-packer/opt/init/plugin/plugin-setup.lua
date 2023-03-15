@@ -1,6 +1,6 @@
-local en = 0
-if en then
-else
+-- local en = 0
+-- if en then
+-- else
 local fn = vim.fn
 
 local ensure_packer = function()
@@ -30,7 +30,7 @@ local plugins = function(use)
 
   use('907th/vim-auto-save')
   use('xolox/vim-misc')
-  use('xolox/vim-session')
+  use({'xolox/vim-session', opt = true})
 
   use('rafi/awesome-vim-colorschemes')
   use('EdenEast/nightfox.nvim')
@@ -70,4 +70,4 @@ return packer.startup(function(use)
     print('sync done!')
   end
 end)
-end
+-- end
