@@ -45,6 +45,8 @@ local plugins = function(use)
 
   use("windwp/nvim-autopairs")
 
+  use("bitc/vim-bad-whitespace")
+
 end
 
 return packer.startup(function(use)
