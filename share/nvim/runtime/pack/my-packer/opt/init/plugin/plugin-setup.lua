@@ -52,7 +52,7 @@ local plugins = function(use)
 
   use("lewis6991/gitsigns.nvim")
   use("tpope/vim-fugitive")
-  use("sindrets/diffview.nvim")
+  use({"sindrets/diffview.nvim", opt = true})
 
   use("kyazdani42/nvim-web-devicons")
 
