@@ -227,6 +227,10 @@ local system_start = function(payload)
   end
 end
 
+local hide = function(payload)
+  f['netrw#Call']("NetrwHide", 1)
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -248,5 +252,7 @@ netrw.setup{
     ['cd'] = function(payload) chg_dir(payload) end,
     ['X'] = function(payload) explorer(payload) end,
     ['x'] = function(payload) system_start(payload) end,
+    ['A'] = function(payload) hide(payload) end,
+    ['a'] = function(payload) open(payload, 'here') end,
   },
 }
