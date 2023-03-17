@@ -66,9 +66,14 @@ if not sta then
   print('no projects')
   return
 end
+local f = vim.fn
+local datapath = f['expand']("$VIMRUNTIME") .. "\\my-neovim-data"
+if f['filereadable'](datapath) == 0 then
+  os.execute('cd ' .. f['expand']("$VIMRUNTIME") .. ' && md my-neovim-data')
+end
 project_nvim.setup({
   manual_mode = false,
-  datapath = vim.fn.expand("$VIMRUNTIME") .. "\\my-nvim-data",
+  datapath = datapath,
   patterns = {
     ".cache",
     "build",
