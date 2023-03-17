@@ -235,6 +235,86 @@ local go_dir = function(payload)
   c(string.format("Ntree %s", get_dtarget(payload)))
 end
 
+local unfold_all = function(payload)
+  local lnr = 0
+  while 1 do
+    if lnr == f['line']('$') then
+      break
+    end
+    lnr = lnr + 1
+    local line = f['getline'](lnr)
+    if string.sub(line, 1, 1) == '"' or string.sub(line, 1, 2) == './' then
+      goto continue
+    end
+    if string.sub(line, 1, 3) == '../' then
+      lnr = lnr + 1
+      goto continue
+    end
+    if string.sub(line, #line, #line) == '/' then
+      local unfold = false
+      if lnr == f['line']('$') then
+        unfold = true
+      end
+      if unfold == false then
+        local hase_space = string.match(line, '(%s+)')
+        if not hase_space then
+          goto continue
+        else
+          local _, space_cnt = string.find(line, '(%s+)')
+          local line_down = f['getline'](lnr + 1)
+          local _, space_cnt_down = string.find(line_down, '(%s+)')
+          if space_cnt >= space_cnt_down then
+            unfold = true
+          end
+        end
+      end
+      if unfold then
+        c(string.format('norm %dgg', lnr))
+        f['netrw#LocalBrowseCheck'](get_dname({ type = 0}))
+      end
+    end
+    ::continue::
+  end
+end
+
+local fold_all = function(payload)
+  local lnr = 0
+  while 1 do
+    if lnr == f['line']('$') then
+      break
+    end
+    lnr = lnr + 1
+    local line = f['getline'](lnr)
+    if string.sub(line, 1, 1) == '"' or string.sub(line, 1, 2) == './' then
+      goto continue
+    end
+    if string.sub(line, 1, 3) == '../' then
+      lnr = lnr + 1
+      goto continue
+    end
+    if string.sub(line, #line, #line) == '/' then
+      if lnr == f['line']('$') then
+        return
+      end
+      local hase_space = string.match(line, '(%s+)')
+      if not hase_space then
+        goto continue
+      else
+        local _, space_cnt = string.find(line, '(%s+)')
+        if space_cnt == 2 then
+          local line_down = f['getline'](lnr + 1)
+          local _, space_cnt_down = string.find(line_down, '(%s+)')
+          if space_cnt_down == 4 then
+            c(string.format('norm %dgg', lnr))
+            f['netrw#LocalBrowseCheck'](f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1))
+          end
+        end
+      end
+    end
+    ::continue::
+  end
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -259,5 +339,7 @@ netrw.setup{
     ['A'] = function(payload) hide(payload) end,
     ['a'] = function(payload) open(payload, 'here') end,
     ['O'] = function(payload) go_dir(payload) end,
+    ['E'] = function(payload) unfold_all(payload) end,
+    ['W'] = function(payload) fold_all(payload) end,
   },
 }

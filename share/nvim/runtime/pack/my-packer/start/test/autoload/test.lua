@@ -1,5 +1,7 @@
 local f = vim.fn
+local s = vim.keymap.set
 local a = vim.api
+local c = vim.cmd
 
 
 -- for k, v in pairs(f['getbufvar'](f['winbufnr'](i), '&')) do
