@@ -2,14 +2,14 @@ local s = vim.keymap.set
 
 s('v', 'm', '<esc>')
 
-s({ 'i', 'c', }, 'lq', '<esc><esc>')
-s({ 'i', 'c', }, 'Lq', '<esc><esc>')
-s({ 'i', 'c', }, 'lQ', '<esc><esc>')
-s({ 'i', 'c', }, 'LQ', '<esc><esc>')
-s('t', 'lq', '<c-\\><c-n>')
-s('t', 'Lq', '<c-\\><c-n>')
-s('t', 'lQ', '<c-\\><c-n>')
-s('t', 'LQ', '<c-\\><c-n>')
+s({ 'i', 'c', }, 'ql', '<esc><esc>')
+s({ 'i', 'c', }, 'qL', '<esc><esc>')
+s({ 'i', 'c', }, 'Ql', '<esc><esc>')
+s({ 'i', 'c', }, 'QL', '<esc><esc>')
+s('t', 'ql', '<c-\\><c-n>')
+s('t', 'qL', '<c-\\><c-n>')
+s('t', 'Ql', '<c-\\><c-n>')
+s('t', 'QL', '<c-\\><c-n>')
 
 s({ 'i', 'c' }, '<a-m>', '<esc><esc>')
 s('t', '<esc>', '<c-\\><c-n>')
