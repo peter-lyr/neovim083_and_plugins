@@ -35,6 +35,7 @@ function M.do_bufferswitch(cmd)
   local bnr = f['bufnr']()
   local untitled_bufnrs = get_untitled_bufnrs()
   if not untitled_bufnrs then
+    c'ec no untitled'
     return
   end
   local fname = a['nvim_buf_get_name'](0)
