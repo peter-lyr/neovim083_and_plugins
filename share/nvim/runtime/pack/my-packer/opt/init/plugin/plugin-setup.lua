@@ -58,6 +58,8 @@ local plugins = function(use)
 
   use("ahmedkhalf/project.nvim")
 
+  use("lukas-reineke/indent-blankline.nvim")
+
 end
 
 return packer.startup(function(use)

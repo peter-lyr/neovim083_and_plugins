@@ -560,7 +560,7 @@ call s:NetrwInit("s:netrw_map_escape","<|\n\r\\\<C-V>\"")
 if has("gui_running") && (&enc == 'utf-8' || &enc == 'utf-16' || &enc == 'ucs-4')
  let s:treedepthstring= "│ "
 else
- let s:treedepthstring= "| "
+ let s:treedepthstring= "  "
 endif
 call s:NetrwInit("s:netrw_posn",'{}')
 
