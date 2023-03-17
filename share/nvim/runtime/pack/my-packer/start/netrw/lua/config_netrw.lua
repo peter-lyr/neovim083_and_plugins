@@ -231,6 +231,10 @@ local hide = function(payload)
   f['netrw#Call']("NetrwHide", 1)
 end
 
+local go_dir = function(payload)
+  c(string.format("Ntree %s", get_dtarget(payload)))
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -254,5 +258,6 @@ netrw.setup{
     ['x'] = function(payload) system_start(payload) end,
     ['A'] = function(payload) hide(payload) end,
     ['a'] = function(payload) open(payload, 'here') end,
+    ['O'] = function(payload) go_dir(payload) end,
   },
 }
