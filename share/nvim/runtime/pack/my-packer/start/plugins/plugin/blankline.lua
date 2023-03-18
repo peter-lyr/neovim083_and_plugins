@@ -8,6 +8,10 @@ if not g.indent_blankline_loaded then
     callback = function()
       a.nvim_del_autocmd(g.indent_blankline_cursormoved)
       local sta, _ = pcall(c, 'packadd indent-blankline.nvim')
+      if not sta then
+        print("no indent_blankline")
+        return
+      end
       local sta, indent_blankline = pcall(require, 'indent_blankline')
       if not sta then
         print("no indent_blankline")
