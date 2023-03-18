@@ -60,7 +60,7 @@ local plugins = function(use)
 
   use("lukas-reineke/indent-blankline.nvim")
 
-  use("tpope/vim-surround")
+  use({"tpope/vim-surround", opt = true})
 
 end
 
