@@ -57,6 +57,7 @@ local plugins = function(use)
   use("kyazdani42/nvim-web-devicons")
 
   use("ahmedkhalf/project.nvim")
+  use("dbakker/vim-projectroot")
 
   use("lukas-reineke/indent-blankline.nvim")
 

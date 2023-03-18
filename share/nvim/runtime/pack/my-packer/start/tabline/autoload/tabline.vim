@@ -5,14 +5,14 @@ fu tabline#get_fname(n)
   if len(trim(bufname)) == 0
     return '[No Name]'
   endif
-  let bufname = substitute(bufname, '\', '/', 'g')
-  let res = split(bufname, ':')[0][0] .'\'
   try
-    let res .= join(split(bufname, '/')[-3:-2], '/')
+    let project = projectroot#get(bufname)
   catch
-    let res .= split(bufname, '/')[-2]
+    let project = bufname
   endtry
-  return res
+  let project = substitute(project, '\', '/', 'g')
+  let project = split(project, '/')[-1]
+  return project
 endfu
 
 fu tabline#tabline()
