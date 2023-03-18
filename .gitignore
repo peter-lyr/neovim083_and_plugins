@@ -1,5 +1,6 @@
 .git-nvim-win64-083
-**/my-neovim-data
+**/my-neovim-data/*
+!**/my-neovim-data/treesitter-parser
 **/packer/opt
 **/packer/start/*
 !**/packer/start/netrw.nvim
