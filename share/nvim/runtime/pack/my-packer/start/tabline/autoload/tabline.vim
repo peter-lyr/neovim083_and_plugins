@@ -11,8 +11,11 @@ fu tabline#get_fname(n)
     let project = bufname
   endtry
   let project = substitute(project, '\', '/', 'g')
-  let project = split(project, '/')[-1]
-  return project
+  let project = split(project, '/')
+  if len(project) > 0
+    return project[-1]
+  endif
+  return '-'
 endfu
 
 fu tabline#tabline()
