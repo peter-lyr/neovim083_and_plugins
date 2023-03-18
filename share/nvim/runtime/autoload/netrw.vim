@@ -6362,7 +6362,7 @@ fun! s:TreeSqueezeDir(islocal)
    " its a tree-listing style
    let curdepth = substitute(getline('.'),'^\(\%('.s:treedepthstring.'\)*\)[^'.s:treedepthstring.'].\{-}$','\1','e')
    let stopline = (exists("w:netrw_bannercnt")? (w:netrw_bannercnt + 1) : 1)
-   let depth    = strchars(substitute(curdepth,' ','','g'))
+   let depth    = strchars(curdepth) / 2
    let srch     = -1
 "   call Decho("curdepth<".curdepth.'>','~'.expand("<slnum>"))
 "   call Decho("depth   =".depth,'~'.expand("<slnum>"))
