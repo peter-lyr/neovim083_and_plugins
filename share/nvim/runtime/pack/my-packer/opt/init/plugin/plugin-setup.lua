@@ -60,6 +60,8 @@ local plugins = function(use)
 
   use("lukas-reineke/indent-blankline.nvim")
 
+  use("tpope/vim-surround")
+
 end
 
 return packer.startup(function(use)
