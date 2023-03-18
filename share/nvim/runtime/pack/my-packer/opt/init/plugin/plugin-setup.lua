@@ -63,6 +63,8 @@ local plugins = function(use)
 
   use({"tpope/vim-surround", opt = true})
 
+  use({"phaazon/hop.nvim", branch = 'v2', opt = true})
+
 end
 
 return packer.startup(function(use)
