@@ -1,10 +1,11 @@
 local s = vim.keymap.set
 local c = vim.cmd
+local g = vim.g
 
 
 local telescope_exe = function(cmd)
   if not vim.g.loaded_config_telescope then
-    vim.g.loaded_config_telescope = 1
+    g.loaded_config_telescope = 1
     local sta, _ = pcall(c, 'packadd telescope.nvim')
     if not sta then
       print('no config_telescope')
@@ -16,7 +17,12 @@ local telescope_exe = function(cmd)
       return
     end
   end
-  vim.cmd('Telescope ' .. cmd)
+  c(string.format([[
+  try
+    Telescope %s
+  catch
+    echomsg "no %s"
+  endtry]], cmd, cmd))
 end
 
 
