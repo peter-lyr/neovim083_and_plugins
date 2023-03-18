@@ -9,11 +9,13 @@ for /f "delims=" %%t in ('git status -s') do (
 if defined res (
   git status
 ) else (
+  timeout /t 3
   exit /b
 )
 set var=
 set /p var=commit info (Add all and push): 
 if not defined var (
+  timeout /t 3
   exit /b
 )
 set var2=
@@ -26,4 +28,4 @@ if not defined var2 (
   git commit -m "%var%"
   git push
 )
-pause
+timeout /t 3
