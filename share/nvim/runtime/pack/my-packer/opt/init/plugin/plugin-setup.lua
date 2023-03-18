@@ -67,6 +67,8 @@ local plugins = function(use)
 
   use("stevearc/aerial.nvim")
 
+  use("luochen1990/rainbow")
+
 end
 
 return packer.startup(function(use)
