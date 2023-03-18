@@ -65,6 +65,8 @@ local plugins = function(use)
 
   use({"phaazon/hop.nvim", branch = 'v2', opt = true})
 
+  use("stevearc/aerial.nvim")
+
 end
 
 return packer.startup(function(use)
