@@ -3,7 +3,7 @@ fu tabline#get_fname(n)
   let winnr = tabpagewinnr(a:n)
   let bufname = nvim_buf_get_name(buflist[winnr-1])
   if len(trim(bufname)) == 0
-    return '[No Name]'
+    return '+'
   endif
   try
     let project = projectroot#get(bufname)
@@ -24,7 +24,8 @@ fu tabline#tabline()
       let s ..= '%#TabLine#'
     endif
     let s ..= '%' .. (i + 1) .. 'T'
-    let s ..= ' %{tabline#get_fname(' .. (i + 1) .. ')} '
+    let s ..= string(i+1)
+    let s ..= ')%{tabline#get_fname(' .. (i + 1) .. ')} '
   endfor
   let s ..= '%#TabLineFill#%T'
   if tabpagenr('$') > 1
