@@ -59,7 +59,7 @@ local plugins = function(use)
   use("ahmedkhalf/project.nvim")
   use("dbakker/vim-projectroot")
 
-  use("lukas-reineke/indent-blankline.nvim")
+  use({"lukas-reineke/indent-blankline.nvim", opt = true})
 
   use({"tpope/vim-surround", opt = true})
 
