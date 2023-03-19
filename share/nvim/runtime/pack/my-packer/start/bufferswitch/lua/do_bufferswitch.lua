@@ -3,12 +3,13 @@ local M = {}
 local f = vim.fn
 local c = vim.cmd
 local a = vim.api
+local o = vim.opt
 
 local get_untitled_bufnrs = function()
   local untitled_bufnrs = {}
   for k, v in pairs(f['getbufinfo']()) do
     local fname = v['name']
-    if #fname == 0 then
+    if #fname == 0 and o.buftype:get() ~= 'nofile' then
       table.insert(untitled_bufnrs, v['bufnr'])
     end
   end
@@ -35,7 +36,7 @@ function M.do_bufferswitch(cmd)
   local bnr = f['bufnr']()
   local untitled_bufnrs = get_untitled_bufnrs()
   if not untitled_bufnrs then
-    c'ec no untitled'
+    c'ec "no untitled(exclude scratch)"'
     return
   end
   local fname = a['nvim_buf_get_name'](0)
