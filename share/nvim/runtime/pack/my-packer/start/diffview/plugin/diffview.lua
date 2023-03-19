@@ -14,10 +14,13 @@ local diffview_exe = function(cmd)
       print('no diffview.nvim')
       return
     end
+    sta, do_diffview = pcall(require, 'do_diffview')
+    if not sta then
+      print('no do_diffview')
+      return
+    end
   end
-  local sta, do_diffview = pcall(require, 'do_diffview')
-  if not sta then
-    print('no do_diffview')
+  if not do_diffview then
     return
   end
   if cmd == 'filehistory' then

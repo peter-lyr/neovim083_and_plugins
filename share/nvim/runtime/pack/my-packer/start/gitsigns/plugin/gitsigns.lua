@@ -1,15 +1,18 @@
 local gitsigns_exe = function(cmd, refresh)
   if not vim.g.loaded_config_gitsigns then
     vim.g.loaded_config_gitsigns = 1
-    local sta, config_gitsigns = pcall(require, 'config_gitsigns')
+    sta, _ = pcall(require, 'config_gitsigns')
     if not sta then
       print('no config_gitsigns')
       return
     end
+    sta, do_gitsigns = pcall(require, 'do_gitsigns')
+    if not sta then
+      print('no do_gitsigns')
+      return
+    end
   end
-  local sta, do_gitsigns = pcall(require, 'do_gitsigns')
-  if not sta then
-    print('no do_gitsigns')
+  if not do_gitsigns then
     return
   end
   do_gitsigns.cmd(cmd, refresh)

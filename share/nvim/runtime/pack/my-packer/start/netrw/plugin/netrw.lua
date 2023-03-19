@@ -3,15 +3,18 @@
 local netrw_exe = function(cmd)
   if not vim.g.loaded_config_netrw then
     vim.g.loaded_config_netrw = 1
-    local sta, config_netrw = pcall(require, 'config_netrw')
+    local sta, _ = pcall(require, 'config_netrw')
     if not sta then
       print('no config_netrw')
       return
     end
+    sta, toggle_netrw = pcall(require, 'toggle_netrw')
+    if not sta then
+      print('no toggle_netrw')
+      return
+    end
   end
-  local sta, toggle_netrw = pcall(require, 'toggle_netrw')
-  if not sta then
-    print('no toggle_netrw')
+  if not toggle_netrw then
     return
   end
   if cmd == 'fix_unfix' then

@@ -12,6 +12,9 @@ local gitpush_exe = function(cmd)
       return
     end
   end
+  if not do_gitpush then
+    return
+  end
   if cmd == 'add_commit_push' then
     do_gitpush.add_commit_push()
   end

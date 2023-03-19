@@ -10,6 +10,9 @@ local buffernew_exe = function(cmd)
       return
     end
   end
+  if not do_buffernew then
+    return
+  end
   if cmd == 'copy_fpath' then
     do_buffernew.copy_fpath()
   else

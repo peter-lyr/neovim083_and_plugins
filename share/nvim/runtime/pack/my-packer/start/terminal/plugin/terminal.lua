@@ -2,9 +2,15 @@ local s = vim.keymap.set
 
 
 local terminal_exe = function(cmd)
-  local sta, toggle_terminal = pcall(require, 'toggle_terminal')
-  if not sta then
-    print('no toggle_terminal')
+  if not g.loaded_toggle_terminal then
+    g.loaded_toggle_terminal = 1
+    sta, toggle_terminal = pcall(require, 'toggle_terminal')
+    if not sta then
+      print('no toggle_terminal')
+      return
+    end
+  end
+  if not toggle_terminal then
     return
   end
   toggle_terminal.toggle_terminal(cmd)
