@@ -27,7 +27,6 @@ end
 
 M.update_title_string = function()
   local title = get_fname_tail(f['getcwd']())
-  print(title, '90000000000')
   if #title > 0 then
     o.titlestring = title
   end
