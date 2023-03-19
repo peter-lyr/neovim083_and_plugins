@@ -18,4 +18,4 @@ local c = vim.cmd
 --   local bnr = f['winbufnr'](i)
 --   local fname = a['nvim_buf_get_name'](bnr)
 --   local fname = string.gsub(fname, '\\', '/')
--- end
+-- ed
