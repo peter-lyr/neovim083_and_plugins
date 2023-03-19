@@ -5,3 +5,4 @@
 **/packer/start/*
 !**/packer/start/netrw.nvim
 *.lnk
+.vim-bookmarks

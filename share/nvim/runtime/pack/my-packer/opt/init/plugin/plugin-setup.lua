@@ -71,6 +71,9 @@ local plugins = function(use)
   use({"p00f/nvim-ts-rainbow", opt = true})
   use({"nvim-treesitter/nvim-treesitter-context", opt = true})
 
+  use({"MattesGroeger/vim-bookmarks", opt = true})
+  use("tom-anders/telescope-vim-bookmarks.nvim")
+
 end
 
 return packer.startup(function(use)

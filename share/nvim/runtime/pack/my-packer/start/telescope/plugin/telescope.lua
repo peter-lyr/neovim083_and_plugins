@@ -6,6 +6,13 @@ local g = vim.g
 local telescope_exe = function(cmd)
   if not vim.g.loaded_config_telescope then
     g.loaded_config_telescope = 1
+    local sta, _ = pcall(c, 'packadd vim-bookmarks')
+    if not sta then
+      print("no vim-bookmarks")
+    else
+      g.bookmark_save_per_working_dir = 1
+      g.bookmark_auto_save = 1
+    end
     local sta, _ = pcall(c, 'packadd telescope.nvim')
     if not sta then
       print('no config_telescope')
