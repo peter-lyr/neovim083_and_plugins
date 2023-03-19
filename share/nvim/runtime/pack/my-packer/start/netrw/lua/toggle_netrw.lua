@@ -87,7 +87,25 @@ function M.get_fname_tail()
   return ''
 end
 
+local open_netrw = function()
+  if o.modified:get() == false and (a['nvim_buf_get_name'](0) == '' or (o.ft:get() == '' and f['filereadable'](a['nvim_buf_get_name'](0)) == false)) then
+    return
+  end
+  if M.split == 'up' then
+    c'leftabove split'
+  elseif M.split == 'right' then
+    c'rightbelow vsplit'
+  elseif M.split == 'down' then
+    c'rightbelow split'
+  elseif M.split == 'left' then
+    c'leftabove vsplit'
+  end
+end
+
 function M.toggle(mode)
+  if o.diff:get() then
+    return
+  end
   local fname = M.get_fname_tail()
   new_unfix = nil
   local netrw_winids = M.get_netrw_winids()
@@ -160,30 +178,26 @@ function M.toggle(mode)
     new_unfix = 1
   end
   if new_unfix then
-    if M.split == 'up' then
-      c'leftabove split'
-    elseif M.split == 'right' then
-      c'rightbelow vsplit'
-    elseif M.split == 'down' then
-      c'rightbelow split'
-    elseif M.split == 'left' then
-      c'leftabove vsplit'
-    end
     local fullname = a['nvim_buf_get_name'](0)
     if mode == 'cur_fname' then
       local dname = M.get_dname()
       if fullname == '' or dname ~= '' then
+        open_netrw()
         c(string.format('Ntree %s', dname))
         if fname ~= '' then
           f['search'](fname)
         end
       else
-        c'hide'
-        print(string.format("not exists: %s", fname))
+        local fname = string.gsub(fullname, "\\", '/')
+        local path = Path:new(fname)
+        local fname = path:_split()
+        c(string.format([[ec "not exists: %s"]], fname[#fname]))
       end
     elseif mode == 'cwd' then
+      open_netrw()
       c(string.format('Ntree %s', f['getcwd']()))
     else
+      open_netrw()
       c'Ntree'
     end
   end
