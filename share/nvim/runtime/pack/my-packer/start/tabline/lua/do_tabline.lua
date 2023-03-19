@@ -1,0 +1,36 @@
+local M = {}
+
+local o = vim.opt
+local f = vim.fn
+
+local get_fname_tail = function(fname)
+  local fname = string.gsub(fname, "\\", '/')
+  local sta, path = pcall(require, "plenary.path")
+  if not sta then
+    print('tabline_show no plenary.path')
+    return ''
+  end
+  local path = path:new(fname)
+  if path:is_file() then
+    local fname = path:_split()
+    return fname[#fname]
+  elseif path:is_dir() then
+    local fname = path:_split()
+    if #fname[#fname] > 0 then
+      return fname[#fname]
+    else
+      return fname[#fname-1]
+    end
+  end
+  return ''
+end
+
+M.update_title_string = function()
+  local title = get_fname_tail(f['getcwd']())
+  print(title, '90000000000')
+  if #title > 0 then
+    o.titlestring = title
+  end
+end
+
+return M
