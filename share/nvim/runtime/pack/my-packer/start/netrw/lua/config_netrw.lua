@@ -123,7 +123,7 @@ local open = function(payload, direction)
     if is_winfixwidth() then
       local cur_winid = f['win_getid']()
       if f['winnr']('$') == 1 then
-        c[[ wincmd n ]]
+        c[[ wincmd v ]]
       else
         c[[ wincmd p ]]
         local netrw_winids = toggle_netrw.get_netrw_winids()
