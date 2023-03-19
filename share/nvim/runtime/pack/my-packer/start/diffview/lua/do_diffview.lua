@@ -27,7 +27,11 @@ function M.open()
 end
 
 function M.quit()
+  local tabpagenr = f['tabpagenr']()
   c'DiffviewClose'
+  if tabpagenr > 1 then
+    c(string.format([[norm %dgt]], tabpagenr - 1))
+  end
 end
 
 return M
