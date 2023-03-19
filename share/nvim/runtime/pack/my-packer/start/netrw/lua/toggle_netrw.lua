@@ -169,10 +169,17 @@ function M.toggle(mode)
     elseif M.split == 'left' then
       c'leftabove vsplit'
     end
+    local fullname = a['nvim_buf_get_name'](0)
     if mode == 'cur_fname' then
-      c(string.format('Ntree %s', M.get_dname()))
-      if fname ~= '' then
-        f['search'](fname)
+      local dname = M.get_dname()
+      if fullname == '' or dname ~= '' then
+        c(string.format('Ntree %s', dname))
+        if fname ~= '' then
+          f['search'](fname)
+        end
+      else
+        c'hide'
+        print(string.format("not exists: %s", fname))
       end
     elseif mode == 'cwd' then
       c(string.format('Ntree %s', f['getcwd']()))
