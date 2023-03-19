@@ -15,10 +15,13 @@ local gitpush_exe = function(cmd)
   if not do_gitpush then
     return
   end
-  if cmd == 'add_commit_push' then
-    do_gitpush.add_commit_push()
-  end
+  do_gitpush.do_gitpush(cmd)
 end
 
 
 s({'n', 'v'}, '<leader>g1', function() gitpush_exe("add_commit_push") end, {silent = true})
+s({'n', 'v'}, '<leader>g2', function() gitpush_exe("commit_push") end, {silent = true})
+s({'n', 'v'}, '<leader>g3', function() gitpush_exe("just_push") end, {silent = true})
+s({'n', 'v'}, '<leader>g4', function() gitpush_exe("add_commit") end, {silent = true})
+s({'n', 'v'}, '<leader>g5', function() gitpush_exe("just_commit") end, {silent = true})
+s({'n', 'v'}, '<leader>gI', function() gitpush_exe("git_init") end, {silent = true})
