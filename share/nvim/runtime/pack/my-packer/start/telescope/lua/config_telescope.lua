@@ -90,3 +90,10 @@ if not sta then
   print('no vim_bookmarks')
   return
 end
+
+
+local sta, _ = pcall(telescope.load_extension, "ui-select")
+if not sta then
+  print('no ui-select')
+  return
+end

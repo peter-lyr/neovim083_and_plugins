@@ -74,6 +74,8 @@ local plugins = function(use)
   use({"MattesGroeger/vim-bookmarks", opt = true})
   use("tom-anders/telescope-vim-bookmarks.nvim")
 
+	use("nvim-telescope/telescope-ui-select.nvim")
+
 end
 
 return packer.startup(function(use)

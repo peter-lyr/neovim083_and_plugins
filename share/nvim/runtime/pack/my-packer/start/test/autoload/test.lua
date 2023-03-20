@@ -18,4 +18,11 @@ local c = vim.cmd
 --   local bnr = f['winbufnr'](i)
 --   local fname = a['nvim_buf_get_name'](bnr)
 --   local fname = string.gsub(fname, '\\', '/')
--- ed
+-- end
+
+
+local l = { 'tabs', 'spaces' }
+
+vim.ui.select(l, { prompt = 'prompt' }, function(choice, idx)
+  print(choice, idx)
+end)
