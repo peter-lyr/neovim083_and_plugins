@@ -1,4 +1,5 @@
 local s = vim.keymap.set
+local g = vim.g
 
 local bufferclean_exe = function()
   if not g.loaded_do_bufferclean then
