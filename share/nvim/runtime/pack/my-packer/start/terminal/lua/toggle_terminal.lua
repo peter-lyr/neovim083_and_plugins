@@ -71,7 +71,6 @@ function index_of(arr, val)
 end
 
 function M.toggle_terminal(terminal)
-  print(terminal)
   local fname = a['nvim_buf_get_name'](0)
   local bnr = f['bufnr']()
   local terminal_bufnrs = get_terminal_bufnrs(terminal)
