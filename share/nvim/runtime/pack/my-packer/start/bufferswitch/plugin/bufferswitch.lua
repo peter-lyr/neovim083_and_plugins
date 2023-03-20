@@ -1,4 +1,5 @@
 local s = vim.keymap.set
+local g = vim.g
 
 
 local bufferswitch_exe = function(cmd)
