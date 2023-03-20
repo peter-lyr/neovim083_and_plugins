@@ -1,7 +1,7 @@
 local o = vim.opt
 
 local tab_width = function()
-  if o.filetype == 'c' or o.filetype == 'cpp' then
+  if o.filetype:get() == 'c' or o.filetype:get() == 'cpp' then
     o.tabstop = 4
     o.softtabstop = 4
     o.shiftwidth = 4
