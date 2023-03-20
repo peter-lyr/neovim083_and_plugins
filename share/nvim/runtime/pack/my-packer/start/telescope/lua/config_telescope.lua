@@ -61,7 +61,7 @@ if not sta then
   print('no project_nvim')
   return
 end
-local sta, projects = pcall(telescope.load_extension, "projects")
+local sta, _ = pcall(telescope.load_extension, "projects")
 if not sta then
   print('no projects')
   return
@@ -85,7 +85,7 @@ project_nvim.setup({
 })
 
 
-local sta, vim_bookmarks = pcall(telescope.load_extension, "vim_bookmarks")
+local sta, _ = pcall(telescope.load_extension, "vim_bookmarks")
 if not sta then
   print('no vim_bookmarks')
   return
