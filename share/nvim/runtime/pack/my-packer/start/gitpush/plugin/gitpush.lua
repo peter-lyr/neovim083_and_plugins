@@ -4,14 +4,15 @@ local s = vim.keymap.set
 g.gitpush_lua = vim.fn['expand']('<sfile>')
 
 local gitpush_exe = function(cmd)
-  if not g.loaded_do_gitpush then
+  -- if not g.loaded_do_gitpush then
     g.loaded_do_gitpush = 1
+    do_gitpush = nil
     sta, do_gitpush = pcall(require, 'do_gitpush')
     if not sta then
       print('no do_gitpush')
       return
     end
-  end
+  -- end
   if not do_gitpush then
     return
   end
