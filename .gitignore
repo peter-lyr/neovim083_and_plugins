@@ -4,5 +4,6 @@
 **/packer/opt
 **/packer/start/*
 !**/packer/start/netrw.nvim
+!**/packer/start/plenary.nvim
 *.lnk
 .vim-bookmarks
