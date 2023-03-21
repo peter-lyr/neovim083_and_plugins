@@ -1,6 +1,6 @@
-if 1 then
-  return
-end
+-- if 1 then
+--   return
+-- end
 
 local fn = vim.fn
 
@@ -76,6 +76,10 @@ local plugins = function(use)
   use("tom-anders/telescope-vim-bookmarks.nvim")
 
 	use("nvim-telescope/telescope-ui-select.nvim")
+
+  use({"neovim/nvim-lspconfig", opt = true})
+  use("williamboman/mason.nvim")
+  use("williamboman/mason-lspconfig.nvim")
 
 end
 
