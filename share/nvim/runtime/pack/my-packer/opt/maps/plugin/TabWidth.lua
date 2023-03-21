@@ -1,4 +1,5 @@
 local o = vim.opt
+local a = vim.api
 
 local tab_width = function()
   if o.filetype:get() == 'c' or o.filetype:get() == 'cpp' then
@@ -12,7 +13,7 @@ local tab_width = function()
   end
 end
 
-vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+a.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   -- pattern = {"*.c", "*.h"},
   callback = tab_width,
 })
