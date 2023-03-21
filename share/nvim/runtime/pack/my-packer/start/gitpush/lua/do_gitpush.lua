@@ -80,7 +80,6 @@ function M.do_gitpush(cmd)
       return
     end
     if not g.loaded_config_telescope then
-      g.loaded_config_telescope = 1
       local sta, exe_telescope = pcall(require, 'exe_telescope')
       if not sta then
         print("no exe_telescope")
