@@ -28,5 +28,6 @@ git reset
 git add .gitignore
 git commit -m ".gitignore"
 git remote add origin %remote_path%
+git branch -M "local_master"
 git push -u origin "local_master"
 timeout /t 3

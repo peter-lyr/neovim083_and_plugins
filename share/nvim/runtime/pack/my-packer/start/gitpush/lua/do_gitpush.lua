@@ -107,7 +107,7 @@ function M.do_gitpush(cmd)
         return
       end
       local remote_dname = '.git-' .. remote_dname
-      f['system'](string.format('cd %s && start cmd /c "%s %s"', Path:new(a['nvim_buf_get_name'](0)):parent()['filename'], cc, remote_dname))
+      f['system'](string.format('cd %s && start cmd /c "%s %s"', dpath, cc, remote_dname))
       local fname = dpath .. '/.gitignore'
       p3 = Path.new(fname)
       if p3:is_file() then
