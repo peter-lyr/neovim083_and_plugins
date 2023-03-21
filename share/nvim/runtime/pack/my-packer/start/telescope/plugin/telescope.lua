@@ -4,7 +4,7 @@ local g = vim.g
 
 
 local telescope_exe = function(cmd)
-  if not vim.g.loaded_config_telescope then
+  if not g.loaded_config_telescope then
     g.loaded_config_telescope = 1
     local sta, _ = pcall(c, 'packadd vim-bookmarks')
     if not sta then

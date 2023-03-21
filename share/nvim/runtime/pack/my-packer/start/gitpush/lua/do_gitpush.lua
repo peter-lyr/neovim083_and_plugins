@@ -3,6 +3,7 @@ local M = {}
 local g = vim.g
 local f = vim.fn
 local a = vim.api
+local c = vim.cmd
 
 local Path = require "plenary.path"
 local p6 = Path:new(g.gitpush_lua)
@@ -78,6 +79,15 @@ function M.do_gitpush(cmd)
       c'ec "not file"'
       return
     end
+    if not g.loaded_config_telescope then
+      g.loaded_config_telescope = 1
+      local sta, exe_telescope = pcall(require, 'exe_telescope')
+      if not sta then
+        print("no exe_telescope")
+        return
+      end
+      exe_telescope.exe_telescope('')
+    end
     local d = {}
     for i=1, 24 do
       p1 = p1:parent()
@@ -89,6 +99,9 @@ function M.do_gitpush(cmd)
       end
     end
     vim.ui.select(d, { prompt = 'git init' }, function(choice, idx)
+      if not choice then
+        return
+      end
       local dpath = choice
       local remote_dname = get_fname_tail(dpath)
       if remote_dname == '' then

@@ -1,7 +1,6 @@
 local M = {}
 
-local c = vim.cmd
-
+local g = vim.g
 local f = vim.fn
 local c = vim.cmd
 local o = vim.opt
@@ -15,19 +14,18 @@ local is_terminal = function(bufname, terminal)
     local is_ipython = m(bufname, ':ipython$')
     local is_bash = m(bufname, ':bash$')
     local is_powershell = m(bufname, ':powershell$')
+    local is_cmd = m(bufname, ':cmd$')
     if terminal == 'ipython' and is_ipython then
-      ret = true
+      return true, true
     elseif terminal == 'bash' and is_bash then
-      ret = true
+      return true, true
     elseif terminal == 'powershell' and is_powershell then
-      ret = true
-    end
-    if ret then
       return true, true
-    elseif terminal == '' and not is_powershell and not is_bash and not is_ipython then
+    elseif terminal == 'cmd' and is_cmd then
       return true, true
+    else
+      return true, false
     end
-    return true, false
   end
   return false, false
 end
@@ -71,6 +69,10 @@ function index_of(arr, val)
 end
 
 function M.toggle_terminal(terminal)
+  if g.builtin_terminal_ok == 0 then
+    c(string.format('silent !start %s', terminal))
+    return
+  end
   local fname = a['nvim_buf_get_name'](0)
   local bnr = f['bufnr']()
   local terminal_bufnrs = get_terminal_bufnrs(terminal)
