@@ -11042,7 +11042,7 @@ fun! s:LocalListing()
     let ft = strpart("000000000000000000",1,18-strlen(t)).t
 "    call Decho("exe NetrwKeepj put ='".ft.'/'.pfile."'",'~'.expand("<slnum>"))
     let ftpfile= ft.'/'.pfile
-    sil! NetrwKeepj put=ftpfile
+    sil! NetrwKeepj put=pfile "ftpfile
 
    elseif g:netrw_sort_by =~ "^s"
     " sort by size (handles file sizes up to 1 quintillion bytes, US)
@@ -11055,7 +11055,7 @@ fun! s:LocalListing()
     let fsz  = strpart("000000000000000000",1,18-strlen(sz)).sz
 "    call Decho("exe NetrwKeepj put ='".fsz.'/'.filename."'",'~'.expand("<slnum>"))
     let fszpfile= fsz.'/'.pfile
-    sil! NetrwKeepj put =fszpfile
+    sil! NetrwKeepj put =pfile "fszpfile
 
    else
     " sort by name
