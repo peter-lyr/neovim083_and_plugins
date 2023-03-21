@@ -17,7 +17,7 @@ end
 
 ---@param bufnr number
 M.bind = function(bufnr)
-  local opts = { noremap = true, silent = true }
+  local opts = { noremap = true, silent = true, nowait = true }
   for k, _ in pairs(config.options.mappings) do
     local r = string.gsub(k, '%(', '<')
     local r = string.gsub(r, '%)', '>')
