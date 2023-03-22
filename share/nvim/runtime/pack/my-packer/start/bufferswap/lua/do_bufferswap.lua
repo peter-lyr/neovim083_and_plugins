@@ -24,7 +24,7 @@ function index_of(arr, val)
 end
 
 function M.do_bufferswap(cmd)
-  local fname = a['nvim_buf_get_name'](0)
+  fname = a['nvim_buf_get_name'](0)
   if o.ft:get() == 'vim' then
     fname = string.gsub(fname, '\\', '/')
     fnames = f['split'](fname, '/')
@@ -34,8 +34,8 @@ function M.do_bufferswap(cmd)
       fnames[#fnames-1] = 'autoload'
     end
     fname = f['join'](fnames, '/')
+    c('e ' .. fname)
   end
-  c('e ' .. fname)
 end
 
 return M
