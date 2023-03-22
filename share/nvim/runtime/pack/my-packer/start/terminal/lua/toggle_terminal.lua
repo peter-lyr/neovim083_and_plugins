@@ -68,6 +68,19 @@ function index_of(arr, val)
   return nil
 end
 
+local is_hide_en = function()
+  local cnt = 0
+  for i=1, f['winnr']('$') do
+    if f['getbufvar'](f['winbufnr'](i), '&buftype') ~= 'nofile' then
+      cnt = cnt + 1
+    end
+    if cnt > 1 then
+      return true
+    end
+  end
+  return false
+end
+
 function M.toggle_terminal(terminal)
   if g.builtin_terminal_ok == 0 then
     c(string.format('silent !start %s', terminal))
@@ -79,7 +92,7 @@ function M.toggle_terminal(terminal)
   local one, certain = is_terminal(fname, terminal)
   if certain then
     if #terminal_bufnrs == 1 then
-      if f['winnr']('$') > 1 then
+      if is_hide_en() then
         c'hide'
       end
       return
@@ -87,7 +100,7 @@ function M.toggle_terminal(terminal)
     bnr_idx = index_of(terminal_bufnrs, f['bufnr']())
     bnr_idx = bnr_idx + 1
     if bnr_idx > #terminal_bufnrs then
-      if f['winnr']('$') > 1 then
+      if is_hide_en() then
         c'hide'
       end
       return

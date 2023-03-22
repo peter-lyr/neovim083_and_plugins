@@ -30,6 +30,19 @@ function index_of(arr, val)
   return nil
 end
 
+local is_hide_en = function()
+  local cnt = 0
+  for i=1, f['winnr']('$') do
+    if f['getbufvar'](f['winbufnr'](i), '&buftype') ~= 'nofile' then
+      cnt = cnt + 1
+    end
+    if cnt > 1 then
+      return true
+    end
+  end
+  return false
+end
+
 function M.do_bufferswitch(cmd)
   local fname = a['nvim_buf_get_name'](0)
   local bnr = f['bufnr']()
@@ -44,7 +57,7 @@ function M.do_bufferswitch(cmd)
     bnr_idx = index_of(untitled_bufnrs, bnr)
     bnr_idx = bnr_idx + 1
     if bnr_idx > #untitled_bufnrs then
-      if f['winnr']('$') > 1 then
+      if is_hide_en() then
         c'hide'
         return
       else

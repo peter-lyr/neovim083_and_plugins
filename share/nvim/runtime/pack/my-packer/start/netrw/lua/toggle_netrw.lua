@@ -102,6 +102,19 @@ local open_netrw = function()
   end
 end
 
+local is_hide_en = function()
+  local cnt = 0
+  for i=1, f['winnr']('$') do
+    if f['getbufvar'](f['winbufnr'](i), '&buftype') ~= 'nofile' then
+      cnt = cnt + 1
+    end
+    if cnt > 1 then
+      return true
+    end
+  end
+  return false
+end
+
 function M.toggle(mode)
   if o.diff:get() then
     return
@@ -112,7 +125,7 @@ function M.toggle(mode)
   if netrw_winids then
     M.update_netrw_winids_fix(netrw_winids)
     if #M.netrw_winids_unfix > 0 then
-      if f['winnr']('$') > 1 then
+      if is_hide_en() then
         a.nvim_win_hide(M.netrw_winids_unfix[1])
       end
     else
