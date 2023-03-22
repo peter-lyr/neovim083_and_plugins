@@ -7,10 +7,9 @@ local o = vim.opt
 
 local get_untitled_bufnrs = function()
   local untitled_bufnrs = {}
-  for k, v in pairs(f['getbufinfo']()) do
-    local fname = v['name']
-    if #fname == 0 and o.buftype:get() ~= 'nofile' then
-      table.insert(untitled_bufnrs, v['bufnr'])
+  for k, v in pairs(a['nvim_list_bufs']()) do
+    if a['nvim_buf_get_name'](v) == '' and f['getbufvar'](v, '&buftype') ~= 'nofile' then
+      table.insert(untitled_bufnrs, v)
     end
   end
   if #untitled_bufnrs == 0 then
@@ -47,8 +46,10 @@ function M.do_bufferswitch(cmd)
     if bnr_idx > #untitled_bufnrs then
       if f['winnr']('$') > 1 then
         c'hide'
+        return
+      else
+        bnr_idx = 1
       end
-      return
     end
   else
     for i=1, f['winnr']('$') do
