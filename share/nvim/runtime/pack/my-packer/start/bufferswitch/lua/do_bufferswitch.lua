@@ -39,7 +39,7 @@ function M.do_bufferswitch(cmd)
     return
   end
   local fname = a['nvim_buf_get_name'](0)
-  local bnr_idx = 1
+  bnr_idx = 1
   if #fname == 0 then
     bnr_idx = index_of(untitled_bufnrs, bnr)
     bnr_idx = bnr_idx + 1
