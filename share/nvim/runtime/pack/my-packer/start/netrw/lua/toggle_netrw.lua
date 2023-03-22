@@ -1,5 +1,6 @@
 local M = {}
 
+local g = vim.g
 local f = vim.fn
 local c = vim.cmd
 local o = vim.opt
@@ -119,6 +120,9 @@ function M.toggle(mode)
   if o.diff:get() then
     return
   end
+  if o.ft:get() ~= 'netrw' then
+    g.netrw_back_winid = f['win_getid']()
+  end
   local fname = M.get_fname_tail()
   new_unfix = nil
   local netrw_winids = M.get_netrw_winids()
@@ -154,17 +158,14 @@ function M.toggle(mode)
             end
             if #M.netrw_winids_fix > 1 then
               local netrw_winids = {}
-              for i = 1, f['winnr']('$') do
-                local bufnr = f['winbufnr'](i)
-                if f['getbufvar'](bufnr, '&filetype') ~= 'netrw' and f['getbufvar'](bufnr, '&buftype') ~= 'nofile' then
-                  f['win_gotoid'](f['win_getid'](i))
-                end
+              if f['win_gotoid'](g.netrw_back_winid) == 0 then
+                print('23423j4j')
               end
             else
               local cur_winid = f['win_getid']()
               c'wincmd p'
               if cur_winid == f['win_getid']() then
-                c'wincmd w'
+                print('23423l23l32')
               end
             end
           else

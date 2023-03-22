@@ -4,6 +4,7 @@ if not sta then
   return
 end
 
+local g = vim.g
 local f = vim.fn
 local c = vim.cmd
 local o = vim.opt
@@ -145,18 +146,8 @@ local open = function(payload, direction)
         c(string.format("e %s", fname))
         return
       else
-        c[[ wincmd p ]]
-        local netrw_winids = toggle_netrw.get_netrw_winids()
-        toggle_netrw.update_netrw_winids_fix(netrw_winids)
-        cur_winid_idx_fix = index_of(toggle_netrw.netrw_winids_fix, f['win_getid']())
-        if cur_winid_idx_fix then
-          for i = 1, f['winnr']('$') do
-            cur_winid_idx_fix = index_of(toggle_netrw.netrw_winids_fix, f['win_getid'](i))
-            if not cur_winid_idx_fix then
-              f['win_gotoid'](f['win_getid'](i))
-              break
-            end
-          end
+        if f['win_gotoid'](g.netrw_back_winid) == 0 then
+          print('23423J4J')
         end
       end
       a.nvim_win_set_width(cur_winid, 0)
