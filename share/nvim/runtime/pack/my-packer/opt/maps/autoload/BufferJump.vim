@@ -1,7 +1,7 @@
 let s:bufferjump_miximize = 1
 
-fu! BufferJump#Up()
-  wincmd k
+fu! BufferJump#Up(cnt)
+  exe string(a:cnt) . 'wincmd k'
   if s:bufferjump_miximize && &winfixheight == 0
     wincmd _
   endif
@@ -10,8 +10,8 @@ fu! BufferJump#Up()
   " endif
 endfu
 
-fu! BufferJump#Down()
-  wincmd j
+fu! BufferJump#Down(cnt)
+  exe string(a:cnt) . 'wincmd j'
   if s:bufferjump_miximize && &winfixwidth == 0
     wincmd _
   endif
@@ -20,12 +20,12 @@ fu! BufferJump#Down()
   endif
 endfu
 
-fu! BufferJump#Left()
-  wincmd h
+fu! BufferJump#Left(cnt)
+  exe string(a:cnt) . 'wincmd h'
 endfu
 
-fu! BufferJump#Right()
-  wincmd l
+fu! BufferJump#Right(cnt)
+  exe string(a:cnt) . 'wincmd l'
 endfu
 
 fu! BufferJump#Miximize(enable)
