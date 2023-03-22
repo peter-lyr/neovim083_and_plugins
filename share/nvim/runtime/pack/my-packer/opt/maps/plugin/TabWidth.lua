@@ -13,7 +13,7 @@ local tab_width = function()
   end
 end
 
-a.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+a.nvim_create_autocmd({"BufEnter"}, {
   -- pattern = {"*.c", "*.h"},
   callback = tab_width,
 })

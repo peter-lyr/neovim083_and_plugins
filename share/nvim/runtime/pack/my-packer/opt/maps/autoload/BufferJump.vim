@@ -5,9 +5,9 @@ fu! BufferJump#Up()
   if s:bufferjump_miximize && &winfixheight == 0
     wincmd _
   endif
-  if &winfixheight == 1
-    call nvim_win_set_height(0, 12)
-  endif
+  " if &winfixheight == 1
+  "   call nvim_win_set_height(0, 12)
+  " endif
 endfu
 
 fu! BufferJump#Down()
