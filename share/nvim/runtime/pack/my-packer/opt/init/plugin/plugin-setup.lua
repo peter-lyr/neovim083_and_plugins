@@ -83,6 +83,8 @@ local plugins = function(use)
 
   use('skywind3000/asyncrun.vim')
 
+  use({"dstein64/nvim-scrollview", opt = true})
+
 end
 
 return packer.startup(function(use)
