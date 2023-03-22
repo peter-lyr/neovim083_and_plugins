@@ -69,8 +69,9 @@ function M.do_bufferswitch(cmd)
     end
   else
     for i=1, f['winnr']('$') do
-      local fname = a['nvim_buf_get_name'](f['winbufnr'](i))
-      if #fname == 0 then
+      local bufnr = f['winbufnr'](i)
+      local fname = a['nvim_buf_get_name'](bufnr)
+      if #fname == 0 and f['getbufvar'](bufnr, '&buftype') ~= 'nofile' then
         f['win_gotoid'](f['win_getid'](i))
         return
       end

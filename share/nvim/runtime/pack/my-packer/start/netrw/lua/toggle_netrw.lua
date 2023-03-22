@@ -156,7 +156,7 @@ function M.toggle(mode)
               local netrw_winids = {}
               for i = 1, f['winnr']('$') do
                 local bufnr = f['winbufnr'](i)
-                if f['getbufvar'](bufnr, '&filetype') ~= 'netrw' then
+                if f['getbufvar'](bufnr, '&filetype') ~= 'netrw' and f['getbufvar'](bufnr, '&buftype') ~= 'nofile' then
                   f['win_gotoid'](f['win_getid'](i))
                 end
               end

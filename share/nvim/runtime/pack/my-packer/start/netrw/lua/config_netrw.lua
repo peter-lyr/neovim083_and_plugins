@@ -109,6 +109,19 @@ local is_winfixwidth = function(payload)
   return nil
 end
 
+local get_win_cnt_no_scratch = function()
+  local wnrs = {}
+  for i = 1, f['winnr']('$') do
+    if f['getbufvar'](f['winbufnr'](i), '&buftype') ~= 'nofile' then
+      table.insert(wnrs, i)
+    end
+  end
+  if #wnrs == 0 then
+    return nil
+  end
+  return wnrs
+end
+
 local toggle_netrw = require('toggle_netrw')
 
 local open = function(payload, direction)
@@ -122,13 +135,20 @@ local open = function(payload, direction)
   else
     if is_winfixwidth() then
       local cur_winid = f['win_getid']()
-      if f['winnr']('$') == 1 then
+      local wnrs = get_win_cnt_no_scratch()
+      if not wnrs then
+        print('2--23-23-23-423-4')
+        return
+      end
+      if #wnrs == 1 then
         c[[ wincmd v ]]
+        c(string.format("e %s", fname))
+        return
       else
         c[[ wincmd p ]]
         local netrw_winids = toggle_netrw.get_netrw_winids()
         toggle_netrw.update_netrw_winids_fix(netrw_winids)
-        cur_winid_idx_fix = index_of(toggle_netrw.netrw_winids_fix, cur_winid)
+        cur_winid_idx_fix = index_of(toggle_netrw.netrw_winids_fix, f['win_getid']())
         if cur_winid_idx_fix then
           for i = 1, f['winnr']('$') do
             cur_winid_idx_fix = index_of(toggle_netrw.netrw_winids_fix, f['win_getid'](i))
