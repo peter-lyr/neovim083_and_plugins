@@ -23,6 +23,8 @@ local telescope_exe = function(cmd)
       print('no config_telescope')
       return
     end
+    require('telescope.builtin').find_files()
+    c[[ call feedkeys("\<esc>") ]]
   end
   c(string.format([[
   try

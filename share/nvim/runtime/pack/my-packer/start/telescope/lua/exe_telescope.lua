@@ -23,6 +23,8 @@ function M.exe_telescope(cmd)
       print('no config_telescope')
       return
     end
+    require('telescope.builtin').find_files()
+    c[[ call feedkeys("\<esc>") ]]
   end
   if cmd == '' then
     return
