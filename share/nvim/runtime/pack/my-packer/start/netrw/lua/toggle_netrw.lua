@@ -178,9 +178,6 @@ function M.toggle(mode)
                 c'wincmd H'
               end
               M.netrw_fix_set_width()
-              if fname ~= '' then
-                f['search'](fname)
-              end
             end
           end
         else
