@@ -1,4 +1,7 @@
-
+local g = vim.g
+local a = vim.api
+local o = vim.opt
+local s = vim.keymap.set
 
 local netrw_exe = function(cmd)
   if not vim.g.loaded_config_netrw then
@@ -17,6 +20,7 @@ local netrw_exe = function(cmd)
   if not toggle_netrw then
     return
   end
+  g.netrw_leader_flag = 1
   if cmd == 'fix_unfix' then
     toggle_netrw.fix_unfix('cwd')
   elseif cmd == 'toggle_fix' then
@@ -26,15 +30,10 @@ local netrw_exe = function(cmd)
   elseif cmd == 'toggle_search_cwd' then
     toggle_netrw.toggle('cwd')
   end
+  g.netrw_leader_flag = 0
 end
 
-
-local s = vim.keymap.set
-local g = vim.g
-
-
 g.netrw_mousemaps = 0
--- g.netrw_liststyle = 3
 g.netrw_sizestyle = "H"
 g.netrw_preview = 1
 g.netrw_alto = 0
@@ -45,3 +44,28 @@ s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = tru
 s({'n', 'v'}, '<leader><leader>l', function() netrw_exe("fix_unfix") end, {silent = true})
 s({'n', 'v'}, '<leader>;', function() netrw_exe("toggle_search_fname") end, {silent = true})
 s({'n', 'v'}, '<leader>\'', function() netrw_exe("toggle_search_cwd") end, {silent = true})
+
+local bufenter_netrw = function()
+  if o.ft:get() == 'netrw' then
+    if g.netrw_leader_flag == 0 then
+      if o.winfixwidth:get() then
+        if not g.bufferenter_do_netrw then
+          g.bufferenter_do_netrw = 1
+          local sta, toggle_netrw = pcall(require, 'toggle_netrw')
+          if not sta then
+            print('no toggle_netrw')
+            return
+          end
+        end
+        if not toggle_netrw then
+          return
+        end
+        toggle_netrw.netrw_fix_set_width()
+      end
+    end
+  end
+end
+
+a.nvim_create_autocmd({"BufEnter"}, {
+  callback = bufenter_netrw,
+})
