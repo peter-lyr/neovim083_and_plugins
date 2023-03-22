@@ -81,6 +81,8 @@ local plugins = function(use)
   use("williamboman/mason.nvim")
   use("williamboman/mason-lspconfig.nvim")
 
+  use('skywind3000/asyncrun.vim')
+
 end
 
 return packer.startup(function(use)
