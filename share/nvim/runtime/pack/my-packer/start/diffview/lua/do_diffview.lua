@@ -28,8 +28,9 @@ end
 
 function M.quit()
   local tabpagenr = f['tabpagenr']()
+  local tabpagecnt = f['tabpagenr']('$')
   c'DiffviewClose'
-  if tabpagenr > 1 then
+  if tabpagenr > 1 and tabpagecnt > f['tabpagenr']('$') then
     c(string.format([[norm %dgt]], tabpagenr - 1))
   end
 end
