@@ -55,6 +55,9 @@ function M.do_bufferswitch(cmd)
   bnr_idx = 1
   if #fname == 0 then
     bnr_idx = index_of(untitled_bufnrs, bnr)
+    if not bnr_idx then
+      return
+    end
     bnr_idx = bnr_idx + 1
     if bnr_idx > #untitled_bufnrs then
       if is_hide_en() then
