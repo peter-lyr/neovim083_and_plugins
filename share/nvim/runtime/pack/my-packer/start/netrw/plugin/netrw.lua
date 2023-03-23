@@ -39,6 +39,7 @@ g.netrw_preview = 1
 g.netrw_alto = 0
 g.netrw_winsize = 120
 g.netrw_list_hide = "^\\..*"
+g.netrw_dirhistmax = 0
 
 s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = true})
 s({'n', 'v'}, '<leader><leader>l', function() netrw_exe("fix_unfix") end, {silent = true})
