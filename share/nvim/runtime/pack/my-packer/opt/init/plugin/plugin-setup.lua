@@ -85,6 +85,8 @@ local plugins = function(use)
 
   use({"dstein64/nvim-scrollview", opt = true})
 
+  use({'google/vim-searchindex', opt = true})
+
 end
 
 return packer.startup(function(use)
