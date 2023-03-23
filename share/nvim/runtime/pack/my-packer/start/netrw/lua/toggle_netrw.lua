@@ -6,7 +6,7 @@ local c = vim.cmd
 local o = vim.opt
 local a = vim.api
 
-M.split = 'down'
+M.split = 'left'
 M.step = 1
 
 function M._show_array(arr)
@@ -42,8 +42,8 @@ function M.get_netrw_winids()
   return nil
 end
 
-local is_winfix = function()
-  if o.winfixheight:get() or o.winfixwidth:get() then
+local is_winfixwidth = function()
+  if o.winfixwidth:get() then
     return 1
   end
   return nil
@@ -58,7 +58,7 @@ function M.update_netrw_winids_fix(netrw_winids)
   local cur_winid = f['win_getid']()
   for _, v in ipairs(netrw_winids) do
     f['win_gotoid'](v)
-    if is_winfix() then
+    if is_winfixwidth() then
       table.insert(M.netrw_winids_fix, v)
     else
       table.insert(M.netrw_winids_unfix, v)
@@ -134,7 +134,11 @@ function M.toggle(mode)
       end
     else
       if mode == 'cur_fname' or mode == 'cwd' then
-        new_unfix = 1
+        if not is_winfixwidth() then
+          new_unfix = 1
+        else
+          c[[call feedkeys("\<space>l")]]
+        end
       else
         if #M.netrw_winids_fix > 0 then
           back_fix = nil
@@ -241,10 +245,9 @@ function M.fix_unfix(mode)
   if not cur_winid_idx then
     f['win_gotoid'](netrw_winids[1])
   end
-  if is_winfix() then
+  if is_winfixwidth() then
     M.netrw_fix_set_width()
     o.winfixwidth = false
-    o.winfixheight = false
     c('ec "netrw not fixed"')
   else
     o.winfixwidth = true

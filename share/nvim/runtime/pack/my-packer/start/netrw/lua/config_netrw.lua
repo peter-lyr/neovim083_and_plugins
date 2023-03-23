@@ -123,6 +123,19 @@ local get_win_cnt_no_scratch = function()
   return wnrs
 end
 
+local is_hide_en = function()
+  local cnt = 0
+  for i=1, f['winnr']('$') do
+    if f['getbufvar'](f['winbufnr'](i), '&buftype') ~= 'nofile' then
+      cnt = cnt + 1
+    end
+    if cnt > 1 then
+      return true
+    end
+  end
+  return false
+end
+
 local toggle_netrw = require('toggle_netrw')
 
 local open = function(payload, direction)
@@ -151,6 +164,14 @@ local open = function(payload, direction)
         end
       end
       a.nvim_win_set_width(cur_winid, 0)
+    end
+    if o.ft:get() == 'netrw' then
+      if is_hide_en() then
+        c'hide'
+      end
+      if f['win_gotoid'](g.netrw_back_winid) == 0 then
+        print('99999j4j')
+      end
     end
     if direction == 'up' then
       c[[ leftabove new ]]
