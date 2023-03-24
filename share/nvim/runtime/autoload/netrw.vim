@@ -3884,6 +3884,7 @@ fun! s:NetrwBrowse(islocal,dirname)
   let svpos  = winsaveview()
   "  call Decho("saving posn to svpos<".string(svpos).">",'~'.expand("<slnum>"))
   let reusing= s:NetrwGetBuffer(a:islocal,dirname)
+  call Decho(['reusing:', reusing])
 
   " maintain markfile highlighting
   if has("syntax") && exists("g:syntax_on") && g:syntax_on
