@@ -215,6 +215,7 @@ function M.toggle(mode)
       open_netrw()
       c'Ntree'
     end
+    M.netrw_fix_set_width()
   end
 end
 
