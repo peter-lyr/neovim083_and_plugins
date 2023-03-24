@@ -1,4 +1,4 @@
-fun! Decho(msgs)
+fun! test#Decho(msgs)
   let msgs = []
   for msg in a:msgs
     let msgs += [string(msg)]
