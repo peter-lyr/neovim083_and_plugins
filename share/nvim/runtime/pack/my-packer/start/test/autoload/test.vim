@@ -1,10 +1,9 @@
-fun! test#Decho(msgs)
+fun! test#echo(msgs)
   let msgs = []
   for msg in a:msgs
-    let msgs += [string(msg)]
-    echomsg string(msg)
+    let msgs += [type(msg) == type('') ? msg : string(msg)]
   endfor
   call writefile([join(msgs, ' ')], 'C:\Users\llydr\Desktop\mm.txt', 'a')
 endfu
 
-call Decho([234, 'asdf', 872347823])
+call test#echo([234, 'asdf', 872347823])
