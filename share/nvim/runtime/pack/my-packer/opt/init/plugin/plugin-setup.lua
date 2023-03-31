@@ -87,6 +87,8 @@ local plugins = function(use)
 
   use({'google/vim-searchindex', opt = true})
 
+  use("CRAG666/code_runner.nvim")
+
 end
 
 return packer.startup(function(use)
