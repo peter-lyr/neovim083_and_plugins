@@ -302,8 +302,8 @@ local unfold_all = function(payload, start)
         unfold = true
       end
       if unfold == false then
-        local hase_space = string.match(line, '(%s+)')
-        if not hase_space then
+        local has_space = string.match(line, '(%s+)')
+        if not has_space then
           goto continue
         else
           local _, space_cnt = string.find(line, '(%s+)')
@@ -358,8 +358,8 @@ local fold_all = function(payload)
       if lnr == f['line']('$') then
         return
       end
-      local hase_space = string.match(line, '(%s+)')
-      if not hase_space then
+      local has_space = string.match(line, '(%s+)')
+      if not has_space then
         goto continue
       else
         local _, space_cnt = string.find(line, '(%s+)')
@@ -374,6 +374,24 @@ local fold_all = function(payload)
       end
     end
     ::continue::
+  end
+end
+
+local go_parent = function(payload)
+  local lnr0 = f['line']('.')
+  local line0 = f['getline'](lnr0)
+  local has_space = string.match(line0, '(%s+)')
+  if not has_space then
+    return
+  end
+  local _, space_cnt0 = string.find(line0, '(%s+)')
+  for i=lnr0-1, 1, -1 do
+    local line = f['getline'](i)
+    local _, space_cnt = string.find(line, '(%s+)')
+    if space_cnt and space_cnt < space_cnt0 then
+      c(string.format([[norm %dgg]], i))
+      return
+    end
   end
 end
 
@@ -406,5 +424,6 @@ netrw.setup{
     ['E'] = function(payload) unfold_all(payload, 1) end,
     ['D'] = function(payload) unfold_all(payload, 2) end,
     ['W'] = function(payload) fold_all(payload) end,
+    ['S'] = function(payload) go_parent(payload) end,
   },
 }
