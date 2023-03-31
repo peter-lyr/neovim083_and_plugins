@@ -4188,40 +4188,40 @@ fun! s:NetrwGetBuffer(islocal,dirname)
   "  call Decho("  s:netrwbuf         =".string(s:netrwbuf),'~'.expand("<slnum>"))
   "  call Decho("  w:netrw_liststyle  =".(exists("w:netrw_liststyle")? w:netrw_liststyle : "n/a"),'~'.expand("<slnum>"))
 
-  if exists("w:netrw_liststyle") && w:netrw_liststyle == s:TREELIST
-    let bufnum = -1
-
-    if !empty(s:netrwbuf) && has_key(s:netrwbuf,s:NetrwFullPath(dirname))
-      if has_key(s:netrwbuf,"NetrwTreeListing")
-        let bufnum= s:netrwbuf["NetrwTreeListing"]
-      else
-        let bufnum= s:netrwbuf[s:NetrwFullPath(dirname)]
-      endif
-      "    call Decho("  NetrwTreeListing: bufnum#".bufnum,'~'.expand("<slnum>"))
-      if !bufexists(bufnum)
-        call remove(s:netrwbuf,"NetrwTreeListing"])
-        let bufnum= -1
-      endif
-    elseif bufnr("NetrwTreeListing") != -1
-      let bufnum= bufnr("NetrwTreeListing")
-      "    call Decho("  NetrwTreeListing".": bufnum#".bufnum,'~'.expand("<slnum>"))
-    else
-      "    call Decho("  did not find a NetrwTreeListing buffer",'~'.expand("<slnum>"))
-      let bufnum= -1
-    endif
-
-  elseif has_key(s:netrwbuf,s:NetrwFullPath(dirname))
-    let bufnum= s:netrwbuf[s:NetrwFullPath(dirname)]
-    "   call Decho("  lookup netrwbuf dictionary: s:netrwbuf[".s:NetrwFullPath(dirname)."]=".bufnum,'~'.expand("<slnum>"))
-    if !bufexists(bufnum)
-      call remove(s:netrwbuf,s:NetrwFullPath(dirname))
-      let bufnum= -1
-    endif
-
-  else
-    "   call Decho("  lookup netrwbuf dictionary: s:netrwbuf[".s:NetrwFullPath(dirname)."] not a key",'~'.expand("<slnum>"))
-    let bufnum= -1
-  endif
+  " if exists("w:netrw_liststyle") && w:netrw_liststyle == s:TREELIST
+  "   let bufnum = -1
+  "
+  "   if !empty(s:netrwbuf) && has_key(s:netrwbuf,s:NetrwFullPath(dirname))
+  "     if has_key(s:netrwbuf,"NetrwTreeListing")
+  "       let bufnum= s:netrwbuf["NetrwTreeListing"]
+  "     else
+  "       let bufnum= s:netrwbuf[s:NetrwFullPath(dirname)]
+  "     endif
+  "     "    call Decho("  NetrwTreeListing: bufnum#".bufnum,'~'.expand("<slnum>"))
+  "     if !bufexists(bufnum)
+  "       call remove(s:netrwbuf,"NetrwTreeListing"])
+  "       let bufnum= -1
+  "     endif
+  "   elseif bufnr("NetrwTreeListing") != -1
+  "     let bufnum= bufnr("NetrwTreeListing")
+  "     "    call Decho("  NetrwTreeListing".": bufnum#".bufnum,'~'.expand("<slnum>"))
+  "   else
+  "     "    call Decho("  did not find a NetrwTreeListing buffer",'~'.expand("<slnum>"))
+  "     let bufnum= -1
+  "   endif
+  "
+  " elseif has_key(s:netrwbuf,s:NetrwFullPath(dirname))
+  "   let bufnum= s:netrwbuf[s:NetrwFullPath(dirname)]
+  "   "   call Decho("  lookup netrwbuf dictionary: s:netrwbuf[".s:NetrwFullPath(dirname)."]=".bufnum,'~'.expand("<slnum>"))
+  "   if !bufexists(bufnum)
+  "     call remove(s:netrwbuf,s:NetrwFullPath(dirname))
+  "     let bufnum= -1
+  "   endif
+  "
+  " else
+  "   "   call Decho("  lookup netrwbuf dictionary: s:netrwbuf[".s:NetrwFullPath(dirname)."] not a key",'~'.expand("<slnum>"))
+  "   let bufnum= -1
+  " endif
   "  call Decho("  bufnum#".bufnum,'~'.expand("<slnum>"))
 
   " hijack the current buffer
@@ -4246,7 +4246,7 @@ fun! s:NetrwGetBuffer(islocal,dirname)
   " Aug 14, 2021: was thinking about looking for a [No Name] buffer here and using it, but that might cause problems
 
   " get enew buffer and name it -or- re-use buffer {{{3
-  if bufnum < 0      " get enew buffer and name it
+  " if bufnum < 0      " get enew buffer and name it
     "   call Decho("--get enew buffer and name it  (bufnum#".bufnum."<0 OR bufexists(".bufnum.")=".bufexists(bufnum)."==0)",'~'.expand("<slnum>"))
     call s:NetrwEnew(dirname)
     "   call Decho("  got enew buffer#".bufnr("%")." (altbuf<".expand("#").">)",'~'.expand("<slnum>"))
@@ -4275,58 +4275,58 @@ fun! s:NetrwGetBuffer(islocal,dirname)
     endif
     "   call Decho("  named enew buffer#".bufnr("%")."<".bufname("%").">",'~'.expand("<slnum>"))
 
-  else " Re-use the buffer
-    "   call Decho("--re-use buffer#".bufnum." (bufnum#".bufnum.">=0 AND bufexists(".bufnum.")=".bufexists(bufnum)."!=0)",'~'.expand("<slnum>"))
-    let eikeep= &ei
-    setl ei=all
-    if getline(2) =~# '^" Netrw Directory Listing'
-      "    call Decho("  getline(2)<".getline(2).'> matches "Netrw Directory Listing" : using keepalt b '.bufnum,'~'.expand("<slnum>"))
-      exe "sil! NetrwKeepj noswapfile keepalt b ".bufnum
-    else
-      "    call Decho("  getline(2)<".getline(2).'> does not match "Netrw Directory Listing" : using b '.bufnum,'~'.expand("<slnum>"))
-      exe "sil! NetrwKeepj noswapfile keepalt b ".bufnum
-    endif
-    "   call Decho("  line($)=".line("$"),'~'.expand("<slnum>"))
-    if bufname("%") == '.'
-      call s:NetrwBufRename(getcwd())
-    endif
-    let &ei= eikeep
-
-    if line("$") <= 1 && getline(1) == ""
-      " empty buffer
-      NetrwKeepj call s:NetrwListSettings(a:islocal)
-      "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
-      "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
-      "    call Dret("s:NetrwGetBuffer 0<buffer empty> : re-using buffer#".bufnr("%").", but its empty, so refresh it")
-      return 0
-
-    elseif g:netrw_fastbrowse == 0 || (a:islocal && g:netrw_fastbrowse == 1)
-      "    call Decho("g:netrw_fastbrowse=".g:netrw_fastbrowse." a:islocal=".a:islocal.": clear buffer",'~'.expand("<slnum>"))
-      NetrwKeepj call s:NetrwListSettings(a:islocal)
-      sil NetrwKeepj %d _
-      "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
-      "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
-      "    call Dret("s:NetrwGetBuffer 0<cleared buffer> : re-using buffer#".bufnr("%").", but refreshing due to g:netrw_fastbrowse=".g:netrw_fastbrowse)
-      return 0
-
-    elseif exists("w:netrw_liststyle") && w:netrw_liststyle == s:TREELIST
-      "    call Decho("--re-use tree listing--",'~'.expand("<slnum>"))
-      "    call Decho("  clear buffer<".expand("%")."> with :%d",'~'.expand("<slnum>"))
-      setl ma
-      sil NetrwKeepj %d _
-      NetrwKeepj call s:NetrwListSettings(a:islocal)
-      "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
-      "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
-      "    call Dret("s:NetrwGetBuffer 0<cleared buffer> : re-using buffer#".bufnr("%").", but treelist mode always needs a refresh")
-      return 0
-
-    else
-      "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
-      "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
-      "    call Dret("s:NetrwGetBuffer 1<buffer not cleared>")
-      return 1
-    endif
-  endif
+  " else " Re-use the buffer
+  "   "   call Decho("--re-use buffer#".bufnum." (bufnum#".bufnum.">=0 AND bufexists(".bufnum.")=".bufexists(bufnum)."!=0)",'~'.expand("<slnum>"))
+  "   let eikeep= &ei
+  "   setl ei=all
+  "   if getline(2) =~# '^" Netrw Directory Listing'
+  "     "    call Decho("  getline(2)<".getline(2).'> matches "Netrw Directory Listing" : using keepalt b '.bufnum,'~'.expand("<slnum>"))
+  "     exe "sil! NetrwKeepj noswapfile keepalt b ".bufnum
+  "   else
+  "     "    call Decho("  getline(2)<".getline(2).'> does not match "Netrw Directory Listing" : using b '.bufnum,'~'.expand("<slnum>"))
+  "     exe "sil! NetrwKeepj noswapfile keepalt b ".bufnum
+  "   endif
+  "   "   call Decho("  line($)=".line("$"),'~'.expand("<slnum>"))
+  "   if bufname("%") == '.'
+  "     call s:NetrwBufRename(getcwd())
+  "   endif
+  "   let &ei= eikeep
+  "
+  "   if line("$") <= 1 && getline(1) == ""
+  "     " empty buffer
+  "     NetrwKeepj call s:NetrwListSettings(a:islocal)
+  "     "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
+  "     "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
+  "     "    call Dret("s:NetrwGetBuffer 0<buffer empty> : re-using buffer#".bufnr("%").", but its empty, so refresh it")
+  "     return 0
+  "
+  "   elseif g:netrw_fastbrowse == 0 || (a:islocal && g:netrw_fastbrowse == 1)
+  "     "    call Decho("g:netrw_fastbrowse=".g:netrw_fastbrowse." a:islocal=".a:islocal.": clear buffer",'~'.expand("<slnum>"))
+  "     NetrwKeepj call s:NetrwListSettings(a:islocal)
+  "     sil NetrwKeepj %d _
+  "     "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
+  "     "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
+  "     "    call Dret("s:NetrwGetBuffer 0<cleared buffer> : re-using buffer#".bufnr("%").", but refreshing due to g:netrw_fastbrowse=".g:netrw_fastbrowse)
+  "     return 0
+  "
+  "   elseif exists("w:netrw_liststyle") && w:netrw_liststyle == s:TREELIST
+  "     "    call Decho("--re-use tree listing--",'~'.expand("<slnum>"))
+  "     "    call Decho("  clear buffer<".expand("%")."> with :%d",'~'.expand("<slnum>"))
+  "     setl ma
+  "     sil NetrwKeepj %d _
+  "     NetrwKeepj call s:NetrwListSettings(a:islocal)
+  "     "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
+  "     "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
+  "     "    call Dret("s:NetrwGetBuffer 0<cleared buffer> : re-using buffer#".bufnr("%").", but treelist mode always needs a refresh")
+  "     return 0
+  "
+  "   else
+  "     "    call Decho("settings buf#".bufnr("%")."<".bufname("%").">: ".((&l:ma == 0)? "no" : "")."ma ".((&l:mod == 0)? "no" : "")."mod ".((&l:bl == 0)? "no" : "")."bl ".((&l:ro == 0)? "no" : "")."ro fo=".&l:fo,'~'.expand("<slnum>"))
+  "     "    call Decho("tab#".tabpagenr()." win#".winnr()." buf#".bufnr("%")."<".bufname("%")."> line#".line(".")." col#".col(".")." winline#".winline()." wincol#".wincol(),'~'.expand("<slnum>"))
+  "     "    call Dret("s:NetrwGetBuffer 1<buffer not cleared>")
+  "     return 1
+  "   endif
+  " endif
 
   " do netrw settings: make this buffer not-a-file, modifiable, not line-numbered, etc {{{3
   "     fastbrowse  Local  Remote   Hiding a buffer implies it may be re-used (fast)

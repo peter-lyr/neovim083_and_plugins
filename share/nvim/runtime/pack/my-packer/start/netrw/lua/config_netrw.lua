@@ -268,6 +268,9 @@ local go_dir = function(payload)
 end
 
 local unfold_all = function(payload, start)
+  if vim.w.netrw_liststyle ~= 3 then
+    return
+  end
   local lnr0 = (start == 0 or start == 3) and 0 or f['line']('.')
   local lnr00 =  f['line']('.')
   local lnr = lnr0 - 1
@@ -341,6 +344,9 @@ local unfold_all = function(payload, start)
 end
 
 local fold_all = function(payload)
+  if vim.w.netrw_liststyle ~= 3 then
+    return
+  end
   local lnr = 0
   while 1 do
     if lnr == f['line']('$') then
@@ -379,6 +385,9 @@ local fold_all = function(payload)
 end
 
 local go_parent = function(payload)
+  if vim.w.netrw_liststyle ~= 3 then
+    return
+  end
   local lnr0 = f['line']('.')
   local line0 = f['getline'](lnr0)
   local has_space, _ = string.find(line0, '(%s+)')
@@ -397,6 +406,9 @@ local go_parent = function(payload)
 end
 
 local go_sibling = function(payload, dir)
+  if vim.w.netrw_liststyle ~= 3 then
+    return
+  end
   local lnr0 = f['line']('.')
   local line0 = f['getline'](lnr0)
   local has_space, _ = string.find(line0, '(%s+)')
