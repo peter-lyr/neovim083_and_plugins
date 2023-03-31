@@ -268,7 +268,12 @@ local go_dir = function(payload)
 end
 
 local unfold_all = function(payload, start)
-  local lnr = start == 0 and 0 or f['line']('.') - 1
+  local lnr0 = (start == 0 or start == 3) and 0 or f['line']('.')
+  local lnr = lnr0 - 1
+  local only_one = start == 2 and true or false
+  local only_one_go = false
+  local all = start == 3 and true or false
+  local _, space_cnt0 = string.find(f['getline'](lnr + 1), '(%s+)')
   local cnt = 0
   while 1 do
     if lnr == f['line']('$') then
@@ -286,6 +291,14 @@ local unfold_all = function(payload, start)
     if string.sub(line, #line, #line) == '/' then
       local unfold = false
       if lnr == f['line']('$') then
+        local _, space_cnt = string.find(line, '(%s+)')
+        if only_one and space_cnt <= space_cnt0 then
+          if only_one_go then
+            c(string.format([[norm %dgg]], lnr0))
+            return
+          end
+          only_one_go = true
+        end
         unfold = true
       end
       if unfold == false then
@@ -294,6 +307,13 @@ local unfold_all = function(payload, start)
           goto continue
         else
           local _, space_cnt = string.find(line, '(%s+)')
+          if only_one and space_cnt <= space_cnt0 then
+            if only_one_go then
+              c(string.format([[norm %dgg]], lnr0))
+              return
+            end
+            only_one_go = true
+          end
           local line_down = f['getline'](lnr + 1)
           local _, space_cnt_down = string.find(line_down, '(%s+)')
           if space_cnt >= space_cnt_down then
@@ -304,15 +324,19 @@ local unfold_all = function(payload, start)
       if unfold then
         c(string.format('norm %dgg', lnr))
         f['netrw#LocalBrowseCheck'](get_dname({ type = 0}))
-        cnt = cnt + 1
-        if cnt > 10 then
-          c[[ec 'unfold 10']]
-          return
+        if not all then
+          cnt = cnt + 1
+          if cnt > 10 then
+            c[[ec 'unfold 10']]
+            c(string.format([[norm %dgg]], lnr0))
+            return
+          end
         end
       end
     end
     ::continue::
   end
+  c(string.format([[norm %dgg]], lnr0))
 end
 
 local fold_all = function(payload)
@@ -377,8 +401,10 @@ netrw.setup{
     ['A'] = function(payload) hide(payload) end,
     ['a'] = function(payload) open(payload, 'here') end,
     ['O'] = function(payload) go_dir(payload) end,
-    ['R'] = function(payload) unfold_all(payload, 0) end,
+    ['F'] = function(payload) unfold_all(payload, 0) end,
+    ['R'] = function(payload) unfold_all(payload, 3) end,
     ['E'] = function(payload) unfold_all(payload, 1) end,
+    ['D'] = function(payload) unfold_all(payload, 2) end,
     ['W'] = function(payload) fold_all(payload) end,
   },
 }
