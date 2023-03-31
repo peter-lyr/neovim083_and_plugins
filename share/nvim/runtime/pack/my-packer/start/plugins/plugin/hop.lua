@@ -21,5 +21,5 @@ if not g.hop_loaded then
   })
 end
 
-vim.keymap.set("n", "gi", "<cmd>:HopChar1MW<CR>")
-vim.keymap.set("n", "go", "<cmd>:HopChar2MW<CR>")
+vim.keymap.set({'n', 'v'}, "gi", "<esc><cmd>:HopChar1MW<CR>")
+vim.keymap.set({'n', 'v'}, "go", "<esc><cmd>:HopChar2MW<CR>")
