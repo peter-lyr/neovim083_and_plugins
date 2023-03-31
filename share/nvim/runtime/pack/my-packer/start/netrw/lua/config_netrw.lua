@@ -444,7 +444,7 @@ local go_sibling = function(payload, dir)
 end
 
 local search_fname = function(payload, dir)
-  c(string.format([[call search("%s", "%s")]], g.netrw_alt_fname, dir == 'up' and '' or 'b'))
+  c(string.format([[call search("%s", "%s")]], g.netrw_alt_fname, dir == 'up' and 'b' or ''))
 end
 
 netrw.setup{
