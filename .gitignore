@@ -7,3 +7,4 @@
 !**/packer/start/plenary.nvim
 *.lnk
 .vim-bookmarks
+*.exe
