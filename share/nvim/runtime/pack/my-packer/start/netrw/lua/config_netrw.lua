@@ -269,6 +269,7 @@ end
 
 local unfold_all = function(payload, start)
   local lnr0 = (start == 0 or start == 3) and 0 or f['line']('.')
+  local lnr00 =  f['line']('.')
   local lnr = lnr0 - 1
   local only_one = start == 2 and true or false
   local only_one_go = false
@@ -294,7 +295,7 @@ local unfold_all = function(payload, start)
         local _, space_cnt = string.find(line, '(%s+)')
         if only_one and space_cnt <= space_cnt0 then
           if only_one_go then
-            c(string.format([[norm %dgg]], lnr0))
+            c(string.format([[norm %dgg]], lnr00))
             return
           end
           only_one_go = true
@@ -309,7 +310,7 @@ local unfold_all = function(payload, start)
           local _, space_cnt = string.find(line, '(%s+)')
           if only_one and space_cnt <= space_cnt0 then
             if only_one_go then
-              c(string.format([[norm %dgg]], lnr0))
+              c(string.format([[norm %dgg]], lnr00))
               return
             end
             only_one_go = true
@@ -328,7 +329,7 @@ local unfold_all = function(payload, start)
           cnt = cnt + 1
           if cnt > 10 then
             c[[ec 'unfold 10']]
-            c(string.format([[norm %dgg]], lnr0))
+            c(string.format([[norm %dgg]], lnr00))
             return
           end
         end
@@ -336,7 +337,7 @@ local unfold_all = function(payload, start)
     end
     ::continue::
   end
-  c(string.format([[norm %dgg]], lnr0))
+  c(string.format([[norm %dgg]], lnr00))
 end
 
 local fold_all = function(payload)
