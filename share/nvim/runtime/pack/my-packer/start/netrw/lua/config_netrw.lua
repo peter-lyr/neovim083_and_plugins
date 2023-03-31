@@ -304,7 +304,7 @@ local unfold_all = function(payload, start)
       end
       if unfold == false then
         local has_space, _ = string.find(line, '(%s+)')
-        if has_space > 1 then
+        if has_space and has_space > 1 then
           goto continue
         else
           local _, space_cnt = string.find(line, '(%s+)')
