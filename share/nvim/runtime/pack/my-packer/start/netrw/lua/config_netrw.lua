@@ -267,8 +267,9 @@ local go_dir = function(payload)
   c(string.format("Ntree %s", get_dtarget(payload)))
 end
 
-local unfold_all = function(payload)
-  local lnr = 0
+local unfold_all = function(payload, start)
+  local lnr = start == 0 and 0 or f['line']('.') - 1
+  local cnt = 0
   while 1 do
     if lnr == f['line']('$') then
       break
@@ -303,6 +304,11 @@ local unfold_all = function(payload)
       if unfold then
         c(string.format('norm %dgg', lnr))
         f['netrw#LocalBrowseCheck'](get_dname({ type = 0}))
+        cnt = cnt + 1
+        if cnt > 10 then
+          c[[ec 'unfold 10']]
+          return
+        end
       end
     end
     ::continue::
@@ -371,7 +377,8 @@ netrw.setup{
     ['A'] = function(payload) hide(payload) end,
     ['a'] = function(payload) open(payload, 'here') end,
     ['O'] = function(payload) go_dir(payload) end,
-    ['E'] = function(payload) unfold_all(payload) end,
+    ['R'] = function(payload) unfold_all(payload, 0) end,
+    ['E'] = function(payload) unfold_all(payload, 1) end,
     ['W'] = function(payload) fold_all(payload) end,
   },
 }
