@@ -302,8 +302,8 @@ local unfold_all = function(payload, start)
         unfold = true
       end
       if unfold == false then
-        local has_space = string.match(line, '(%s+)')
-        if not has_space then
+        local has_space, _ = string.find(line, '(%s+)')
+        if has_space > 1 then
           goto continue
         else
           local _, space_cnt = string.find(line, '(%s+)')
@@ -358,8 +358,8 @@ local fold_all = function(payload)
       if lnr == f['line']('$') then
         return
       end
-      local has_space = string.match(line, '(%s+)')
-      if not has_space then
+      local has_space, _ = string.find(line, '(%s+)')
+      if has_space > 1 then
         goto continue
       else
         local _, space_cnt = string.find(line, '(%s+)')
@@ -380,8 +380,8 @@ end
 local go_parent = function(payload)
   local lnr0 = f['line']('.')
   local line0 = f['getline'](lnr0)
-  local has_space = string.match(line0, '(%s+)')
-  if not has_space then
+  local has_space, _ = string.find(line0, '(%s+)')
+  if has_space > 1 then
     return
   end
   local _, space_cnt0 = string.find(line0, '(%s+)')
@@ -391,6 +391,41 @@ local go_parent = function(payload)
     if space_cnt and space_cnt < space_cnt0 then
       c(string.format([[norm %dgg]], i))
       return
+    end
+  end
+end
+
+local go_sibling = function(payload, dir)
+  local lnr0 = f['line']('.')
+  local line0 = f['getline'](lnr0)
+  local has_space, _ = string.find(line0, '(%s+)')
+  if has_space > 1 then
+    return
+  end
+  local _, space_cnt0 = string.find(line0, '(%s+)')
+  if dir == 'up' then
+    for i=lnr0-1, 1, -1 do
+      local line = f['getline'](i)
+      local _, space_cnt = string.find(line, '(%s+)')
+      if not space_cnt then
+        return
+      end
+      if space_cnt == space_cnt0 then
+        c(string.format([[norm %dgg]], i))
+        return
+      end
+    end
+  else
+    for i=lnr0+1, f['line']('$') do
+      local line = f['getline'](i)
+      local _, space_cnt = string.find(line, '(%s+)')
+      if not space_cnt then
+        return
+      end
+      if space_cnt == space_cnt0 then
+        c(string.format([[norm %dgg]], i))
+        return
+      end
     end
   end
 end
@@ -424,6 +459,8 @@ netrw.setup{
     ['E'] = function(payload) unfold_all(payload, 1) end,
     ['D'] = function(payload) unfold_all(payload, 2) end,
     ['W'] = function(payload) fold_all(payload) end,
-    ['S'] = function(payload) go_parent(payload) end,
+    ['U'] = function(payload) go_parent(payload) end,
+    ['K'] = function(payload) go_sibling(payload, 'up') end,
+    ['J'] = function(payload) go_sibling(payload, 'down') end,
   },
 }
