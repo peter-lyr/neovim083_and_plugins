@@ -443,6 +443,10 @@ local go_sibling = function(payload, dir)
   end
 end
 
+local search_fname = function(payload, dir)
+  c(string.format([[call search("%s", "%s")]], g.netrw_alt_fname, dir == 'up' and '' or 'b'))
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -475,5 +479,7 @@ netrw.setup{
     ['U'] = function(payload) go_parent(payload) end,
     ['K'] = function(payload) go_sibling(payload, 'up') end,
     ['J'] = function(payload) go_sibling(payload, 'down') end,
+    ['dp'] = function(payload) search_fname(payload, 'up') end,
+    ['dn'] = function(payload) search_fname(payload, 'down') end,
   },
 }

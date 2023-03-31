@@ -116,6 +116,8 @@ local is_hide_en = function()
   return false
 end
 
+g.netrw_alt_fname = ''
+
 function M.toggle(mode)
   if o.diff:get() then
     return
@@ -124,6 +126,9 @@ function M.toggle(mode)
     g.netrw_back_winid = f['win_getid']()
   end
   local fname = M.get_fname_tail()
+  if o.ft:get() ~= 'netrw' then
+    g.netrw_alt_fname = fname
+  end
   new_unfix = nil
   local netrw_winids = M.get_netrw_winids()
   if netrw_winids then
@@ -235,7 +240,6 @@ function M.netrw_fix_set_width()
 end
 
 function M.fix_unfix(mode)
-  local fname = M.get_fname_tail()
   local netrw_winids = M.get_netrw_winids()
   if not netrw_winids then
     M.toggle(mode)
