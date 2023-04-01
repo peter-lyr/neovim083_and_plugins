@@ -4,7 +4,8 @@
 
 char *add_output_dir(char *path)
 {
-    char *result = (char *)malloc(strlen(path) + 8);
+    char *subdir = "output";
+    char *result = (char *)malloc(strlen(path) + strlen(subdir) + 1);
     strcpy(result, path);
     char *last_slash = strrchr(result, '\\');
     char *fname = (char *)malloc(256);
@@ -12,15 +13,15 @@ char *add_output_dir(char *path)
     if (last_slash != NULL)
     {
         *(last_slash + 1) = '\0';
-        strcat(result, "output\\");
-        strcat(result, fname + 1);
+        strcat(result, subdir);
+        strcat(result, fname);
     }
     return result;
 }
 
 int main()
 {
-    char path[] = "c:\\usr\\local\\bin\\test.txt";
+    char path[] = "C:\\Users\\llydr\\Desktop\\neovim083_and_plugins\\share\\nvim\\runtime\\pack\\my-packer\\start\\c\\autoload\\testaddoutputdir\\testaddoutputdir.c";
     printf("%s\n", path);
     char *result = add_output_dir(path);
     printf("%s\n", result);
