@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-char *add_output_dir(char *path)
+char *add_output_dir(char *path, char *ext)
 {
     char *subdir = "output";
     char *result = (char *)malloc(strlen(path) + strlen(subdir) + 1);
@@ -16,15 +16,17 @@ char *add_output_dir(char *path)
         strcat(result, subdir);
         mkdir(result);
         strcat(result, fname);
+        strcat(result, ext);
     }
     return result;
 }
+
 
 int main()
 {
     char path[] = "C:\\Users\\llydr\\Desktop\\neovim083_and_plugins\\share\\nvim\\runtime\\pack\\my-packer\\start\\c\\autoload\\testaddoutputdir\\testaddoutputdir.c";
     printf("%s\n", path);
-    char *result = add_output_dir(path);
+    char *result = add_output_dir(path, ".pcm");
     printf("%s\n", result);
     free(result);
     return 0;
