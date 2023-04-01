@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <sys/stat.h>
 
 char *add_output_dir(char *path)
 {
@@ -14,6 +14,7 @@ char *add_output_dir(char *path)
     {
         *(last_slash + 1) = '\0';
         strcat(result, subdir);
+        mkdir(result);
         strcat(result, fname);
     }
     return result;
