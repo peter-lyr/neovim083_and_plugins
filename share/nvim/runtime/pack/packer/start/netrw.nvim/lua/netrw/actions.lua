@@ -29,8 +29,19 @@ M.bind = function(bufnr)
     elseif r == "<2-leftmouse>" then
       mouse = '<2-leftmouse>'
     end
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', r, mouse .. ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'v', r, mouse .. ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
+    local _, has_dquote = string.find(k, '(")')
+    if has_dquote then
+      vim.api.nvim_buf_set_keymap(bufnr, 'n', r, mouse .. ':lua require"netrw.actions".dispatch(\'' .. k .. '\')<cr>', opts)
+      vim.api.nvim_buf_set_keymap(bufnr, 'v', r, mouse .. ':lua require"netrw.actions".dispatch(\'' .. k .. '\')<cr>', opts)
+    else
+      local _, has_quote = string.find(k, "(')")
+      if not has_quote then
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', r, mouse .. ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'v', r, mouse .. ':lua require"netrw.actions".dispatch("' .. k .. '")<cr>', opts)
+      else
+        print('cannot \' " together')
+      end
+    end
   end
 end
 
