@@ -598,6 +598,14 @@ local copy_sel_list = function(payload)
   end
 end
 
+local create = function(payload)
+  local name = get_fname(payload)
+  if name == '' then
+    name = get_dname(payload)
+  end
+  c(string.format([[call feedkeys(":wincmd p|wincmd s|e %s")]], string.gsub(name, "\\", "/")))
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -638,5 +646,6 @@ netrw.setup{
     ['dD'] = function(payload) delete_sel_list(payload) end,
     ['dM'] = function(payload) move_sel_list(payload) end,
     ['dC'] = function(payload) copy_sel_list(payload) end,
+    ['da'] = function(payload) create(payload) end,
   },
 }
