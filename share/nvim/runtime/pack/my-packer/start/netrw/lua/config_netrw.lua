@@ -457,6 +457,58 @@ local search_fname = function(payload, dir)
   c(string.format([[call search("%s", "%s")]], g.netrw_alt_fname, dir == 'up' and 'b' or ''))
 end
 
+g.netrw_sel_list = {}
+g.netrw_sel_list_bak = {}
+
+local sel_toggle_cur = function(payload)
+  local name = get_fname(payload)
+  if name == '' then
+    name = get_dname(payload)
+  end
+  local appendIfNotExists = function(t, s)
+    local index_of = function(arr, val)
+      if not arr then
+        return nil
+      end
+      for i, v in ipairs(arr) do
+        if v == val then
+          return i
+        end
+      end
+      return nil
+    end
+    local idx = index_of(t, s)
+    local cwd = f['getcwd']()
+    if not idx then
+      table.insert(t, s)
+      c(string.format([[ec 'attach: %s']], string.sub(s, #cwd+2, #s)))
+    else
+      table.remove(t, idx)
+      s = string.gsub(s, f['getcwd'](), '')
+      c(string.format([[ec 'detach: %s']], string.sub(s, #cwd+2, #s)))
+    end
+    return t
+  end
+  g.netrw_sel_list = appendIfNotExists(g.netrw_sel_list, name)
+  c'norm j'
+end
+
+local sel_toggle_all = function(payload)
+  if not g.netrw_sel_list or #g.netrw_sel_list == 0 then
+    g.netrw_sel_list = g.netrw_sel_list_bak
+    local show_array = function(arr)
+      for i, v in ipairs(arr) do
+        c(string.format([[ec '%d : %s']], i, v))
+      end
+    end
+    show_array(g.netrw_sel_list)
+  else
+    c(string.format('ec "empty %d"', #g.netrw_sel_list))
+    g.netrw_sel_list_bak = g.netrw_sel_list
+    g.netrw_sel_list = {}
+  end
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -491,5 +543,7 @@ netrw.setup{
     ['J'] = function(payload) go_sibling(payload, 'down') end,
     ['dp'] = function(payload) search_fname(payload, 'up') end,
     ['dn'] = function(payload) search_fname(payload, 'down') end,
+    ['\''] = function(payload) sel_toggle_cur(payload) end,
+    ['"'] = function(payload) sel_toggle_all(payload) end,
   },
 }
