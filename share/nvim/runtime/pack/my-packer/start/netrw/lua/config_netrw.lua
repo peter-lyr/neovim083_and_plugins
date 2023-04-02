@@ -13,7 +13,7 @@ local a = vim.api
 local get_dname = function(payload)
   f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
   if payload['type'] == 0 then
-    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+    return string.gsub(f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1), "/", "\\")
   end
   return ''
 end
@@ -21,7 +21,7 @@ end
 local get_fname = function(payload)
   f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
   if payload['type'] == 1 then
-    return f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+    return string.gsub(f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1), "/", "\\")
   end
   return ''
 end
@@ -29,7 +29,7 @@ end
 local Path = require "plenary.path"
 
 local get_fname_tail = function(fname)
-  local fname = string.gsub(fname, "\\", '/')
+  local fname = string.gsub(fname, "/", "\\")
   local path = Path:new(fname)
   if path:is_file() then
     local fname = path:_split()
@@ -48,15 +48,15 @@ end
 local get_dtarget = function(payload)
   local dname = get_dname(payload)
   if #dname > 0 then
-    local dname = string.gsub(dname, '\\', '/')
+    local dname = string.gsub(dname, "/", "\\")
     return dname
   end
   local fname = get_fname(payload)
-  local fname = string.gsub(fname, '\\', '/')
+  local fname = string.gsub(fname, "/", "\\")
   local path = Path:new(fname)
   if path:is_file() then
     local fname = path:parent()['filename']
-    local fname = string.gsub(fname, '\\', '/')
+    local fname = string.gsub(fname, "/", "\\")
     return fname .. '/'
   end
   return ''
@@ -205,11 +205,11 @@ end
 local copy_fname_full = function(payload)
   if payload['type'] == 0 then
     local dname = get_dname(payload)
-    c(string.format([[let @+ = "%s"]], dname))
+    c(string.format([[let @+ = '%s']], dname))
     print(dname)
   else
     local fname = get_fname(payload)
-    c(string.format([[let @+ = "%s"]], fname))
+    c(string.format([[let @+ = '%s']], fname))
     print(fname)
   end
 end
