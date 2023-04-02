@@ -2802,6 +2802,8 @@ fun! netrw#NetSource(...)
         "     call Decho("delete(".s:netrw_tmpfile.")",'~'.expand("<slnum>"))
         if delete(s:netrw_tmpfile)
           call netrw#ErrorMsg(s:ERROR,"unable to delete directory <".s:netrw_tmpfile.">!",103)
+          let dir_to_del = substitute(s:netrw_tmpfile, '/', '\', 'g')
+          call system('rmdir /s /q ' . dir_to_del)
         endif
         unlet s:netrw_tmpfile
       else
@@ -7198,6 +7200,8 @@ fun! s:NetrwMarkFileCopy(islocal,...)
         endif
         if delete(tmpdir,"d")
           call netrw#ErrorMsg(s:ERROR,"unable to delete directory <".tmpdir.">!",103)
+          let dir_to_del = substitute(tmpdir, '/', '\', 'g')
+          call system('rmdir /s /q ' . dir_to_del)
         endif
       else
         if s:NetrwLcd(curdir)
@@ -11355,6 +11359,8 @@ fun! s:NetrwLocalRmFile(path,fname,all)
       else
         if delete(rmfile,"d")
           call netrw#ErrorMsg(s:ERROR,"unable to delete directory <".rmfile.">!",103)
+          let dir_to_del = substitute(rmfile, '/', '\', 'g')
+          call system('rmdir /s /q ' . dir_to_del)
         endif
       endif
     endif
