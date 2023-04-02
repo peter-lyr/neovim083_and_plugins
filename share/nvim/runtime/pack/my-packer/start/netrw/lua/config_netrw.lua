@@ -32,7 +32,7 @@ local get_fname = function(payload)
   return ''
 end
 
-local Path = require "plenary.path"
+local Path = require("plenary.path")
 
 local get_fname_tail = function(fname)
   local fname = string.gsub(fname, "/", "\\")
@@ -509,6 +509,38 @@ local sel_toggle_all = function(payload)
   end
 end
 
+local empty_sel_list = function(payload)
+  g.netrw_sel_list = {}
+  g.netrw_sel_list_bak = {}
+end
+
+local delete_sel_list = function(payload)
+  local res = f['input']("Confirm deletion " .. #g.netrw_sel_list .. " [N/y] " ,"y")
+  local index_of = function(arr, val)
+    if not arr then
+      return nil
+    end
+    for i, v in ipairs(arr) do
+      if v == val then
+        return i
+      end
+    end
+    return nil
+  end
+  if index_of({'y', 'Y', 'yes', 'Yes', 'YES'}, res) then
+    for i, v in ipairs(g.netrw_sel_list) do
+      if Path:new(v):is_dir() then
+        f['system'](string.format('rd /s /q "%s"', v))
+      else
+        f['system'](string.format('del "%s"', v))
+      end
+    end
+    empty_sel_list()
+  else
+    c"echomsg 'canceled'"
+  end
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -545,5 +577,7 @@ netrw.setup{
     ['dn'] = function(payload) search_fname(payload, 'down') end,
     ['\''] = function(payload) sel_toggle_cur(payload) end,
     ['"'] = function(payload) sel_toggle_all(payload) end,
+    ['dE'] = function(payload) empty_sel_list(payload) end,
+    ['dD'] = function(payload) delete_sel_list(payload) end,
   },
 }
