@@ -63,7 +63,7 @@ local get_dtarget = function(payload)
   if path:is_file() then
     local fname = path:parent()['filename']
     local fname = string.gsub(fname, "/", "\\")
-    return fname .. '/'
+    return fname .. '\\'
   end
   return ''
 end
@@ -541,6 +541,35 @@ local delete_sel_list = function(payload)
   end
 end
 
+local move_sel_list = function(payload)
+  local target = get_dtarget(payload)
+  local res = f['input'](target .. "\nConfirm movment " .. #g.netrw_sel_list .. " [N/y] " ,"y")
+  local index_of = function(arr, val)
+    if not arr then
+      return nil
+    end
+    for i, v in ipairs(arr) do
+      if v == val then
+        return i
+      end
+    end
+    return nil
+  end
+  if index_of({'y', 'Y', 'yes', 'Yes', 'YES'}, res) then
+    for i, v in ipairs(g.netrw_sel_list) do
+      if Path:new(v):is_dir() then
+        f['system'](string.format('move "%s" "%s"', string.sub(v, 1, #v-1), target))
+      else
+        f['system'](string.format('move "%s" "%s"', v, target))
+        print(string.format('move "%s" "%s"', v, target))
+      end
+    end
+    empty_sel_list()
+  else
+    c"echomsg 'canceled'"
+  end
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -579,5 +608,6 @@ netrw.setup{
     ['"'] = function(payload) sel_toggle_all(payload) end,
     ['dE'] = function(payload) empty_sel_list(payload) end,
     ['dD'] = function(payload) delete_sel_list(payload) end,
+    ['dM'] = function(payload) move_sel_list(payload) end,
   },
 }
