@@ -561,7 +561,35 @@ local move_sel_list = function(payload)
         f['system'](string.format('move "%s" "%s"', string.sub(v, 1, #v-1), target))
       else
         f['system'](string.format('move "%s" "%s"', v, target))
-        print(string.format('move "%s" "%s"', v, target))
+      end
+    end
+    empty_sel_list()
+  else
+    c"echomsg 'canceled'"
+  end
+end
+
+local copy_sel_list = function(payload)
+  local target = get_dtarget(payload)
+  local res = f['input'](target .. "\nConfirm copy " .. #g.netrw_sel_list .. " [N/y] " ,"y")
+  local index_of = function(arr, val)
+    if not arr then
+      return nil
+    end
+    for i, v in ipairs(arr) do
+      if v == val then
+        return i
+      end
+    end
+    return nil
+  end
+  if index_of({'y', 'Y', 'yes', 'Yes', 'YES'}, res) then
+    for i, v in ipairs(g.netrw_sel_list) do
+      if Path:new(v):is_dir() then
+        local tname = get_fname_tail(v)
+        f['system'](string.format('xcopy "%s" "%s%s\\" /s /e /f', string.sub(v, 1, #v-1), target, tname))
+      else
+        f['system'](string.format('copy "%s" "%s"', v, target))
       end
     end
     empty_sel_list()
@@ -609,5 +637,6 @@ netrw.setup{
     ['dE'] = function(payload) empty_sel_list(payload) end,
     ['dD'] = function(payload) delete_sel_list(payload) end,
     ['dM'] = function(payload) move_sel_list(payload) end,
+    ['dC'] = function(payload) copy_sel_list(payload) end,
   },
 }
