@@ -13,7 +13,10 @@ local a = vim.api
 local get_dname = function(payload)
   f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
   if payload['type'] == 0 then
-    return string.gsub(f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1), "/", "\\")
+    local res = f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+    if #res > 0 then
+      return string.gsub(res, "/", "\\")
+    end
   end
   return ''
 end
@@ -21,7 +24,10 @@ end
 local get_fname = function(payload)
   f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
   if payload['type'] == 1 then
-    return string.gsub(f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1), "/", "\\")
+    local res = f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
+    if #res > 0 then
+      return string.gsub(res, "/", "\\")
+    end
   end
   return ''
 end
@@ -327,7 +333,11 @@ local unfold_all = function(payload, start)
       end
       if unfold then
         c(string.format('norm %dgg', lnr))
-        f['netrw#LocalBrowseCheck'](get_dname({ type = 0}))
+        local res = get_dname({ type = 0})
+        if #res > 0 then
+          res =string.gsub(res, '\\', '/')
+        end
+        f['netrw#LocalBrowseCheck'](res)
         if not all then
           cnt = cnt + 1
           if cnt > 10 then
