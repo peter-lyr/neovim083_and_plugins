@@ -10481,7 +10481,7 @@ fun! s:NetrwRemoteRmFile(path,rmfile,all)
       echohl Statement
       "    call Decho("case all=0:",'~'.expand("<slnum>"))
       call inputsave()
-      let ok= input("Confirm deletion of file<".a:rmfile."> ","[{y(es)},n(o),a(ll),q(uit)] ")
+      let ok= input("Confirm deletion of file<".a:rmfile."> ","[{y(es)},n(o),a(ll),q(uit)] y")
       call inputrestore()
       echohl NONE
       if ok == ""
@@ -10543,7 +10543,7 @@ fun! s:NetrwRemoteRmFile(path,rmfile,all)
     "    call Decho("attempt to remove directory",'~'.expand("<slnum>"))
     if !all
       call inputsave()
-      let ok= input("Confirm deletion of directory<".a:rmfile."> ","[{y(es)},n(o),a(ll),q(uit)] ")
+      let ok= input("Confirm deletion of directory<".a:rmfile."> ","[{y(es)},n(o),a(ll),q(uit)] y")
       call inputrestore()
       if ok == ""
         let ok="no"
@@ -11295,7 +11295,7 @@ fun! s:NetrwLocalRmFile(path,fname,all)
     if !all
       echohl Statement
       call inputsave()
-      let ok= input("Confirm deletion of file<".rmfile."> ","[{y(es)},n(o),a(ll),q(uit)] ")
+      let ok= input("Confirm deletion of file<".rmfile."> ","[{y(es)},n(o),a(ll),q(uit)] y")
       call inputrestore()
       echohl NONE
       if ok == ""
