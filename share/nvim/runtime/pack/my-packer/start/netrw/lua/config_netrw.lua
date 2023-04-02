@@ -485,7 +485,7 @@ netrw.setup{
     ['pr'] = function(payload) unfold_all(payload, 3) end,
     ['pe'] = function(payload) unfold_all(payload, 1) end,
     ['pd'] = function(payload) unfold_all(payload, 2) end,
-    ['W'] = function(payload) fold_all(payload) end,
+    ['pw'] = function(payload) fold_all(payload) end,
     ['U'] = function(payload) go_parent(payload) end,
     ['K'] = function(payload) go_sibling(payload, 'up') end,
     ['J'] = function(payload) go_sibling(payload, 'down') end,
