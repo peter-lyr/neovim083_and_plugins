@@ -1,6 +1,7 @@
 local M = {}
 
 local g = vim.g
+local b = vim.b
 local f = vim.fn
 local c = vim.cmd
 local o = vim.opt
@@ -81,7 +82,21 @@ local is_hide_en = function()
   return false
 end
 
-function M.toggle_terminal(terminal)
+local Path = require "plenary.path"
+
+function M.get_dname(readablefile)
+  if #readablefile == 0 then
+    return ''
+  end
+  local fname = string.gsub(readablefile, "\\", '/')
+  local path = Path:new(fname)
+  if path:is_file() then
+    return path:parent()['filename']
+  end
+  return ''
+end
+
+function M.toggle_terminal(terminal, chdir)
   if g.builtin_terminal_ok == 0 then
     c(string.format('silent !start %s', terminal))
     return
@@ -91,11 +106,32 @@ function M.toggle_terminal(terminal)
   local terminal_bufnrs = get_terminal_bufnrs(terminal)
   local one, certain = is_terminal(fname, terminal)
   if certain then
-    if #terminal_bufnrs == 1 then
-      if is_hide_en() then
-        c'hide'
+    if #chdir > 0 then
+      if chdir == '.' then
+        chdir = M.get_dname(g.bufleave_readablefile)
+      elseif chdir == 'u' then
+        chdir = '..'
+      elseif chdir == '-' then
+        chdir = '-'
+      end
+      local chdir = string.gsub(chdir, "\\", '/')
+      a['nvim_chan_send'](b.terminal_job_id, string.format('cd %s', chdir))
+      if terminal == 'ipython' then
+        f['feedkeys']([[:call feedkeys("i\<cr>\<esc>")]])
+        local t0 = os.clock()
+        while os.clock() - t0 <= 0.02 do end
+        c[[call feedkeys("\<cr>")]]
+      else
+        c[[call feedkeys("i\<cr>\<esc>")]]
       end
       return
+    else
+      if #terminal_bufnrs == 1 then
+        if is_hide_en() then
+          c'hide'
+        end
+        return
+      end
     end
     bnr_idx = index_of(terminal_bufnrs, f['bufnr']())
     bnr_idx = bnr_idx + 1
