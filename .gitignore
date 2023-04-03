@@ -10,3 +10,6 @@
 *.exe
 output
 *.csv
+*.bin
+*.pcm
+**/NetrwTreeListing
