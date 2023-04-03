@@ -10,6 +10,7 @@
 .vim-bookmarks
 NetrwTreeListing
 *.exe
+!**/clangd/bing/clangd.exe
 output
 *.csv
 *.bin
