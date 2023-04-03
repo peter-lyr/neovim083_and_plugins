@@ -7,9 +7,9 @@
 !**/packer/start/plenary.nvim
 *.lnk
 .vim-bookmarks
+NetrwTreeListing
 *.exe
 output
 *.csv
 *.bin
 *.pcm
-**/NetrwTreeListing
