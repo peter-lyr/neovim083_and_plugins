@@ -8,5 +8,6 @@
 *.lnk
 .vim-bookmarks
 *.exe
+output
 **/output/*
 *.csv
