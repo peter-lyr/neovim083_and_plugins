@@ -5806,7 +5806,7 @@ fun! s:NetrwHide(islocal)
   else
 
     " switch between show-all/show-not-hidden/show-hidden
-    let g:netrw_hide=(g:netrw_hide+1)%3
+    let g:netrw_hide=(g:netrw_hide+1)%2
     exe "NetrwKeepj norm! 0"
     if g:netrw_hide && g:netrw_list_hide == ""
       NetrwKeepj call netrw#ErrorMsg(s:WARNING,"your hiding list is empty!",49)
@@ -6190,19 +6190,19 @@ fun! s:NetrwListHide()
     if g:netrw_hide == 1
       "    call Decho("..hiding<".hide.">",'~'.expand("<slnum>"))
       exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g'.sep.hide.sep.'d'
-    elseif g:netrw_hide == 2
-      "    call Decho("..showing<".hide.">",'~'.expand("<slnum>"))
-      exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g'.sep.hide.sep.'s@^@ /-KEEP-/ @'
+    " elseif g:netrw_hide == 2
+    "   "    call Decho("..showing<".hide.">",'~'.expand("<slnum>"))
+    "   exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g'.sep.hide.sep.'s@^@ /-KEEP-/ @'
     endif
     "   call Decho("..result: ".string(getline(w:netrw_bannercnt,'$')),'~'.expand("<slnum>"))
   endwhile
 
-  if g:netrw_hide == 2
-    exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$v@^ /-KEEP-/ @d'
-    "   call Decho("..v KEEP: ".string(getline(w:netrw_bannercnt,'$')),'~'.expand("<slnum>"))
-    exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$s@^\%( /-KEEP-/ \)\+@@e'
-    "   call Decho("..g KEEP: ".string(getline(w:netrw_bannercnt,'$')),'~'.expand("<slnum>"))
-  endif
+  " if g:netrw_hide == 2
+  "   exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$v@^ /-KEEP-/ @d'
+  "   "   call Decho("..v KEEP: ".string(getline(w:netrw_bannercnt,'$')),'~'.expand("<slnum>"))
+  "   exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$s@^\%( /-KEEP-/ \)\+@@e'
+  "   "   call Decho("..g KEEP: ".string(getline(w:netrw_bannercnt,'$')),'~'.expand("<slnum>"))
+  " endif
 
   " remove any blank lines that have somehow remained.
   " This seems to happen under Windows.
@@ -9414,23 +9414,23 @@ fun! s:NetrwTreeDisplay(dir,depth)
     let listhide= split(g:netrw_list_hide,',')
     "   call Decho("listhide=".string(listhide))
     for pat in listhide
-      call filter(w:netrw_treedict[dir],'v:val !~ "'.escape(pat,'\\').'"')
+      call filter(w:netrw_treedict[dir],'dir."/".v:val !~ "'.escape(pat,'\\').'"')
     endfor
 
-  elseif g:netrw_hide == 2
-    " show given patterns (only)
-    let listhide= split(g:netrw_list_hide,',')
-    "   call Decho("listhide=".string(listhide))
-    let entries=[]
-    for entry in w:netrw_treedict[dir]
-      for pat in listhide
-        if entry =~ pat
-          call add(entries,entry)
-          break
-        endif
-      endfor
-    endfor
-    let w:netrw_treedict[dir]= entries
+  " elseif g:netrw_hide == 2
+  "   " show given patterns (only)
+  "   let listhide= split(g:netrw_list_hide,',')
+  "   "   call Decho("listhide=".string(listhide))
+  "   let entries=[]
+  "   for entry in w:netrw_treedict[dir]
+  "     for pat in listhide
+  "       if entry =~ pat
+  "         call add(entries,entry)
+  "         break
+  "       endif
+  "     endfor
+  "   endfor
+  "   let w:netrw_treedict[dir]= entries
   endif
   if depth != ""
     " always remove "." and ".." entries when there's depth
