@@ -2,6 +2,7 @@
 // 将它定义成一个函数，在main里调用
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
 
@@ -13,8 +14,8 @@ void get_absolute_path(char *buf) {
 
 int main() {
     char buf[PATH_MAX];
-    printf("PATH_MAX: %d\n", PATH_MAX);
     get_absolute_path(buf);
     printf("Current working dir: %s\n", buf);
+    system("pause");
     return 0;
 }
