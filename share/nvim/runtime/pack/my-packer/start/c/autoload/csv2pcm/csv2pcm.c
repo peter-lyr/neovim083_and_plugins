@@ -52,14 +52,15 @@ int csv2pcm(char *filename)
     fgets(buffer, 1024, fp); // skip first line
     while (fgets(buffer, 1024, fp))
     {
+        // Time [s],Packet ID,MOSI,MISO
         char *pch = strtok(buffer, ",");
         int cnt = 0;
         while (pch != NULL)
         {
-            if (cnt == 1) // sel 2nd row
+            if (cnt == 2) // skip Time [s] and Packet ID, sel MOSI or MISO
             {
-                int c = atoi(pch);
-                fwrite(&c, 1, 2, fp2);
+                int c = strtol(pch, NULL, 16);
+                fwrite(&c, 1, 1, fp2);
             }
             cnt++;
             pch = strtok(NULL, ",");
