@@ -205,7 +205,7 @@ function M.toggle(mode)
         open_netrw()
         c(string.format('Ntree %s', dname))
         if fname ~= '' then
-          c(string.format([[call search("%s")]], fname))
+          c(string.format([[call search(substitute("%s", '\.', '\\\.', 'g'))]], fname))
         end
       else
         local fname = string.gsub(fullname, "\\", '/')
