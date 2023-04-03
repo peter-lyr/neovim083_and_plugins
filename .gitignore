@@ -9,3 +9,4 @@
 .vim-bookmarks
 *.exe
 **/output/*
+*.csv
