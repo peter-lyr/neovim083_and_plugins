@@ -4396,20 +4396,20 @@ fun! s:NetrwGetWord()
     let curline= getline('.')
 
     if curline =~# '"\s*Sorted by\s'
-      NetrwKeepj norm! "_s
+      " NetrwKeepj norm! "_s
       let s:netrw_skipbrowse= 1
       echo 'Pressing "s" also works'
 
     elseif curline =~# '"\s*Sort sequence:'
       let s:netrw_skipbrowse= 1
-      echo 'Press "S" to edit sorting sequence'
+      " echo 'Press "S" to edit sorting sequence'
 
-    elseif curline =~# '"\s*Quick Help:'
-      NetrwKeepj norm! ?
-      let s:netrw_skipbrowse= 1
+    " elseif curline =~# '"\s*Quick Help:'
+    "   NetrwKeepj norm! ?
+    "   let s:netrw_skipbrowse= 1
 
     elseif curline =~# '"\s*\%(Hiding\|Showing\):'
-      NetrwKeepj norm! a
+      NetrwKeepj norm! A
       let s:netrw_skipbrowse= 1
       echo 'Pressing "a" also works'
 
@@ -4798,16 +4798,16 @@ fun! s:NetrwBrowseChgDir(islocal,newdir,...)
   if g:netrw_banner
     "   call Decho("win#".winnr()." w:netrw_bannercnt=".(exists("w:netrw_bannercnt")? w:netrw_bannercnt : 'n/a')." line(.)#".line('.')." line($)#".line("#"),'~'.expand("<slnum>"))
     if exists("w:netrw_bannercnt") && line(".") < w:netrw_bannercnt && line("$") >= w:netrw_bannercnt
-      if getline(".") =~# 'Quick Help'
-        "     call Decho("#1: quickhelp=".g:netrw_quickhelp." ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
-        let g:netrw_quickhelp= (g:netrw_quickhelp + 1)%len(s:QuickHelp)
-        "     call Decho("#2: quickhelp=".g:netrw_quickhelp." ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
-        setl ma noro nowrap
-        NetrwKeepj call setline(line('.'),'"   Quick Help: <F1>:help  '.s:QuickHelp[g:netrw_quickhelp])
-        setl noma nomod nowrap
-        NetrwKeepj call s:NetrwOptionsRestore("s:")
-        "     call Decho("ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
-      endif
+      " if getline(".") =~# 'Quick Help'
+      "   "     call Decho("#1: quickhelp=".g:netrw_quickhelp." ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
+      "   let g:netrw_quickhelp= (g:netrw_quickhelp + 1)%len(s:QuickHelp)
+      "   "     call Decho("#2: quickhelp=".g:netrw_quickhelp." ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
+      "   setl ma noro nowrap
+      "   NetrwKeepj call setline(line('.'),'"   Quick Help: '.s:QuickHelp[g:netrw_quickhelp])
+      "   setl noma nomod nowrap
+      "   NetrwKeepj call s:NetrwOptionsRestore("s:")
+      "   "     call Decho("ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
+      " endif
     endif
     "  else " Decho
     "   call Decho("g:netrw_banner=".g:netrw_banner." (no banner)",'~'.expand("<slnum>"))
@@ -9792,13 +9792,13 @@ fun! s:PerformListing(islocal)
     if g:netrw_sort_by =~# "^n"
       "   call Decho("directories will be sorted by name",'~'.expand("<slnum>"))
       " sorted by name (also includes the sorting sequence in the banner)
-      NetrwKeepj put ='\"   Sorted by      '.sortby
+      NetrwKeepj put ='\"   Sorted by  '.sortby
       NetrwKeepj put ='\"   Sort sequence: '.g:netrw_sort_sequence
       let w:netrw_bannercnt= w:netrw_bannercnt + 2
     else
       "   call Decho("directories will be sorted by size or time",'~'.expand("<slnum>"))
       " sorted by time, size, exten
-      NetrwKeepj put ='\"   Sorted by '.sortby
+      NetrwKeepj put ='\"   Sorted by  '.sortby
       let w:netrw_bannercnt= w:netrw_bannercnt + 1
     endif
     exe "sil! NetrwKeepj ".w:netrw_bannercnt
@@ -9828,9 +9828,9 @@ fun! s:PerformListing(islocal)
     "   call Decho("--handle hiding/showing in banner (g:netrw_hide=".g:netrw_hide." g:netrw_list_hide<".g:netrw_list_hide.">)",'~'.expand("<slnum>"))
     if g:netrw_list_hide != "" && g:netrw_hide
       if g:netrw_hide == 1
-        NetrwKeepj put ='\"   Hiding:        '.g:netrw_list_hide
+        NetrwKeepj put ='\"   Hiding:    '.g:netrw_list_hide
       else
-        NetrwKeepj put ='\"   Showing:       '.g:netrw_list_hide
+        NetrwKeepj put ='\"   Showing:    '.g:netrw_list_hide
       endif
       let w:netrw_bannercnt= w:netrw_bannercnt + 1
     endif
@@ -9839,10 +9839,10 @@ fun! s:PerformListing(islocal)
     "   call Decho("ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
     let quickhelp   = g:netrw_quickhelp%len(s:QuickHelp)
     "   call Decho("quickhelp   =".quickhelp,'~'.expand("<slnum>"))
-    NetrwKeepj put ='\"   Quick Help: <F1>:help  '.s:QuickHelp[quickhelp]
+    " NetrwKeepj put ='\"   Quick Help: '.s:QuickHelp[quickhelp]
     "   call Decho("ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
     NetrwKeepj put ='\" =============================================================================='
-    let w:netrw_bannercnt= w:netrw_bannercnt + 2
+    let w:netrw_bannercnt= w:netrw_bannercnt + 1
     "  else " Decho
     "   call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
   endif
@@ -10837,11 +10837,11 @@ fun! s:LocalBrowseRefresh()
       " refresh any netrw buffer
       "    call Decho("refresh buf#".ibuf.'-> win#'.bufwinnr(ibuf),'~'.expand("<slnum>"))
       exe bufwinnr(ibuf)."wincmd w"
-      if getline(".") =~# 'Quick Help'
-        " decrement g:netrw_quickhelp to prevent refresh from changing g:netrw_quickhelp
-        " (counteracts s:NetrwBrowseChgDir()'s incrementing)
-        let g:netrw_quickhelp= g:netrw_quickhelp - 1
-      endif
+      " if getline(".") =~# 'Quick Help'
+      "   " decrement g:netrw_quickhelp to prevent refresh from changing g:netrw_quickhelp
+      "   " (counteracts s:NetrwBrowseChgDir()'s incrementing)
+      "   let g:netrw_quickhelp= g:netrw_quickhelp - 1
+      " endif
       "    call Decho("#3: quickhelp=".g:netrw_quickhelp,'~'.expand("<slnum>"))
       if exists("w:netrw_liststyle") && w:netrw_liststyle == s:TREELIST
         NetrwKeepj call s:NetrwRefreshTreeDict(w:netrw_treetop)

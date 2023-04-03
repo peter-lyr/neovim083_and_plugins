@@ -1,4 +1,5 @@
 local g = vim.g
+local f = vim.fn
 local a = vim.api
 local o = vim.opt
 local s = vim.keymap.set
@@ -63,6 +64,7 @@ local bufenter_netrw = function()
         end
         toggle_netrw.netrw_fix_set_width()
       end
+      g.netrw_list_hide = '^\\..*,' .. f['netrw_gitignore#Hide']()
     end
   end
 end
