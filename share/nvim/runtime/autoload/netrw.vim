@@ -4389,6 +4389,7 @@ fun! s:NetrwGetWord()
   endif
 
   if exists("w:netrw_bannercnt") && line(".") < w:netrw_bannercnt
+    call test#echo([curline])
     " Active Banner support
     "   call Decho("active banner handling",'~'.expand("<slnum>"))
     NetrwKeepj norm! 0
