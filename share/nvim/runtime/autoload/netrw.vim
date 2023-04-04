@@ -5181,6 +5181,7 @@ endfun
 fun! s:NetrwBrowseUpDir(islocal)
   "  call Dfunc("s:NetrwBrowseUpDir(islocal=".a:islocal.")")
   if exists("w:netrw_bannercnt") && line(".") < w:netrw_bannercnt-1
+    exe "norm " . string(w:netrw_bannercnt) .'gg'
     " this test needed because occasionally this function seems to be incorrectly called
     " when multiple leftmouse clicks are taken when atop the one line help in the banner.
     " I'm allowing the very bottom line to permit a "-" exit so that one may escape empty
