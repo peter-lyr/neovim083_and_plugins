@@ -4398,7 +4398,7 @@ fun! s:NetrwGetWord()
     if curline =~# '"\s*Sorted by\s'
       " NetrwKeepj norm! "_s
       let s:netrw_skipbrowse= 1
-      echo 'Pressing "s" also works'
+      " echo 'Pressing "s" also works'
 
     elseif curline =~# '"\s*Sort sequence:'
       let s:netrw_skipbrowse= 1
@@ -4409,9 +4409,9 @@ fun! s:NetrwGetWord()
     "   let s:netrw_skipbrowse= 1
 
     elseif curline =~# '"\s*\%(Hiding\|Showing\):'
-      NetrwKeepj norm! A
+      " NetrwKeepj norm! A
       let s:netrw_skipbrowse= 1
-      echo 'Pressing "a" also works'
+      " echo 'Pressing "a" also works'
 
     elseif line("$") > w:netrw_bannercnt
       exe 'sil NetrwKeepj '.w:netrw_bannercnt
