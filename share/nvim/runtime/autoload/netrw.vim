@@ -9755,7 +9755,7 @@ fun! s:PerformListing(islocal)
   " Set up the banner {{{3
   if g:netrw_banner
     "   call Decho("--set up banner",'~'.expand("<slnum>"))
-    NetrwKeepj call setline(1,'" ============================================================================')
+    NetrwKeepj call setline(1,'" ==============================================================================')
     if exists("g:netrw_pchk")
       " this undocumented option allows pchk to run with different versions of netrw without causing spurious
       " failure detections.
@@ -9886,7 +9886,7 @@ fun! s:PerformListing(islocal)
     if g:netrw_hide && g:netrw_list_hide != ""
       NetrwKeepj call s:NetrwListHide()
     endif
-    exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g@^\./@d'
+    exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g@^\./$@d'
     if !g:netrw_banner || line("$") >= w:netrw_bannercnt
       "    call Decho("manipulate directory listing (sort) : g:netrw_sort_by<".g:netrw_sort_by.">",'~'.expand("<slnum>"))
 
@@ -9958,6 +9958,21 @@ fun! s:PerformListing(islocal)
       endif
     endif
   endif
+  let linenr = 0
+  if getline(1) == '" =============================================================================='
+    let linenr = 1
+    while 1
+      let linenr += 1
+      let line_ = getline(linenr)
+      if line_ == '" =============================================================================='
+        break
+      endif
+      if linenr > 15
+        break
+      endif
+    endwhile
+  endif
+  exe 'sil! NetrwKeepj '.string(linenr+2).',$g@^\.@d'
   "  call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
 
   " convert to wide/tree listing {{{3
