@@ -9972,7 +9972,7 @@ fun! s:PerformListing(islocal)
       endif
     endwhile
   endif
-  exe 'sil! NetrwKeepj '.string(linenr+2).',$g@^\.@d'
+  exe 'sil! NetrwKeepj '.string(linenr+1).',$g@^\.@d'
   "  call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
 
   " convert to wide/tree listing {{{3
