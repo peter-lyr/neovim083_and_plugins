@@ -69,6 +69,9 @@ local get_dtarget = function(payload)
 end
 
 local test = function(payload)
+  if not payload then
+    return
+  end
   -- - dir: the current netrw directory (vim.b.netrw_curdir)
   -- - node: the name of the file or directory under the cursor
   -- - link: the referenced file if the node under the cursor is a symlink
@@ -145,6 +148,9 @@ end
 local toggle_netrw = require('toggle_netrw')
 
 local open = function(payload, direction)
+  if not payload then
+    return
+  end
   if payload['type'] == 0 then
     c[[ call feedkeys("\<cr>") ]]
     return
@@ -197,6 +203,9 @@ local updir = function()
 end
 
 local copy_fname = function(payload)
+  if not payload then
+    return
+  end
   if payload['type'] == 0 then
     local dname = get_fname_tail(get_dname(payload))
     c(string.format([[let @+ = "%s"]], dname))
@@ -209,6 +218,9 @@ local copy_fname = function(payload)
 end
 
 local copy_fname_full = function(payload)
+  if not payload then
+    return
+  end
   if payload['type'] == 0 then
     local dname = get_dname(payload)
     c(string.format([[let @+ = '%s']], dname))
@@ -249,15 +261,24 @@ local preview_file = function(payload)
 end
 
 local chg_dir = function(payload)
+  if not payload then
+    return
+  end
   c(string.format("cd %s", get_dtarget(payload)))
   print(f['getcwd']())
 end
 
 local explorer = function(payload)
+  if not payload then
+    return
+  end
   f['system'](string.format("cd %s && start .", get_dtarget(payload)))
 end
 
 local system_start = function(payload)
+  if not payload then
+    return
+  end
   if payload['type'] == 1 then
     f['system'](string.format([[start /b /min cmd /c "%s"]], get_fname(payload)))
   else
@@ -270,6 +291,9 @@ local hide = function(payload)
 end
 
 local go_dir = function(payload)
+  if not payload then
+    return
+  end
   c(string.format("Ntree %s", get_dtarget(payload)))
 end
 
@@ -461,6 +485,9 @@ g.netrw_sel_list = {}
 g.netrw_sel_list_bak = {}
 
 local sel_toggle_cur = function(payload)
+  if not payload then
+    return
+  end
   local name = get_fname(payload)
   if name == '' then
     name = get_dname(payload)

@@ -205,7 +205,7 @@ function M.toggle(mode)
         open_netrw()
         c(string.format('Ntree %s', dname))
         if fname ~= '' then
-          f['search'](fname)
+          c(string.format([[call search(substitute("%s", '\.', '\\\.', 'g'))]], fname))
         end
       else
         local fname = string.gsub(fullname, "\\", '/')
@@ -235,7 +235,7 @@ function M.netrw_fix_set_width()
       end
     end
   end
-  res = math.max(res + 8, 24)
+  res = math.max(res + 10, 30)
   a['nvim_win_set_width'](0, res)
 end
 

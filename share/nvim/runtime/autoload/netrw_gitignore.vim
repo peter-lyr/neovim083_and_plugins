@@ -18,5 +18,5 @@
 "               holder be liable for any damages resulting from the use
 "               of this software.
 function! netrw_gitignore#Hide(...)
-  return substitute(substitute(system('git ls-files --other --ignored --exclude-standard --directory'), '\n', ',', 'g'), ',$', '', '')
+  return substitute(substitute(system('git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ',', 'g'), ',$', '', '')
 endfunction
