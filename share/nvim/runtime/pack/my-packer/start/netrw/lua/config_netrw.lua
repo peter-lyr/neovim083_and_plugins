@@ -655,6 +655,7 @@ netrw.setup{
     ['X'] = function(payload) explorer(payload) end,
     ['x'] = function(payload) system_start(payload) end,
     ['A'] = function(payload) hide(payload) end,
+    ['(leader)x'] = function(payload) hide(payload) end,
     ['a'] = function(payload) open(payload, 'here') end,
     ['O'] = function(payload) go_dir(payload) end,
     ['pf'] = function(payload) unfold_all(payload, 0) end,
