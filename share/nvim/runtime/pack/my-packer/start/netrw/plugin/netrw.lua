@@ -1,6 +1,7 @@
 local g = vim.g
 local f = vim.fn
 local a = vim.api
+local c = vim.cmd
 local o = vim.opt
 local s = vim.keymap.set
 
@@ -75,7 +76,11 @@ a.nvim_create_autocmd({"BufEnter"}, {
 a.nvim_create_autocmd({"CursorMoved"}, {
   callback = function()
     if o.ft:get() == 'netrw' then
-      g.netrw_list_hide = string.gsub(string.gsub(f['system']('cd ' .. f['netrw#Call']('NetrwGetCurdir', 1) .. ' && git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+      netrw_list_hide = string.gsub(string.gsub(f['system']('cd ' .. f['netrw#Call']('NetrwGetCurdir', 1) .. ' && git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+      if netrw_list_hide ~= g.netrw_list_hide then
+        g.netrw_list_hide = netrw_list_hide
+        c([[call feedkeys("AA")]])
+      end
     end
   end,
 })
