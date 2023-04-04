@@ -10948,6 +10948,14 @@ fun! s:LocalFastBrowser()
   "  call Dret("s:LocalFastBrowser : browselist<".string(s:netrw_browselist).">")
 endfun
 
+fun! NewString(string, len)
+  if strdisplaywidth(a:string) < a:len
+    return a:string . repeat(' ', a:len - strdisplaywidth(a:string))
+  else
+    return a:string
+  endif
+endfun
+
 " ---------------------------------------------------------------------
 "  s:LocalListing: does the job of "ls" for local directories {{{2
 fun! s:LocalListing()
@@ -10982,7 +10990,7 @@ fun! s:LocalListing()
 
   if get(g:, 'netrw_dynamic_maxfilenamelen', 0)
     let filelistcopy           = map(deepcopy(filelist),'fnamemodify(v:val, ":t")')
-    let g:netrw_maxfilenamelen = max(map(filelistcopy,'len(v:val)')) + 1
+    let g:netrw_maxfilenamelen = max(map(filelistcopy,'strdisplaywidth(v:val)')) + 3
     "   call Decho("dynamic_maxfilenamelen: filenames             =".string(filelistcopy),'~'.expand("<slnum>"))
     "   call Decho("dynamic_maxfilenamelen: g:netrw_maxfilenamelen=".g:netrw_maxfilenamelen,'~'.expand("<slnum>"))
   endif
@@ -11052,8 +11060,8 @@ fun! s:LocalListing()
       if g:netrw_sizestyle =~# "[hH]"
         let sz= s:NetrwHumanReadable(sz)
       endif
-      let longfile= printf("%-".(g:netrw_maxfilenamelen+1)."s",pfile)
-      let pfile   = longfile.sz." ".strftime(g:netrw_timefmt,getftime(filename))
+      let longfile= NewString(pfile, g:netrw_maxfilenamelen)
+      let pfile   = longfile.printf("%-5s",sz)." ".strftime(g:netrw_timefmt,getftime(filename))
       "    call Decho("longlist support: sz=".sz." fsz=".fsz,'~'.expand("<slnum>"))
     endif
 
