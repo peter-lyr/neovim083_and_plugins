@@ -66,14 +66,14 @@ local bufenter_netrw = function()
       end
     end
   else
-    local dir = ''
-    local sta, vimlfuncret = pcall(a.nvim_call_function, 'ProjectRootGet', {})
-    if not sta then
-      print('no viml func:', 'ProjectRootGet')
-    else
-      dir = vimlfuncret
-    end
-    g.netrw_list_hide = '^\\..*,' .. string.gsub(string.gsub(f['system']('cd ' .. dir .. '&& git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+    -- local dir = ''
+    -- local sta, vimlfuncret = pcall(a.nvim_call_function, 'ProjectRootGet', {})
+    -- if not sta then
+    --   print('no viml func:', 'ProjectRootGet')
+    -- else
+    --   dir = vimlfuncret
+    -- end
+    g.netrw_list_hide = '^\\..*,' .. string.gsub(string.gsub(f['system']('git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
   end
 end
 
