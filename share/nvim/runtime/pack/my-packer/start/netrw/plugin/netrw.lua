@@ -39,7 +39,7 @@ g.netrw_sizestyle = "H"
 g.netrw_preview = 1
 g.netrw_alto = 0
 g.netrw_winsize = 120
-g.netrw_list_hide = "^\\..*"
+g.netrw_list_hide = ""
 g.netrw_dirhistmax = 0
 
 s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = true})
@@ -73,7 +73,7 @@ local bufenter_netrw = function()
     -- else
     --   dir = vimlfuncret
     -- end
-    g.netrw_list_hide = '^\\..*,' .. string.gsub(string.gsub(f['system']('git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+    g.netrw_list_hide = string.gsub(string.gsub(f['system']('git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
   end
 end
 

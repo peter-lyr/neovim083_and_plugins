@@ -4389,7 +4389,6 @@ fun! s:NetrwGetWord()
   endif
 
   if exists("w:netrw_bannercnt") && line(".") < w:netrw_bannercnt
-    call test#echo([curline])
     " Active Banner support
     "   call Decho("active banner handling",'~'.expand("<slnum>"))
     NetrwKeepj norm! 0
@@ -6174,6 +6173,9 @@ fun! s:NetrwListHide()
     else
       let hide     = listhide
       let listhide = ""
+    endif
+    if w:netrw_liststyle < 2
+      let hide = split(split(hide, '/')[-1], '\')[-1]
     endif
     "   call Decho("..extracted pattern from listhide: hide<".hide."> g:netrw_sort_by<".g:netrw_sort_by.'>','~'.expand("<slnum>"))
     if g:netrw_sort_by =~ '^[ts]'
@@ -9884,6 +9886,7 @@ fun! s:PerformListing(islocal)
     if g:netrw_hide && g:netrw_list_hide != ""
       NetrwKeepj call s:NetrwListHide()
     endif
+    exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g@^\./@d'
     if !g:netrw_banner || line("$") >= w:netrw_bannercnt
       "    call Decho("manipulate directory listing (sort) : g:netrw_sort_by<".g:netrw_sort_by.">",'~'.expand("<slnum>"))
 
