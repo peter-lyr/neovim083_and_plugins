@@ -65,18 +65,17 @@ local bufenter_netrw = function()
         toggle_netrw.netrw_fix_set_width()
       end
     end
-  else
-    -- local dir = ''
-    -- local sta, vimlfuncret = pcall(a.nvim_call_function, 'ProjectRootGet', {})
-    -- if not sta then
-    --   print('no viml func:', 'ProjectRootGet')
-    -- else
-    --   dir = vimlfuncret
-    -- end
-    g.netrw_list_hide = string.gsub(string.gsub(f['system']('git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
   end
 end
 
 a.nvim_create_autocmd({"BufEnter"}, {
   callback = bufenter_netrw,
+})
+
+a.nvim_create_autocmd({"CursorMoved"}, {
+  callback = function()
+    if o.ft:get() == 'netrw' then
+      g.netrw_list_hide = string.gsub(string.gsub(f['system']('cd ' .. f['netrw#Call']('NetrwGetCurdir', 1) .. ' && git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+    end
+  end,
 })
