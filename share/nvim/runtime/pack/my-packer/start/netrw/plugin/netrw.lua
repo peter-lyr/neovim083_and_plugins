@@ -82,7 +82,7 @@ a.nvim_create_autocmd({"CursorMoved"}, {
       if netrw_list_hide ~= g.netrw_list_hide then
         g.netrw_list_hide = netrw_list_hide
         if w.netrw_liststyle < 2 and g.netrw_hide == 1 then
-          c([[call feedkeys("AA")]])
+          c([[call feedkeys("..")]])
         end
       end
     end
