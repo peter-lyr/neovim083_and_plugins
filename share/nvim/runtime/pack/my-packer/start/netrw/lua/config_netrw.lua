@@ -294,7 +294,7 @@ local go_dir = function(payload)
   if not payload then
     return
   end
-  c(string.format("Ntree %s", get_dtarget(payload)))
+  c(string.format("Explore %s", get_dtarget(payload)))
 end
 
 local unfold_all = function(payload, start)
