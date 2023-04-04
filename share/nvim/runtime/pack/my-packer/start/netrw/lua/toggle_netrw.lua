@@ -136,6 +136,8 @@ function M.toggle(mode)
     if #M.netrw_winids_unfix > 0 then
       if is_hide_en() then
         a.nvim_win_hide(M.netrw_winids_unfix[1])
+      else
+        c'bd'
       end
     else
       if mode == 'cur_fname' or mode == 'cwd' then
