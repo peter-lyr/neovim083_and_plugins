@@ -157,12 +157,6 @@ int csv2pcm(char *filename, int skip_line_numbers, int *sel_columns, int sel_col
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2) {
-        printf("Usage: %s filename.csv filename2.csv ...\n", argv[0]);
-        system("pause");
-        return 1;
-    }
-
     char skip_line_numbers_buffer[MAX_LINE_LENGTH];
     int skip_line_numbers;
 
@@ -180,12 +174,18 @@ int main(int argc, char *argv[])
     int sel_columns[32];
     int sel_column_len;
 
-    read_ini_file("csv2pcm.ini", "config", "sel_columns", "1", sel_columns_buffer);
+    read_ini_file("csv2pcm.ini", "config", "sel_columns", "3", sel_columns_buffer);
 
     split(sel_columns_buffer, sel_columns, &sel_column_len);
     printf("sel_columns(non empty, first column is 1):\n");
     for (int i = 0; i < sel_column_len; i++) {
         printf("  %d\n", sel_columns[i]);
+    }
+
+    if (argc < 2) {
+        printf("Usage: %s filename.csv filename2.csv ...\n", argv[0]);
+        system("pause");
+        return 1;
     }
 
     for (int i=1; i<argc; i++)

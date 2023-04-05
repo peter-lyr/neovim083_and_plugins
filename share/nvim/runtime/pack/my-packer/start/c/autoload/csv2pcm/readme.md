@@ -8,7 +8,14 @@
 
 增加.ini文件
 csv2pcm.ini
+如果没有csv2pcm.ini，执行csv2pcm.exe会创建一个，默认值如下
+```ini
+[config]
+skip_line_numbers=1
+sel_columns=3
+```
 
+说明：
 ```ini
 [config]
 skip_line_numbers=1
