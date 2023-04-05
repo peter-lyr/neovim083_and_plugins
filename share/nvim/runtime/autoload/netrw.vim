@@ -9922,14 +9922,19 @@ fun! s:PerformListing(islocal)
         NetrwKeepj call histdel("/",-1)
         exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$v+['.g:netrw_sepchr.'/]+s/^\(.*\.\)\(.\{-\}\)$/\2'.g:netrw_sepchr.'&/e'
         NetrwKeepj call histdel("/",-1)
+        if w:netrw_liststyle == 1
+          let ppp = " "
+        else
+          let ppp = "$"
+        endif
         if !g:netrw_banner || w:netrw_bannercnt < line("$")
           "      call Decho("g:netrw_sort_direction=".g:netrw_sort_direction." (bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
           if g:netrw_sort_direction =~# 'n'
             " normal direction sorting
-            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort'.' '.g:netrw_sort_options
+            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort /[^ ]*\ze\zs\.\([^ ]*\)' .ppp .'/'
           else
             " reverse direction sorting
-            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.g:netrw_sort_options
+            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort! /[^ ]*\ze\zs\.\([^ ]*\)' .ppp .'/'
           endif
         endif
         exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$s/^.\{-}'.g:netrw_sepchr.'//e'
