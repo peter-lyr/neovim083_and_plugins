@@ -11056,12 +11056,13 @@ fun! s:LocalListing()
 
     if w:netrw_liststyle == s:LONGLIST
       let sz   = getfsize(filename)
+      let osz  = sz
       let fsz  = strpart("               ",1,15-strlen(sz)).sz
       if g:netrw_sizestyle =~# "[hH]"
         let sz= s:NetrwHumanReadable(sz)
       endif
       let longfile= NewString(pfile, g:netrw_maxfilenamelen)
-      let pfile   = longfile.printf("%-5s",sz)." ".strftime(g:netrw_timefmt,getftime(filename))
+      let pfile   = longfile.'('.printf("%011s",osz).')'.printf("%-5s",sz)." ".strftime(g:netrw_timefmt,getftime(filename))
       "    call Decho("longlist support: sz=".sz." fsz=".fsz,'~'.expand("<slnum>"))
     endif
 
