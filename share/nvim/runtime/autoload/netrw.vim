@@ -9943,13 +9943,19 @@ fun! s:PerformListing(islocal)
       elseif a:islocal
         if !g:netrw_banner || w:netrw_bannercnt < line("$")
           "      call Decho("g:netrw_sort_direction=".g:netrw_sort_direction,'~'.expand("<slnum>"))
+          if g:netrw_sort_by =~# "^size"
+            let elen = g:netrw_maxfilenamelen
+          elseif g:netrw_sort_by =~# "^time"
+            let elen = g:netrw_maxfilenamelen + 19
+          endif
           if g:netrw_sort_direction =~# 'n'
             "       call Decho('exe sil NetrwKeepj '.w:netrw_bannercnt.',$sort','~'.expand("<slnum>"))
-            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort'.' '.g:netrw_sort_options
+            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort'.' '.'/.*\%'.elen.'v/'
           else
             "       call Decho('exe sil NetrwKeepj '.w:netrw_bannercnt.',$sort!','~'.expand("<slnum>"))
-            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.g:netrw_sort_options
+            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.'/.*\%'.elen.'v/'
           endif
+          call test#echo(['sil! NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.'/.*\%'.elen.'v/'])
           "     call Decho("remove leading digits/ (sorting) information from listing",'~'.expand("<slnum>"))
           exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$s/^\d\{-}\///e'
           NetrwKeepj call histdel("/",-1)
