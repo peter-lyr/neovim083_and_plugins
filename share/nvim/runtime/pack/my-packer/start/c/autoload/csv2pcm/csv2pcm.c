@@ -215,9 +215,10 @@ int main(int argc, char *argv[])
     for (int i = 0; i < sel_column_len; i++) {
         printf("  %d\n", sel_columns[i]);
     }
+    printf("\n");
 
     if (argc < 2) {
-        printf("\nAnother Usage(drag files to csv2pcm.exe):\n    csv2pcm.exe filename.csv filename2.csv ...\n");
+        printf("Another Usage(drag files to csv2pcm.exe):\n    csv2pcm.exe filename.csv filename2.csv ...\n");
         printf(" or csv2pcm.exe filename.txt filename2.txt ...\n\n");
         char **Files = NULL;
         int n = 0;
@@ -226,6 +227,9 @@ int main(int argc, char *argv[])
         getExecutablePath(executable_dir);
         scan_dir(executable_dir, &Files, &n);
         char f[MAX_PATH];
+        if (n == 0) {
+            printf("No csv or txt file under %s\n", executable_dir);
+        }
         for (int i = 0; i < n; i++) {
             *f = '\0';
             strcat(f, executable_dir);
