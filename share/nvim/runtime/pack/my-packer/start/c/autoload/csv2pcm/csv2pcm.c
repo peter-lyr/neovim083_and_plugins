@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <windows.h>
 #include <sys/stat.h>
 
 #define MAX_LINE_LENGTH 1024
@@ -86,6 +87,38 @@ char *add_output_dir(char *path, char *ext)
     return result;
 }
 
+void getExecutablePath(char *buffer) {
+    GetModuleFileName(NULL, buffer, MAX_PATH);
+    char *lastSlash = strrchr(buffer, '\\');
+    if (lastSlash != NULL) {
+        *(lastSlash + 1) = '\0';
+    }
+}
+
+void scan_dir(const char *dir_name, char ***files, int *n)
+{
+    DIR *dir;
+    struct dirent *ent;
+
+    if ((dir = opendir(dir_name)) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            char *extension = strrchr(ent->d_name, '.');
+            if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".txt") != 0)) {
+                continue;
+            }
+            if (ent->d_type == DT_REG) { /* If the entry is a regular file */
+                *files = realloc(*files, sizeof(char*) * ++(*n));
+                (*files)[*n-1] = malloc(strlen(ent->d_name) + 1);
+                strcpy((*files)[*n-1], ent->d_name);
+            }
+        }
+        closedir(dir);
+    } else {
+        perror("");
+        exit(EXIT_FAILURE);
+    }
+}
+
 int csv2pcm(char *filename, int skip_line_numbers, int *sel_columns, int sel_column_len)
 {
 
@@ -135,7 +168,7 @@ int csv2pcm(char *filename, int skip_line_numbers, int *sel_columns, int sel_col
                 fwrite(&c, 1, 1, fp2);
                 if (temp_cnt < 4)
                 {
-                    printf("%s(0x%04x),", pch, c);
+                    printf("%s(0x%02x),", pch, c);
                 } else if (temp_cnt == 4) {
                     temp_cnt++;
                     printf("...\n");
@@ -184,10 +217,25 @@ int main(int argc, char *argv[])
     }
 
     if (argc < 2) {
-        printf("Usage:\n    csv2pcm.exe filename.csv filename2.csv ...\n");
-        printf(" or csv2pcm.exe filename.txt filename2.txt ...\n");
+        printf("\nAnother Usage(drag files to csv2pcm.exe):\n    csv2pcm.exe filename.csv filename2.csv ...\n");
+        printf(" or csv2pcm.exe filename.txt filename2.txt ...\n\n");
+        char **Files = NULL;
+        int n = 0;
+
+        char executable_dir[MAX_PATH];
+        getExecutablePath(executable_dir);
+        scan_dir(executable_dir, &Files, &n);
+        char f[MAX_PATH];
+        for (int i = 0; i < n; i++) {
+            *f = '\0';
+            strcat(f, executable_dir);
+            strcat(f, Files[i]);
+            csv2pcm(f, skip_line_numbers, sel_columns, sel_column_len);
+            free(Files[i]);
+        }
+        free(Files);
         system("pause");
-        return 1;
+        return 0;
     }
 
     for (int i=1; i<argc; i++)
