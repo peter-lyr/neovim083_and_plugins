@@ -13,7 +13,7 @@ local coderunner_exe = function(cmd)
     config_coderunner.setup({
       filetype = {
         python = "python -u",
-        c = "cd $dir && gcc $fileName -Wall -O3 -o $fileNameWithoutExt && strip -s $dir/$fileNameWithoutExt.exe && upx --best $dir/$fileNameWithoutExt.exe && $dir/$fileNameWithoutExt"
+        c = "cd $dir && gcc $fileName -Wall -s -ffunction-sections -fdata-sections -Wl,--gc-sections -O3 -o $fileNameWithoutExt && strip -s $dir/$fileNameWithoutExt.exe && upx --best $dir/$fileNameWithoutExt.exe && $dir/$fileNameWithoutExt"
       },
     })
   end
