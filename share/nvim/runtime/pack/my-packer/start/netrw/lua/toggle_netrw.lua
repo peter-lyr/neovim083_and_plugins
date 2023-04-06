@@ -136,6 +136,8 @@ function M.toggle(mode)
     if #M.netrw_winids_unfix > 0 then
       if is_hide_en() then
         a.nvim_win_hide(M.netrw_winids_unfix[1])
+      else
+        c'bd'
       end
     else
       if mode == 'cur_fname' or mode == 'cwd' then
@@ -203,7 +205,7 @@ function M.toggle(mode)
       local dname = M.get_dname()
       if fullname == '' or dname ~= '' then
         open_netrw()
-        c(string.format('Ntree %s', dname))
+        c(string.format('Explore %s', dname))
         if fname ~= '' then
           c(string.format([[call search(substitute("%s", '\.', '\\\.', 'g'))]], fname))
         end
@@ -215,10 +217,10 @@ function M.toggle(mode)
       end
     elseif mode == 'cwd' then
       open_netrw()
-      c(string.format('Ntree %s', f['getcwd']()))
+      c(string.format('Explore %s', f['getcwd']()))
     else
       open_netrw()
-      c'Ntree'
+      c'Explore'
     end
     M.netrw_fix_set_width()
   end

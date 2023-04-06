@@ -4398,7 +4398,7 @@ fun! s:NetrwGetWord()
     if curline =~# '"\s*Sorted by\s'
       " NetrwKeepj norm! "_s
       let s:netrw_skipbrowse= 1
-      echo 'Pressing "s" also works'
+      " echo 'Pressing "s" also works'
 
     elseif curline =~# '"\s*Sort sequence:'
       let s:netrw_skipbrowse= 1
@@ -4409,9 +4409,9 @@ fun! s:NetrwGetWord()
     "   let s:netrw_skipbrowse= 1
 
     elseif curline =~# '"\s*\%(Hiding\|Showing\):'
-      NetrwKeepj norm! A
+      " NetrwKeepj norm! A
       let s:netrw_skipbrowse= 1
-      echo 'Pressing "a" also works'
+      " echo 'Pressing "a" also works'
 
     elseif line("$") > w:netrw_bannercnt
       exe 'sil NetrwKeepj '.w:netrw_bannercnt
@@ -5181,6 +5181,7 @@ endfun
 fun! s:NetrwBrowseUpDir(islocal)
   "  call Dfunc("s:NetrwBrowseUpDir(islocal=".a:islocal.")")
   if exists("w:netrw_bannercnt") && line(".") < w:netrw_bannercnt-1
+    exe "norm " . string(w:netrw_bannercnt) .'gg'
     " this test needed because occasionally this function seems to be incorrectly called
     " when multiple leftmouse clicks are taken when atop the one line help in the banner.
     " I'm allowing the very bottom line to permit a "-" exit so that one may escape empty
@@ -9755,7 +9756,7 @@ fun! s:PerformListing(islocal)
   " Set up the banner {{{3
   if g:netrw_banner
     "   call Decho("--set up banner",'~'.expand("<slnum>"))
-    NetrwKeepj call setline(1,'" ============================================================================')
+    NetrwKeepj call setline(1,'" ==============================================================================')
     if exists("g:netrw_pchk")
       " this undocumented option allows pchk to run with different versions of netrw without causing spurious
       " failure detections.
@@ -9886,7 +9887,7 @@ fun! s:PerformListing(islocal)
     if g:netrw_hide && g:netrw_list_hide != ""
       NetrwKeepj call s:NetrwListHide()
     endif
-    exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g@^\./@d'
+    exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$g@^\./$@d'
     if !g:netrw_banner || line("$") >= w:netrw_bannercnt
       "    call Decho("manipulate directory listing (sort) : g:netrw_sort_by<".g:netrw_sort_by.">",'~'.expand("<slnum>"))
 
@@ -9921,14 +9922,19 @@ fun! s:PerformListing(islocal)
         NetrwKeepj call histdel("/",-1)
         exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$v+['.g:netrw_sepchr.'/]+s/^\(.*\.\)\(.\{-\}\)$/\2'.g:netrw_sepchr.'&/e'
         NetrwKeepj call histdel("/",-1)
+        if w:netrw_liststyle == 1
+          let ppp = " "
+        else
+          let ppp = "$"
+        endif
         if !g:netrw_banner || w:netrw_bannercnt < line("$")
           "      call Decho("g:netrw_sort_direction=".g:netrw_sort_direction." (bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
           if g:netrw_sort_direction =~# 'n'
             " normal direction sorting
-            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort'.' '.g:netrw_sort_options
+            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort /[^ ]*\ze\zs\.\([^ ]*\)' .ppp .'/'
           else
             " reverse direction sorting
-            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.g:netrw_sort_options
+            exe 'sil NetrwKeepj '.w:netrw_bannercnt.',$sort! /[^ ]*\ze\zs\.\([^ ]*\)' .ppp .'/'
           endif
         endif
         exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$s/^.\{-}'.g:netrw_sepchr.'//e'
@@ -9937,13 +9943,19 @@ fun! s:PerformListing(islocal)
       elseif a:islocal
         if !g:netrw_banner || w:netrw_bannercnt < line("$")
           "      call Decho("g:netrw_sort_direction=".g:netrw_sort_direction,'~'.expand("<slnum>"))
+          if g:netrw_sort_by =~# "^size"
+            let elen = g:netrw_maxfilenamelen
+          elseif g:netrw_sort_by =~# "^time"
+            let elen = g:netrw_maxfilenamelen + 19
+          endif
           if g:netrw_sort_direction =~# 'n'
             "       call Decho('exe sil NetrwKeepj '.w:netrw_bannercnt.',$sort','~'.expand("<slnum>"))
-            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort'.' '.g:netrw_sort_options
+            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort'.' '.'/.*\%'.elen.'v/'
           else
             "       call Decho('exe sil NetrwKeepj '.w:netrw_bannercnt.',$sort!','~'.expand("<slnum>"))
-            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.g:netrw_sort_options
+            exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.'/.*\%'.elen.'v/'
           endif
+          call test#echo(['sil! NetrwKeepj '.w:netrw_bannercnt.',$sort!'.' '.'/.*\%'.elen.'v/'])
           "     call Decho("remove leading digits/ (sorting) information from listing",'~'.expand("<slnum>"))
           exe 'sil! NetrwKeepj '.w:netrw_bannercnt.',$s/^\d\{-}\///e'
           NetrwKeepj call histdel("/",-1)
@@ -9958,6 +9970,21 @@ fun! s:PerformListing(islocal)
       endif
     endif
   endif
+  let linenr = 0
+  if getline(1) == '" =============================================================================='
+    let linenr = 1
+    while 1
+      let linenr += 1
+      let line_ = getline(linenr)
+      if line_ == '" =============================================================================='
+        break
+      endif
+      if linenr > 15
+        break
+      endif
+    endwhile
+  endif
+  exe 'sil! NetrwKeepj '.string(linenr+1).',$g@^\.@d'
   "  call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
 
   " convert to wide/tree listing {{{3
@@ -10932,6 +10959,14 @@ fun! s:LocalFastBrowser()
   "  call Dret("s:LocalFastBrowser : browselist<".string(s:netrw_browselist).">")
 endfun
 
+fun! NewString(string, len)
+  if strdisplaywidth(a:string) < a:len
+    return a:string . repeat(' ', a:len - strdisplaywidth(a:string))
+  else
+    return a:string
+  endif
+endfun
+
 " ---------------------------------------------------------------------
 "  s:LocalListing: does the job of "ls" for local directories {{{2
 fun! s:LocalListing()
@@ -10966,7 +11001,7 @@ fun! s:LocalListing()
 
   if get(g:, 'netrw_dynamic_maxfilenamelen', 0)
     let filelistcopy           = map(deepcopy(filelist),'fnamemodify(v:val, ":t")')
-    let g:netrw_maxfilenamelen = max(map(filelistcopy,'len(v:val)')) + 1
+    let g:netrw_maxfilenamelen = max(map(filelistcopy,'strdisplaywidth(v:val)')) + 3
     "   call Decho("dynamic_maxfilenamelen: filenames             =".string(filelistcopy),'~'.expand("<slnum>"))
     "   call Decho("dynamic_maxfilenamelen: g:netrw_maxfilenamelen=".g:netrw_maxfilenamelen,'~'.expand("<slnum>"))
   endif
@@ -11032,12 +11067,13 @@ fun! s:LocalListing()
 
     if w:netrw_liststyle == s:LONGLIST
       let sz   = getfsize(filename)
+      let osz  = sz
       let fsz  = strpart("               ",1,15-strlen(sz)).sz
       if g:netrw_sizestyle =~# "[hH]"
         let sz= s:NetrwHumanReadable(sz)
       endif
-      let longfile= printf("%-".(g:netrw_maxfilenamelen+1)."s",pfile)
-      let pfile   = longfile.sz." ".strftime(g:netrw_timefmt,getftime(filename))
+      let longfile= NewString(pfile, g:netrw_maxfilenamelen)
+      let pfile   = longfile.'('.printf("%011s",osz).')'.printf("%-5s",sz)." ".strftime(g:netrw_timefmt,getftime(filename))
       "    call Decho("longlist support: sz=".sz." fsz=".fsz,'~'.expand("<slnum>"))
     endif
 

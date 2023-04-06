@@ -294,7 +294,7 @@ local go_dir = function(payload)
   if not payload then
     return
   end
-  c(string.format("Ntree %s", get_dtarget(payload)))
+  c(string.format("Explore %s", get_dtarget(payload)))
 end
 
 local unfold_all = function(payload, start)
@@ -654,7 +654,7 @@ netrw.setup{
     ['cd'] = function(payload) chg_dir(payload) end,
     ['X'] = function(payload) explorer(payload) end,
     ['x'] = function(payload) system_start(payload) end,
-    ['A'] = function(payload) hide(payload) end,
+    ['.'] = function(payload) hide(payload) end,
     ['a'] = function(payload) open(payload, 'here') end,
     ['O'] = function(payload) go_dir(payload) end,
     ['pf'] = function(payload) unfold_all(payload, 0) end,

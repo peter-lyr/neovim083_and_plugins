@@ -1,6 +1,8 @@
 local g = vim.g
+local w = vim.w
 local f = vim.fn
 local a = vim.api
+local c = vim.cmd
 local o = vim.opt
 local s = vim.keymap.set
 
@@ -41,6 +43,9 @@ g.netrw_alto = 0
 g.netrw_winsize = 120
 g.netrw_list_hide = ""
 g.netrw_dirhistmax = 0
+g.netrw_hide = 0
+g.netrw_dynamic_maxfilenamelen = 1
+g.netrw_timefmt = "%Y-%m-%d %H:%M:%S %a"
 
 s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = true})
 s({'n', 'v'}, '<leader><leader>l', function() netrw_exe("fix_unfix") end, {silent = true})
@@ -65,18 +70,23 @@ local bufenter_netrw = function()
         toggle_netrw.netrw_fix_set_width()
       end
     end
-  else
-    -- local dir = ''
-    -- local sta, vimlfuncret = pcall(a.nvim_call_function, 'ProjectRootGet', {})
-    -- if not sta then
-    --   print('no viml func:', 'ProjectRootGet')
-    -- else
-    --   dir = vimlfuncret
-    -- end
-    g.netrw_list_hide = string.gsub(string.gsub(f['system']('git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
   end
 end
 
 a.nvim_create_autocmd({"BufEnter"}, {
   callback = bufenter_netrw,
+})
+
+a.nvim_create_autocmd({"CursorMoved"}, {
+  callback = function()
+    if o.ft:get() == 'netrw' then
+      netrw_list_hide = string.gsub(string.gsub(f['system']('cd ' .. f['netrw#Call']('NetrwGetCurdir', 1) .. ' && git config --global core.quotepath false && git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+      if netrw_list_hide ~= g.netrw_list_hide then
+        g.netrw_list_hide = netrw_list_hide
+        if w.netrw_liststyle < 2 and g.netrw_hide == 1 then
+          c([[call feedkeys("..")]])
+        end
+      end
+    end
+  end,
 })
