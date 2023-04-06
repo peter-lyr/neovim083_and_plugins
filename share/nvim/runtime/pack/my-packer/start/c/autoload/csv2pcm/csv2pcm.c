@@ -90,8 +90,8 @@ int csv2pcm(char *filename, int skip_line_numbers, int *sel_columns, int sel_col
 {
 
     char *extension = strrchr(filename, '.');
-    if (extension == NULL || strcmp(extension, ".csv") != 0) {
-        printf("Not csv file: \"%s\"\n", filename);
+    if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".txt") != 0)) {
+        printf("Not csv or txt file: \"%s\"\n", filename);
         return -1;
     }
 
@@ -184,7 +184,8 @@ int main(int argc, char *argv[])
     }
 
     if (argc < 2) {
-        printf("Usage: %s filename.csv filename2.csv ...\n", argv[0]);
+        printf("Usage:\n    csv2pcm.exe filename.csv filename2.csv ...\n");
+        printf(" or csv2pcm.exe filename.txt filename2.txt ...\n");
         system("pause");
         return 1;
     }
