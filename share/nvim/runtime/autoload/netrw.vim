@@ -9390,7 +9390,7 @@ fun! s:NetrwTreeDisplay(dir,depth)
 
   " install ../ and shortdir
   if a:depth == ""
-    call setline(line("$")+1,'../')
+    " call setline(line("$")+1,'../')
     "   call Decho("setline#".line("$")." ../ (depth is zero)",'~'.expand("<slnum>"))
   endif
   if a:dir =~ '^\a\{3,}://'
