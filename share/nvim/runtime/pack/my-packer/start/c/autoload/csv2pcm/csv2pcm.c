@@ -234,6 +234,7 @@ int main(int argc, char *argv[])
             *f = '\0';
             strcat(f, executable_dir);
             strcat(f, Files[i]);
+            printf("%03d. ", i + 1);
             csv2pcm(f, skip_line_numbers, sel_columns, sel_column_len);
             free(Files[i]);
         }
@@ -244,6 +245,7 @@ int main(int argc, char *argv[])
 
     for (int i=1; i<argc; i++)
     {
+        printf("%03d. ", i);
         csv2pcm(argv[i], skip_line_numbers, sel_columns, sel_column_len);
     }
 
