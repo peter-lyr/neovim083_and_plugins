@@ -10992,6 +10992,8 @@ fun! s:LocalListing()
     "   call Decho("dynamic_maxfilenamelen: filenames             =".string(filelistcopy),'~'.expand("<slnum>"))
     "   call Decho("dynamic_maxfilenamelen: g:netrw_maxfilenamelen=".g:netrw_maxfilenamelen,'~'.expand("<slnum>"))
   endif
+  let filelistcopy = map(deepcopy(filelist),'v:val')
+  let netrw_maxfilesizelen = max(map(filelistcopy,'len(string(getfsize(v:val)))'))
   "  call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
 
   for filename in filelist
@@ -11060,7 +11062,7 @@ fun! s:LocalListing()
         let sz= s:NetrwHumanReadable(sz)
       endif
       let longfile= NewString(pfile, g:netrw_maxfilenamelen)
-      let pfile   = longfile.'('.printf("%011s",osz).')'.printf("%-5s",sz)." ".strftime(g:netrw_timefmt,getftime(filename))
+      let pfile   = longfile.'('.printf("%" .netrw_maxfilesizelen . "s",osz).')'.printf("%-5s",sz)." ".strftime(g:netrw_timefmt,getftime(filename))
       "    call Decho("longlist support: sz=".sz." fsz=".fsz,'~'.expand("<slnum>"))
     endif
 
