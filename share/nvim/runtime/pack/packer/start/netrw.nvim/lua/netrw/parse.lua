@@ -4,6 +4,10 @@ M.TYPE_DIR = 0
 M.TYPE_FILE = 1
 M.TYPE_SYMLINK = 2
 
+function ltrim(s)
+  return s:gsub("^%s*(.-)%s*$", "%1")
+end
+
 ---@alias Word {dir:string, node:string, link:string|nil, extension:string|nil, type:number}
 
 ---@param line string
@@ -23,7 +27,7 @@ M.get_node = function(line)
   end
 
   local curdir = vim.b.netrw_curdir
-  local line = string.gsub(line, " ", "")
+  local line = ltrim(line)
 
   local _, _, node, link = string.find(line, "^(.+)@\t%s*%-%->%s*(.+)")
   if node then
