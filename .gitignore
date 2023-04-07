@@ -11,7 +11,7 @@
 NetrwTreeListing
 *.exe
 !**/clangd/bin/clangd.exe
-output
+output*
 *.csv
 *.bin
 *.pcm
