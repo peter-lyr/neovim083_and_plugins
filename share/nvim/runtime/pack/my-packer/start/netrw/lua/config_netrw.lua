@@ -644,6 +644,7 @@ netrw.setup{
     ['(leftmouse)'] = function(payload) toggle_dir(payload) end,
     ['(2-leftmouse)'] = function(payload) preview_file(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
+    ['(middlemouse)'] = function(payload) updir(payload) end,
     ['q'] = function(payload) updir() end,
     ['o'] = function(payload) open(payload, 'here') end,
     ['do'] = function(payload) open(payload, 'here') end,
