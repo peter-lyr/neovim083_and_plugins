@@ -106,6 +106,10 @@ end
 ---@type Config
 M.options = {}
 
+local s = vim.keymap.set
+local c = vim.cmd
+local opts = { noremap = true, silent = true, nowait = true }
+
 ---@param options Config|nil
 function M.setup(options)
   M.options = vim.tbl_deep_extend("force", {}, defaults, options or {})
@@ -124,6 +128,9 @@ function M.setup(options)
       vim.opt.relativenumber = true
 
       if vim.b.netrw_liststyle == 2 then
+        s({'n', 'v'}, 'q', function() c[[ call feedkeys("-") ]] end, opts)
+        s({'n', 'v'}, 'o', function() c[[ call feedkeys("\<cr>") ]] end, opts)
+        s({'n', 'v'}, 'a', function() c[[ call feedkeys("\<cr>") ]] end, opts)
         return
       end
 
