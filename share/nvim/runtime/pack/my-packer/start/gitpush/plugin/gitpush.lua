@@ -26,3 +26,4 @@ s({'n', 'v'}, '<leader>g3', function() gitpush_exe("just_push") end, {silent = t
 s({'n', 'v'}, '<leader>g4', function() gitpush_exe("add_commit") end, {silent = true})
 s({'n', 'v'}, '<leader>g5', function() gitpush_exe("just_commit") end, {silent = true})
 s({'n', 'v'}, '<leader>gI', function() gitpush_exe("git_init") end, {silent = true})
+s({'n', 'v'}, '<leader>g<f1>', function() os.execute('start cmd /c "git log --all --graph --decorate --oneline && pause"') end, {silent = true})
