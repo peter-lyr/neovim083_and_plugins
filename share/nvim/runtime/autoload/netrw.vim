@@ -4400,8 +4400,8 @@ fun! s:NetrwGetWord()
       let s:netrw_skipbrowse= 1
       " echo 'Pressing "s" also works'
 
-    elseif curline =~# '"\s*Sort sequence:'
-      let s:netrw_skipbrowse= 1
+    " elseif curline =~# '"\s*Sort sequence:'
+    "   let s:netrw_skipbrowse= 1
       " echo 'Press "S" to edit sorting sequence'
 
     " elseif curline =~# '"\s*Quick Help:'
@@ -9757,24 +9757,24 @@ fun! s:PerformListing(islocal)
   if g:netrw_banner
     "   call Decho("--set up banner",'~'.expand("<slnum>"))
     NetrwKeepj call setline(1,'" ==============================================================================')
-    if exists("g:netrw_pchk")
-      " this undocumented option allows pchk to run with different versions of netrw without causing spurious
-      " failure detections.
-      NetrwKeepj call setline(2,'" Netrw Directory Listing')
-    else
-      NetrwKeepj call setline(2,'" Netrw Directory Listing                                        (netrw '.g:loaded_netrw.')')
-    endif
+    " if exists("g:netrw_pchk")
+    "   " this undocumented option allows pchk to run with different versions of netrw without causing spurious
+    "   " failure detections.
+    "   NetrwKeepj call setline(2,'" Netrw Directory Listing')
+    " else
+    "   NetrwKeepj call setline(2,'" Netrw Directory Listing                                        (netrw '.g:loaded_netrw.')')
+    " endif
     if exists("g:netrw_pchk")
       let curdir= substitute(b:netrw_curdir,expand("$HOME"),'~','')
     else
       let curdir= b:netrw_curdir
     endif
     if exists("g:netrw_bannerbackslash") && g:netrw_bannerbackslash
-      NetrwKeepj call setline(3,'"   '.substitute(curdir,'/','\\','g'))
+      NetrwKeepj call setline(2,'"   '.substitute(curdir,'/','\\','g'))
     else
-      NetrwKeepj call setline(3,'"   '.curdir)
+      NetrwKeepj call setline(2,'"   '.curdir)
     endif
-    let w:netrw_bannercnt= 3
+    let w:netrw_bannercnt= 2
     NetrwKeepj exe "sil! NetrwKeepj ".w:netrw_bannercnt
   else
     "   call Decho("--no banner",'~'.expand("<slnum>"))
@@ -9793,18 +9793,18 @@ fun! s:PerformListing(islocal)
   " Sorted by... {{{3
   if g:netrw_banner
     "   call Decho("--handle specified sorting: g:netrw_sort_by<".g:netrw_sort_by.">",'~'.expand("<slnum>"))
-    if g:netrw_sort_by =~# "^n"
-      "   call Decho("directories will be sorted by name",'~'.expand("<slnum>"))
-      " sorted by name (also includes the sorting sequence in the banner)
-      NetrwKeepj put ='\"   Sorted by  '.sortby
-      NetrwKeepj put ='\"   Sort sequence: '.g:netrw_sort_sequence
-      let w:netrw_bannercnt= w:netrw_bannercnt + 2
-    else
+    " if g:netrw_sort_by =~# "^n"
+    "   "   call Decho("directories will be sorted by name",'~'.expand("<slnum>"))
+    "   " sorted by name (also includes the sorting sequence in the banner)
+    "   NetrwKeepj put ='\"   Sorted by  '.sortby
+    "   NetrwKeepj put ='\"   Sort sequence: '.g:netrw_sort_sequence
+    "   let w:netrw_bannercnt= w:netrw_bannercnt + 2
+    " else
       "   call Decho("directories will be sorted by size or time",'~'.expand("<slnum>"))
       " sorted by time, size, exten
       NetrwKeepj put ='\"   Sorted by  '.sortby
       let w:netrw_bannercnt= w:netrw_bannercnt + 1
-    endif
+    " endif
     exe "sil! NetrwKeepj ".w:netrw_bannercnt
     "  else " Decho
     "   call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
