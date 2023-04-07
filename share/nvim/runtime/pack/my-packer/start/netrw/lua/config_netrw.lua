@@ -322,10 +322,14 @@ local unfold_all = function(payload, start)
       lnr = lnr + 1
       goto continue
     end
+    local _, space_cnt = string.find(line, '(%s+)')
+    if not space_cnt then
+      lnr = lnr + 1
+      goto continue
+    end
     if string.sub(line, #line, #line) == '/' then
       local unfold = false
       if lnr == f['line']('$') then
-        local _, space_cnt = string.find(line, '(%s+)')
         if only_one and space_cnt <= space_cnt0 then
           if only_one_go then
             c(string.format([[norm %dgg]], lnr00))
@@ -340,7 +344,6 @@ local unfold_all = function(payload, start)
         if has_space and has_space > 1 then
           goto continue
         else
-          local _, space_cnt = string.find(line, '(%s+)')
           if only_one and space_cnt <= space_cnt0 then
             if only_one_go then
               c(string.format([[norm %dgg]], lnr00))
