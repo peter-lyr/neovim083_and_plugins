@@ -324,7 +324,6 @@ local unfold_all = function(payload, start)
     end
     local _, space_cnt = string.find(line, '(%s+)')
     if not space_cnt then
-      lnr = lnr + 1
       goto continue
     end
     if string.sub(line, #line, #line) == '/' then
