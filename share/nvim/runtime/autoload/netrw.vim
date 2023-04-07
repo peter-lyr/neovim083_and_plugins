@@ -9970,23 +9970,8 @@ fun! s:PerformListing(islocal)
       endif
     endif
   endif
-  let linenr = 0
-  if getline(1) == '" =============================================================================='
-    let linenr = 1
-    while 1
-      let linenr += 1
-      let line_ = getline(linenr)
-      if line_ == '" =============================================================================='
-        break
-      endif
-      if linenr > 15
-        break
-      endif
-    endwhile
-  endif
-  if g:netrw_hide
-    exe 'sil! NetrwKeepj '.string(linenr+1).',$g@^\.@d'
-  endif
+  exe 'sil! NetrwKeepj %g@^\./@d'
+  exe 'sil! NetrwKeepj %g@^\.\./@d'
   "  call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
 
   " convert to wide/tree listing {{{3
