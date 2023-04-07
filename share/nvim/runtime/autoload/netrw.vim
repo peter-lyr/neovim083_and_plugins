@@ -9756,7 +9756,7 @@ fun! s:PerformListing(islocal)
   " Set up the banner {{{3
   if g:netrw_banner
     "   call Decho("--set up banner",'~'.expand("<slnum>"))
-    NetrwKeepj call setline(1,'" ==============================================================================')
+    " NetrwKeepj call setline(1,'" ==============================================================================')
     " if exists("g:netrw_pchk")
     "   " this undocumented option allows pchk to run with different versions of netrw without causing spurious
     "   " failure detections.
@@ -9770,11 +9770,11 @@ fun! s:PerformListing(islocal)
       let curdir= b:netrw_curdir
     endif
     if exists("g:netrw_bannerbackslash") && g:netrw_bannerbackslash
-      NetrwKeepj call setline(2,'"   '.substitute(curdir,'/','\\','g'))
+      NetrwKeepj call setline(1,'" '.substitute(curdir,'/','\\','g'))
     else
-      NetrwKeepj call setline(2,'"   '.curdir)
+      NetrwKeepj call setline(1,'" '.curdir)
     endif
-    let w:netrw_bannercnt= 2
+    let w:netrw_bannercnt= 1
     NetrwKeepj exe "sil! NetrwKeepj ".w:netrw_bannercnt
   else
     "   call Decho("--no banner",'~'.expand("<slnum>"))
@@ -9802,7 +9802,7 @@ fun! s:PerformListing(islocal)
     " else
       "   call Decho("directories will be sorted by size or time",'~'.expand("<slnum>"))
       " sorted by time, size, exten
-      NetrwKeepj put ='\"   Sorted by  '.sortby
+      NetrwKeepj put ='\" Sorted by  '.sortby
       let w:netrw_bannercnt= w:netrw_bannercnt + 1
     " endif
     exe "sil! NetrwKeepj ".w:netrw_bannercnt
@@ -9832,9 +9832,9 @@ fun! s:PerformListing(islocal)
     "   call Decho("--handle hiding/showing in banner (g:netrw_hide=".g:netrw_hide." g:netrw_list_hide<".g:netrw_list_hide.">)",'~'.expand("<slnum>"))
     if g:netrw_list_hide != "" && g:netrw_hide
       if g:netrw_hide == 1
-        NetrwKeepj put ='\"   Hiding:    '.g:netrw_list_hide
+        NetrwKeepj put ='\" Hiding:    '.g:netrw_list_hide
       else
-        NetrwKeepj put ='\"   Showing:    '.g:netrw_list_hide
+        NetrwKeepj put ='\" Showing:    '.g:netrw_list_hide
       endif
       let w:netrw_bannercnt= w:netrw_bannercnt + 1
     endif
@@ -9845,8 +9845,8 @@ fun! s:PerformListing(islocal)
     "   call Decho("quickhelp   =".quickhelp,'~'.expand("<slnum>"))
     " NetrwKeepj put ='\"   Quick Help: '.s:QuickHelp[quickhelp]
     "   call Decho("ro=".&l:ro." ma=".&l:ma." mod=".&l:mod." wrap=".&l:wrap." (filename<".expand("%")."> win#".winnr()." ft<".&ft.">)",'~'.expand("<slnum>"))
-    NetrwKeepj put ='\" =============================================================================='
-    let w:netrw_bannercnt= w:netrw_bannercnt + 1
+    " NetrwKeepj put ='\" =============================================================================='
+    " let w:netrw_bannercnt= w:netrw_bannercnt + 1
     "  else " Decho
     "   call Decho("g:netrw_banner=".g:netrw_banner.": banner ".(g:netrw_banner? "enabled" : "suppressed").": (line($)=".line("$")." byte2line(1)=".byte2line(1)." bannercnt=".w:netrw_bannercnt.")",'~'.expand("<slnum>"))
   endif
