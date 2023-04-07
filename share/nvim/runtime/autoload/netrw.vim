@@ -9769,11 +9769,21 @@ fun! s:PerformListing(islocal)
     else
       let curdir= b:netrw_curdir
     endif
-    if exists("g:netrw_bannerbackslash") && g:netrw_bannerbackslash
-      NetrwKeepj call setline(1,'" '.substitute(curdir,'/','\\','g'))
-    else
-      NetrwKeepj call setline(1,'" '.curdir)
-    endif
+    let lll = substitute(curdir,'\\','/','g')
+    let lll = split(lll, '/')
+    let sss = ''
+    for i in range(len(lll)-1, 0, -1)
+      let sss .= lll[i]
+      if i != 0
+        let sss .= '/'
+      endif
+    endfor
+    NetrwKeepj call setline(1,'" ' . sss)
+    " if exists("g:netrw_bannerbackslash") && g:netrw_bannerbackslash
+    "   NetrwKeepj call setline(1,'" '.substitute(curdir,'/','\\','g'))
+    " else
+    "   NetrwKeepj call setline(1,'" '.curdir)
+    " endif
     let w:netrw_bannercnt= 1
     NetrwKeepj exe "sil! NetrwKeepj ".w:netrw_bannercnt
   else
