@@ -157,6 +157,9 @@ function M.toggle_terminal(terminal, chdir)
       end
       c(string.format('te %s', terminal))
     end
+    if #chdir > 0 then
+      M.toggle_terminal(terminal, chdir)
+    end
   end
 end
 
