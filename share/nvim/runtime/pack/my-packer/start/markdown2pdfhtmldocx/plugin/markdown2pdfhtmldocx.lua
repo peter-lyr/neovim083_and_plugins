@@ -25,3 +25,4 @@ end
 
 
 s({'n', 'v'}, '\\1', function() markdown2pdfhtmldocx_exe("create") end, {silent = true})
+s({'n', 'v'}, '\\2', function() markdown2pdfhtmldocx_exe("delete") end, {silent = true})
