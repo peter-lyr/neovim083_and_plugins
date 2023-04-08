@@ -98,7 +98,15 @@ end
 
 function M.toggle_terminal(terminal, chdir)
   if g.builtin_terminal_ok == 0 then
-    c(string.format('silent !start %s', terminal))
+    if chdir == '.' then
+      chdir = M.get_dname(a['nvim_buf_get_name'](0))
+      chdir = string.gsub(chdir, "/", '\\')
+    elseif chdir == 'u' then
+      chdir = '..'
+    elseif chdir == '-' then
+      chdir = '-'
+    end
+    c(string.format('silent !cd %s & start %s', chdir, terminal))
     return
   end
   local fname = a['nvim_buf_get_name'](0)

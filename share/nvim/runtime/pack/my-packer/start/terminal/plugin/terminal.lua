@@ -45,15 +45,15 @@ s('n', '\\e', function() terminal_exe('bash', '') end, { silent = true})
 s('n', '\\r', function() terminal_exe('powershell', '') end, { silent = true})
 
 
-s('n', '\\\\q', function() terminal_exe('cmd', f['getcwd']()) end, { silent = true})
-s('n', '\\\\w', function() terminal_exe('ipython', f['getcwd']()) end, { silent = true})
-s('n', '\\\\e', function() terminal_exe('bash', f['getcwd']()) end, { silent = true})
-s('n', '\\\\r', function() terminal_exe('powershell', f['getcwd']()) end, { silent = true})
+s('n', '\\<bs>q', function() terminal_exe('cmd', f['getcwd']()) end, { silent = true})
+s('n', '\\<bs>w', function() terminal_exe('ipython', f['getcwd']()) end, { silent = true})
+s('n', '\\<bs>e', function() terminal_exe('bash', f['getcwd']()) end, { silent = true})
+s('n', '\\<bs>r', function() terminal_exe('powershell', f['getcwd']()) end, { silent = true})
 
-s('n', '\\<bs>q', function() terminal_exe('cmd', '.') end, { silent = true})
-s('n', '\\<bs>w', function() terminal_exe('ipython', '.') end, { silent = true})
-s('n', '\\<bs>e', function() terminal_exe('bash', '.') end, { silent = true})
-s('n', '\\<bs>r', function() terminal_exe('powershell', '.') end, { silent = true})
+s('n', '\\\\q', function() terminal_exe('cmd', '.') end, { silent = true})
+s('n', '\\\\w', function() terminal_exe('ipython', '.') end, { silent = true})
+s('n', '\\\\e', function() terminal_exe('bash', '.') end, { silent = true})
+s('n', '\\\\r', function() terminal_exe('powershell', '.') end, { silent = true})
 
 s('n', '\\[q', function() terminal_exe('cmd', 'u') end, { silent = true})
 s('n', '\\[w', function() terminal_exe('ipython', 'u') end, { silent = true})
