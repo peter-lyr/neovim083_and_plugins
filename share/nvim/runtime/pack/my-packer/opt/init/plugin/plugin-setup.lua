@@ -89,6 +89,8 @@ local plugins = function(use)
 
   use("CRAG666/code_runner.nvim")
 
+  use({"iamcco/markdown-preview.nvim", run = function() vim.fn["mkdp#util#install"]() end })
+
 end
 
 return packer.startup(function(use)
