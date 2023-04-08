@@ -38,6 +38,23 @@ function M.getimage(sel_jpg)
     local image_path = image_path:joinpath(image_name)['filename']
     cmd = string.format('%s "%s" %d', g.get_clipboard_image_ps1, image_path, sel_jpg)
     do_terminal.send_cmd('powershell', cmd, 0)
+    local timer = vim.loop.new_timer()
+    local timeout = 0
+    local image_path = image_path .. '.' .. imagetype
+    timer:start(1000, 1000, function()
+      vim.schedule(function()
+        timeout = timeout + 1
+        local file = io.open(image_path, "r")
+        if file then
+          file:close()
+          timer:stop()
+        end
+        if timeout > 6 then
+          print('get image timeout 6s')
+          timer:stop()
+        end
+      end)
+    end)
   end
 end
 
