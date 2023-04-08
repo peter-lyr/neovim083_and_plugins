@@ -108,7 +108,7 @@ M.options = {}
 
 local s = vim.keymap.set
 local c = vim.cmd
-local opts = { noremap = true, silent = true, nowait = true }
+local opts = { noremap = true, silent = true, nowait = true, buffer = true}
 
 ---@param options Config|nil
 function M.setup(options)
