@@ -196,7 +196,7 @@ local get_paragraph = function(sep)
   return table.concat(paragraph, sep)
 end
 
-function M.send_cmd(terminal, cmd)
+function M.send_cmd(terminal, cmd, show) -- show "1" 时，send后不hide
   if g.builtin_terminal_ok == 0 then
     c(string.format('silent !start %s', terminal))
     return
@@ -204,12 +204,13 @@ function M.send_cmd(terminal, cmd)
   local cmd_to_send = ''
   if cmd == '<curline>' then
     cmd_to_send = f['getline']('.')
-    print('===', f['getline']('.'))
   elseif cmd == '<paragraph>' then
     if terminal == 'cmd' then
       cmd_to_send = get_paragraph(' && ')
     elseif terminal == 'powershell' then
       cmd_to_send = get_paragraph('; ')
+    elseif terminal == 'ipython' then
+      cmd_to_send = '%paste'
     else
       cmd_to_send = get_paragraph('\n')
     end
@@ -241,6 +242,11 @@ function M.send_cmd(terminal, cmd)
     else
       c[[call feedkeys("i\<cr>\<esc>")]]
     end
+    if show ~= '1' then
+      if is_hide_en() then
+        c'hide'
+      end
+    end
   else
     if terminal_bufnrs then
       if not try_goto_terminal() then
@@ -256,7 +262,7 @@ function M.send_cmd(terminal, cmd)
       c(string.format('te %s', terminal))
     end
     if #cmd_to_send > 0 then
-      M.send_cmd(terminal, cmd_to_send)
+      M.send_cmd(terminal, cmd_to_send, show)
     end
   end
 end

@@ -24,10 +24,10 @@ local terminal_exe = function(cmd, chdir)
   end
   if split_string then
     local mytable = split_string.split_string(chdir, " ")
-    if mytable and #mytable == 2 and mytable[1] == 'send' then
+    if mytable and #mytable == 3 and mytable[1] == 'send' then
       local one, certain = do_terminal.is_terminal(a['nvim_buf_get_name'](0), cmd)
       if not one or mytable[2] == 'clipboard' then
-        do_terminal.send_cmd(cmd, mytable[2])
+        do_terminal.send_cmd(cmd, mytable[2], mytable[3])
       end
       return
     end
@@ -66,20 +66,20 @@ s('n', '\\]e', function() terminal_exe('bash', '-') end, { silent = true})
 s('n', '\\]r', function() terminal_exe('powershell', '-') end, { silent = true})
 
 
-s('n', '\\<cr>q', function() terminal_exe('cmd', 'send <curline>') end, { silent = true})
-s('n', '\\<cr>w', function() terminal_exe('ipython', 'send <curline>') end, { silent = true})
-s('n', '\\<cr>e', function() terminal_exe('bash', 'send <curline>') end, { silent = true})
-s('n', '\\<cr>r', function() terminal_exe('powershell', 'send <curline>') end, { silent = true})
+s('n', '\\<cr>q', function() terminal_exe('cmd', 'send <curline> 1') end, { silent = true})
+s('n', '\\<cr>w', function() terminal_exe('ipython', 'send <curline> 1') end, { silent = true})
+s('n', '\\<cr>e', function() terminal_exe('bash', 'send <curline> 1') end, { silent = true})
+s('n', '\\<cr>r', function() terminal_exe('powershell', 'send <curline> 1') end, { silent = true})
 
-s('n', '\\<cr><cr>q', function() terminal_exe('cmd', 'send <paragraph>') end, { silent = true})
-s('n', '\\<cr><cr>w', function() terminal_exe('ipython', 'send <paragraph>') end, { silent = true})
-s('n', '\\<cr><cr>e', function() terminal_exe('bash', 'send <paragraph>') end, { silent = true})
-s('n', '\\<cr><cr>r', function() terminal_exe('powershell', 'send <paragraph>') end, { silent = true})
+s('n', '\\<cr><cr>q', function() terminal_exe('cmd', 'send <paragraph> 1') end, { silent = true})
+s('n', '\\<cr><cr>w', function() terminal_exe('ipython', 'send <paragraph> 1') end, { silent = true})
+s('n', '\\<cr><cr>e', function() terminal_exe('bash', 'send <paragraph> 1') end, { silent = true})
+s('n', '\\<cr><cr>r', function() terminal_exe('powershell', 'send <paragraph> 1') end, { silent = true})
 
-s('n', '\\<cr><cr><cr>q', function() terminal_exe('cmd', 'send <clipboard>') end, { silent = true})
-s('n', '\\<cr><cr><cr>w', function() terminal_exe('ipython', 'send <clipboard>') end, { silent = true})
-s('n', '\\<cr><cr><cr>e', function() terminal_exe('bash', 'send <clipboard>') end, { silent = true})
-s('n', '\\<cr><cr><cr>r', function() terminal_exe('powershell', 'send <clipboard>') end, { silent = true})
+s('n', '\\<cr><cr><cr>q', function() terminal_exe('cmd', 'send <clipboard> 1') end, { silent = true})
+s('n', '\\<cr><cr><cr>w', function() terminal_exe('ipython', 'send <clipboard> 1') end, { silent = true})
+s('n', '\\<cr><cr><cr>e', function() terminal_exe('bash', 'send <clipboard> 1') end, { silent = true})
+s('n', '\\<cr><cr><cr>r', function() terminal_exe('powershell', 'send <clipboard> 1') end, { silent = true})
 
 
 function file_exists(name)
