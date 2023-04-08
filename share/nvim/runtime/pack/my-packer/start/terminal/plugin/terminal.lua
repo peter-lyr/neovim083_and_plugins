@@ -9,11 +9,11 @@ g.builtin_terminal_ok = 1
 
 
 local terminal_exe = function(cmd, chdir)
-  if not g.loaded_toggle_terminal then
-    g.loaded_toggle_terminal = 1
-    sta, toggle_terminal = pcall(require, 'toggle_terminal')
+  if not g.loaded_do_terminal then
+    g.loaded_do_terminal = 1
+    sta, do_terminal = pcall(require, 'do_terminal')
     if not sta then
-      print('no toggle_terminal')
+      print('no do_terminal')
       return
     end
     sta, split_string = pcall(require, 'split_string')
@@ -25,17 +25,17 @@ local terminal_exe = function(cmd, chdir)
   if split_string then
     local mytable = split_string.split_string(chdir, " ")
     if mytable and #mytable == 2 and mytable[1] == 'send' then
-      local one, certain = toggle_terminal.is_terminal(a['nvim_buf_get_name'](0), cmd)
+      local one, certain = do_terminal.is_terminal(a['nvim_buf_get_name'](0), cmd)
       if not one or mytable[2] == 'clipboard' then
-        toggle_terminal.send_cmd(cmd, mytable[2])
+        do_terminal.send_cmd(cmd, mytable[2])
       end
       return
     end
   end
-  if not toggle_terminal then
+  if not do_terminal then
     return
   end
-  toggle_terminal.toggle_terminal(cmd, chdir)
+  do_terminal.toggle_terminal(cmd, chdir)
 end
 
 
