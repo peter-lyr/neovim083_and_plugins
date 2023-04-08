@@ -1,5 +1,6 @@
 local s = vim.keymap.set
 local a = vim.api
+local c = vim.cmd
 local f = vim.fn
 local g = vim.g
 
@@ -13,6 +14,21 @@ local terminal_exe = function(cmd, chdir)
     sta, toggle_terminal = pcall(require, 'toggle_terminal')
     if not sta then
       print('no toggle_terminal')
+      return
+    end
+    sta, split_string = pcall(require, 'split_string')
+    if not sta then
+      print('no split_string')
+      return
+    end
+  end
+  if split_string then
+    local mytable = split_string.split_string(chdir, " ")
+    if mytable and #mytable == 2 and mytable[1] == 'send' then
+      local one, certain = toggle_terminal.is_terminal(a['nvim_buf_get_name'](0), cmd)
+      if not one or mytable[2] == 'clipboard' then
+        toggle_terminal.send_cmd(cmd, mytable[2])
+      end
       return
     end
   end
@@ -34,23 +50,36 @@ s('n', '\\\\w', function() terminal_exe('ipython', f['getcwd']()) end, { silent 
 s('n', '\\\\e', function() terminal_exe('bash', f['getcwd']()) end, { silent = true})
 s('n', '\\\\r', function() terminal_exe('powershell', f['getcwd']()) end, { silent = true})
 
-
 s('n', '\\<bs>q', function() terminal_exe('cmd', '.') end, { silent = true})
 s('n', '\\<bs>w', function() terminal_exe('ipython', '.') end, { silent = true})
 s('n', '\\<bs>e', function() terminal_exe('bash', '.') end, { silent = true})
 s('n', '\\<bs>r', function() terminal_exe('powershell', '.') end, { silent = true})
-
 
 s('n', '\\[q', function() terminal_exe('cmd', 'u') end, { silent = true})
 s('n', '\\[w', function() terminal_exe('ipython', 'u') end, { silent = true})
 s('n', '\\[e', function() terminal_exe('bash', 'u') end, { silent = true})
 s('n', '\\[r', function() terminal_exe('powershell', 'u') end, { silent = true})
 
-
 s('n', '\\]q', function() terminal_exe('cmd', '-') end, { silent = true})
 s('n', '\\]w', function() terminal_exe('ipython', '-') end, { silent = true})
 s('n', '\\]e', function() terminal_exe('bash', '-') end, { silent = true})
 s('n', '\\]r', function() terminal_exe('powershell', '-') end, { silent = true})
+
+
+s('n', '\\<cr>q', function() terminal_exe('cmd', 'send <curline>') end, { silent = true})
+s('n', '\\<cr>w', function() terminal_exe('ipython', 'send <curline>') end, { silent = true})
+s('n', '\\<cr>e', function() terminal_exe('bash', 'send <curline>') end, { silent = true})
+s('n', '\\<cr>r', function() terminal_exe('powershell', 'send <curline>') end, { silent = true})
+
+s('n', '\\<cr><cr>q', function() terminal_exe('cmd', 'send <paragraph>') end, { silent = true})
+s('n', '\\<cr><cr>w', function() terminal_exe('ipython', 'send <paragraph>') end, { silent = true})
+s('n', '\\<cr><cr>e', function() terminal_exe('bash', 'send <paragraph>') end, { silent = true})
+s('n', '\\<cr><cr>r', function() terminal_exe('powershell', 'send <paragraph>') end, { silent = true})
+
+s('n', '\\<cr><cr><cr>q', function() terminal_exe('cmd', 'send <clipboard>') end, { silent = true})
+s('n', '\\<cr><cr><cr>w', function() terminal_exe('ipython', 'send <clipboard>') end, { silent = true})
+s('n', '\\<cr><cr><cr>e', function() terminal_exe('bash', 'send <clipboard>') end, { silent = true})
+s('n', '\\<cr><cr><cr>r', function() terminal_exe('powershell', 'send <clipboard>') end, { silent = true})
 
 
 function file_exists(name)
@@ -62,6 +91,7 @@ function file_exists(name)
     return false
   end
 end
+
 
 if not g.bufleave_readablefile_autocmd then
   g.bufleave_readablefile = f['getcwd']()

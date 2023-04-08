@@ -9,7 +9,7 @@ local a = vim.api
 local m = string.match
 local s = vim.keymap.set
 
-local is_terminal = function(bufname, terminal)
+function M.is_terminal(bufname, terminal)
   if m(bufname, '^term://') then
     local ret = false
     local is_ipython = m(bufname, ':ipython$')
@@ -46,7 +46,7 @@ end
 local get_terminal_bufnrs = function(terminal)
   local terminal_bufnrs = {}
   for k, v in pairs(f['getbufinfo']()) do
-    local one, certain = is_terminal(v['name'], terminal)
+    local one, certain = M.is_terminal(v['name'], terminal)
     if certain then
       table.insert(terminal_bufnrs, v['bufnr'])
     end
@@ -104,7 +104,7 @@ function M.toggle_terminal(terminal, chdir)
   local fname = a['nvim_buf_get_name'](0)
   local bnr = f['bufnr']()
   local terminal_bufnrs = get_terminal_bufnrs(terminal)
-  local one, certain = is_terminal(fname, terminal)
+  local one, certain = M.is_terminal(fname, terminal)
   if certain then
     if #chdir > 0 then
       if chdir == '.' then
@@ -159,6 +159,96 @@ function M.toggle_terminal(terminal, chdir)
     end
     if #chdir > 0 then
       M.toggle_terminal(terminal, chdir)
+    end
+  end
+end
+
+local get_paragraph = function(sep)
+  local paragraph = {}
+  local linenr = f['line']('.')
+  local lines = 0
+  for i=linenr, 1, -1 do
+    local line = f['getline'](i)
+    if #line > 0 then
+      lines = lines + 1
+      table.insert(paragraph, 1, line)
+    else
+      break
+    end
+  end
+  for i=linenr+1, f['line']('$') do
+    local line = f['getline'](i)
+    if #line > 0 then
+      table.insert(paragraph, line)
+      lines = lines + 1
+    else
+      break
+    end
+  end
+  return table.concat(paragraph, sep)
+end
+
+function M.send_cmd(terminal, cmd)
+  if g.builtin_terminal_ok == 0 then
+    c(string.format('silent !start %s', terminal))
+    return
+  end
+  local cmd_to_send = ''
+  if cmd == '<curline>' then
+    cmd_to_send = f['getline']('.')
+    print('===', f['getline']('.'))
+  elseif cmd == '<paragraph>' then
+    if terminal == 'cmd' then
+      cmd_to_send = get_paragraph(' && ')
+    elseif terminal == 'powershell' then
+      cmd_to_send = get_paragraph('; ')
+    else
+      cmd_to_send = get_paragraph('\n')
+    end
+  elseif cmd == '<clipboard>' then
+    local clipboard = f['getreg']('+')
+    clipboard = clipboard:gsub("^%s*(.-)%s*$", "%1") -- trim_string
+    if terminal == 'cmd' then
+      cmd_to_send = string.gsub(clipboard, '\n', ' && ')
+    elseif terminal == 'powershell' then
+      cmd_to_send = string.gsub(clipboard, '\n', '; ')
+    else
+      cmd_to_send = string.gsub(clipboard, '\n', '\n')
+    end
+    print('cmd_to_send', cmd_to_send)
+  else
+    cmd_to_send = cmd
+  end
+  local fname = a['nvim_buf_get_name'](0)
+  local bnr = f['bufnr']()
+  local terminal_bufnrs = get_terminal_bufnrs(terminal)
+  local one, certain = M.is_terminal(fname, terminal)
+  if certain then
+    a['nvim_chan_send'](b.terminal_job_id, cmd_to_send)
+    if terminal == 'ipython' then
+      f['feedkeys']([[:call feedkeys("i\<cr>\<esc>")]])
+      local t0 = os.clock()
+      while os.clock() - t0 <= 0.02 do end
+      c[[call feedkeys("\<cr>")]]
+    else
+      c[[call feedkeys("i\<cr>\<esc>")]]
+    end
+  else
+    if terminal_bufnrs then
+      if not try_goto_terminal() then
+        if #fname > 0 or o.modified:get() == true then
+          c'split'
+        end
+      end
+      c(string.format("b%d", terminal_bufnrs[1]))
+    else
+      if not one then
+        c'split'
+      end
+      c(string.format('te %s', terminal))
+    end
+    if #cmd_to_send > 0 then
+      M.send_cmd(terminal, cmd_to_send)
     end
   end
 end
