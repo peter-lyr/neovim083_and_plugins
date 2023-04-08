@@ -1,6 +1,7 @@
 local M = {}
 
 local g = vim.g
+local o = vim.opt
 local c = vim.cmd
 local a = vim.api
 local f = vim.fn
@@ -24,6 +25,8 @@ function M.getimage(sel_jpg)
       print('get image canceled!')
       return
     end
+    local linenr = f['line']('.')
+    local ft = o.ft:get()
     local project_dir = Path:new(f['projectroot#get'](a['nvim_buf_get_name'](0)))
     local image_path = 'C:\\images'
     if project_dir:is_dir() then
@@ -41,13 +44,34 @@ function M.getimage(sel_jpg)
     local timer = vim.loop.new_timer()
     local timeout = 0
     local image_path = image_path .. '.' .. imagetype
-    timer:start(1000, 1000, function()
+    timer:start(100, 100, function()
       vim.schedule(function()
         timeout = timeout + 1
         local file = io.open(image_path, "r")
         if file then
           file:close()
           timer:stop()
+          local file = io.open(project_dir:joinpath('saved_images', '_.md')['filename'], 'a')
+          local image_rel_path = image_name .. '.' .. imagetype
+          file:write(string.format('![%s](%s)', image_rel_path, image_rel_path))
+          file:close()
+          if ft ~= 'markdown' then
+            return
+          end
+          local image_reduce_path = image_path .. '.' .. imagetype
+          os.execute(string.format('ffmpeg -y -loglevel quiet -i "%s" -q 18 %s', image_path, image_reduce_path))
+          local sta, base64 = pcall(require, 'base64')
+          if not sta then
+            print('get image: no base64')
+            return
+          end
+          local file = io.open(image_reduce_path, "rb")
+          local content = file:read("*a")
+          file:close()
+          os.execute(string.format('del "%s"', image_reduce_path))
+          local encoded = base64.encode(content)
+          image_format = (imagetype == 'jpg') and 'jpeg' or 'png'
+          f['append'](linenr, string.format('![%s](data:image/%s;base64,%s)', image_rel_path, image_format, encoded))
         end
         if timeout > 6 then
           print('get image timeout 6s')

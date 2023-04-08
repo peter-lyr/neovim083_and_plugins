@@ -244,7 +244,7 @@ function M.send_cmd(terminal, cmd, show) -- show "1" 时，send后不hide
     end
     if show ~= '1' then
       if is_hide_en() then
-        vim.loop.new_timer():start(1000, 0,
+        vim.loop.new_timer():start(100, 0,
           function()
             vim.schedule(function()
               c'hide'
