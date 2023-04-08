@@ -79,10 +79,18 @@ a.nvim_create_autocmd({"BufEnter"}, {
   callback = bufenter_netrw,
 })
 
+local ignore_list = {
+  '.git/',
+}
+
 a.nvim_create_autocmd({"CursorMoved"}, {
   callback = function()
     if o.ft:get() == 'netrw' then
-      netrw_list_hide = string.gsub(string.gsub(f['system']('cd ' .. f['netrw#Call']('NetrwGetCurdir', 1) .. ' && git config --local core.quotepath false & git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+      netrw_list_hide = table.concat(ignore_list, ',')
+      netrw_list_hide2 = string.gsub(string.gsub(f['system']('cd ' .. f['netrw#Call']('NetrwGetCurdir', 1) .. ' && git config --local core.quotepath false & git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
+      if #netrw_list_hide2 > 0 then
+        netrw_list_hide = netrw_list_hide .. ',' .. netrw_list_hide2
+      end
       if netrw_list_hide ~= g.netrw_list_hide then
         g.netrw_list_hide = netrw_list_hide
         if w.netrw_liststyle < 2 and g.netrw_hide == 1 then
