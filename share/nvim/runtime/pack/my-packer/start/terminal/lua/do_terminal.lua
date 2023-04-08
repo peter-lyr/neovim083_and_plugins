@@ -209,8 +209,6 @@ function M.send_cmd(terminal, cmd, show) -- show "1" 时，send后不hide
       cmd_to_send = get_paragraph(' && ')
     elseif terminal == 'powershell' then
       cmd_to_send = get_paragraph('; ')
-    elseif terminal == 'ipython' then
-      cmd_to_send = '%paste'
     else
       cmd_to_send = get_paragraph('\n')
     end
@@ -221,8 +219,10 @@ function M.send_cmd(terminal, cmd, show) -- show "1" 时，send后不hide
       cmd_to_send = string.gsub(clipboard, '\n', ' && ')
     elseif terminal == 'powershell' then
       cmd_to_send = string.gsub(clipboard, '\n', '; ')
+    elseif terminal == 'ipython' then
+      cmd_to_send = '%paste'
     else
-      cmd_to_send = string.gsub(clipboard, '\n', '\n')
+      cmd_to_send = clipboard
     end
     print('cmd_to_send', cmd_to_send)
   else
