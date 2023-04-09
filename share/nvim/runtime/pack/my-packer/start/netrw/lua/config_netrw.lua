@@ -486,6 +486,31 @@ end
 g.netrw_sel_list = {}
 g.netrw_sel_list_bak = {}
 
+local appendIfNotExists = function(t, s)
+  local index_of = function(arr, val)
+    if not arr then
+      return nil
+    end
+    for i, v in ipairs(arr) do
+      if v == val then
+        return i
+      end
+    end
+    return nil
+  end
+  local idx = index_of(t, s)
+  local cwd = f['getcwd']()
+  if not idx then
+    table.insert(t, s)
+    c(string.format([[ec 'attach: %s']], string.sub(s, #cwd+2, #s)))
+  else
+    table.remove(t, idx)
+    s = string.gsub(s, f['getcwd'](), '')
+    c(string.format([[ec 'detach: %s']], string.sub(s, #cwd+2, #s)))
+  end
+  return t
+end
+
 local sel_toggle_cur = function(payload)
   if not payload then
     return
@@ -493,30 +518,6 @@ local sel_toggle_cur = function(payload)
   local name = get_fname(payload)
   if name == '' then
     name = get_dname(payload)
-  end
-  local appendIfNotExists = function(t, s)
-    local index_of = function(arr, val)
-      if not arr then
-        return nil
-      end
-      for i, v in ipairs(arr) do
-        if v == val then
-          return i
-        end
-      end
-      return nil
-    end
-    local idx = index_of(t, s)
-    local cwd = f['getcwd']()
-    if not idx then
-      table.insert(t, s)
-      c(string.format([[ec 'attach: %s']], string.sub(s, #cwd+2, #s)))
-    else
-      table.remove(t, idx)
-      s = string.gsub(s, f['getcwd'](), '')
-      c(string.format([[ec 'detach: %s']], string.sub(s, #cwd+2, #s)))
-    end
-    return t
   end
   g.netrw_sel_list = appendIfNotExists(g.netrw_sel_list, name)
   c'norm j'
@@ -535,6 +536,31 @@ local sel_toggle_all = function(payload)
     c(string.format('ec "empty %d"', #g.netrw_sel_list))
     g.netrw_sel_list_bak = g.netrw_sel_list
     g.netrw_sel_list = {}
+  end
+end
+
+local sel_all = function(payload)
+  if not payload then
+    return
+  end
+  local target = get_dname(payload)
+  if #target == 0 then
+    target = get_fname(payload)
+  end
+  local path = Path:new(target)
+  target = path:parent()['filename']
+  target = string.gsub(target, "/", "\\")
+  local scandir = require "plenary.scandir"
+  local result = scandir.scan_dir(target, { depth = 1, hidden = 1, add_dirs = 1 })
+  print(target)
+  if #g.netrw_sel_list == 0 then
+    g.netrw_sel_list_bak = {}
+    for _, file in ipairs(result) do
+      local file, _ = string.gsub(file, '\\\\', '\\')
+      g.netrw_sel_list = appendIfNotExists(g.netrw_sel_list, file)
+    end
+  else
+    sel_toggle_all(payload)
   end
 end
 
@@ -672,6 +698,7 @@ netrw.setup{
     ['dn'] = function(payload) search_fname(payload, 'down') end,
     ['\''] = function(payload) sel_toggle_cur(payload) end,
     ['"'] = function(payload) sel_toggle_all(payload) end,
+    ['(s-cr)'] = function(payload) sel_all(payload) end,
     ['dE'] = function(payload) empty_sel_list(payload) end,
     ['dD'] = function(payload) delete_sel_list(payload) end,
     ['dM'] = function(payload) move_sel_list(payload) end,
