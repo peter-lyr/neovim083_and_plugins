@@ -675,6 +675,11 @@ local create = function(payload)
   c(string.format([[call feedkeys(":wincmd p|wincmd s|e %s")]], string.gsub(name, "\\", "/")))
 end
 
+local create_dir = function(payload)
+  local dname = get_dname(payload)
+  c(string.format([[call feedkeys(':!md %s')]], string.gsub(dname, "/", "\\")))
+end
+
 netrw.setup{
   use_devicons = true,
   mappings = {
@@ -719,5 +724,6 @@ netrw.setup{
     ['dC'] = function(payload) copy_sel_list(payload) end,
     ['dY'] = function(payload) copy_2_clip(payload) end,
     ['da'] = function(payload) create(payload) end,
+    ['ds'] = function(payload) create_dir(payload) end,
   },
 }
