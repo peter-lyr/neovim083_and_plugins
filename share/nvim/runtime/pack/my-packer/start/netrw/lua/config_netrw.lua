@@ -20,7 +20,7 @@ local a = vim.api
 
 local get_dname = function(payload)
   f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
-  if payload['type'] == 0 then
+  if not payload or payload['type'] == 0 then
     local res = f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
     if #res > 0 then
       return string.gsub(res, "/", "\\")
@@ -31,7 +31,7 @@ end
 
 local get_fname = function(payload)
   f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
-  if payload['type'] == 1 then
+  if payload and payload['type'] == 1 then
     local res = f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
     if #res > 0 then
       return string.gsub(res, "/", "\\")
@@ -77,9 +77,6 @@ local get_dtarget = function(payload)
 end
 
 local test = function(payload)
-  if not payload then
-    return
-  end
   -- - dir: the current netrw directory (vim.b.netrw_curdir)
   -- - node: the name of the file or directory under the cursor
   -- - link: the referenced file if the node under the cursor is a symlink
