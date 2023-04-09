@@ -54,18 +54,29 @@ function M.getimage(sel_jpg)
       image_path:mkdir()
       print("created ->", image_path)
     end
-    print("get image ->", image_path)
     local image_path = image_path:joinpath(image_name)['filename']
+    local exi = f['filereadable'](image_path)
+    if exi ~= 0 then
+      print("existed ->", image_path)
+      return
+    end
+    print("get image ->", image_path)
     cmd = string.format('%s "%s" %d', g.get_clipboard_image_ps1, image_path, sel_jpg)
     do_terminal.send_cmd('powershell', cmd, 0)
     local timer = vim.loop.new_timer()
     local timeout = 0
     local image_path = image_path .. '.' .. imagetype
+    local get_ok = 0
     timer:start(100, 100, function()
       vim.schedule(function()
         timeout = timeout + 1
-        local file = io.open(image_path, "rb")
-        if file then
+        local exi2 = f['filereadable'](image_path)
+        if exi2 ~= 0 or get_ok == 1 then
+          local file = io.open(image_path, "rb")
+          if not file then
+            get_ok = 1
+            return
+          end
           timer:stop()
           print('save one image:', image_path)
           local sha256 = require("sha2")
@@ -81,7 +92,7 @@ function M.getimage(sel_jpg)
             return
           end
           local image_reduce_path = image_path .. '.' .. imagetype
-          os.execute(string.format('ffmpeg -y -loglevel quiet -i "%s" -q 18 %s', image_path, image_reduce_path))
+          os.execute(string.format('ffmpeg -y -loglevel quiet -i "%s" -q 23 %s', image_path, image_reduce_path))
           local sta, base64 = pcall(require, 'base64')
           if not sta then
             print('get image: no base64')
@@ -89,11 +100,20 @@ function M.getimage(sel_jpg)
           end
           local file = io.open(image_reduce_path, "rb")
           local content = file:read("*a")
+          local image_reduce_size = f['getfsize'](image_reduce_path)
           file:close()
           os.execute(string.format('del "%s"', image_reduce_path))
-          local encoded = base64.encode(content)
           image_format = (imagetype == 'jpg') and 'jpeg' or 'png'
-          f['append'](linenr, string.format('![%s](data:image/%s;base64,%s)', image_rel_path, image_format, encoded))
+          if image_reduce_size < fsize then
+            encoded = base64.encode(content)
+            f['append'](linenr, string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', image_rel_path, human_readable_fsize(fsize), human_readable_fsize(image_reduce_size), human_readable_fsize(#encoded), hash, image_format, encoded))
+          else
+            local file = io.open(image_path, "rb")
+            local content = file:read("*a")
+            encoded = base64.encode(content)
+            file:close()
+            f['append'](linenr, string.format('![%s-%s-%s-{%s}](data:image/%s;base64,%s)', image_rel_path, human_readable_fsize(fsize), human_readable_fsize(#encoded), hash, image_format, encoded))
+          end
         end
         if timeout > 60 then
           print('get image timeout 6s')
