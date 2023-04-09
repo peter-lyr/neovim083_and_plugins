@@ -91,6 +91,14 @@ local plugins = function(use)
 
   use({"iamcco/markdown-preview.nvim", run = function() vim.fn["mkdp#util#install"]() end })
 
+  use('hrsh7th/cmp-nvim-lsp')
+  use('hrsh7th/cmp-buffer')
+  use('hrsh7th/cmp-path')
+  use('hrsh7th/nvim-cmp')
+  use('hrsh7th/cmp-cmdline')
+  use("SirVer/ultisnips")
+  use("quangnguyen30192/cmp-nvim-ultisnips")
+
 end
 
 return packer.startup(function(use)
