@@ -16,6 +16,23 @@ if not sta then
   print'no do_terminal in markdownimage'
 end
 
+local human_readable_fsize = function(sz)
+  if sz >= 1073741824 then
+    sz = string.format("%.1f",sz/1073741824.0) .. "G"
+  elseif sz >= 10485760 then
+    sz = string.format("%d",sz/1048576) .. "M"
+  elseif sz >= 1048576 then
+    sz = string.format("%.1f",sz/1048576.0) .. "M"
+  elseif sz >= 10240 then
+    sz = string.format("%d",sz/1024) .. "K"
+  elseif sz >= 1024 then
+    sz = string.format("%.1f",sz/1024.0) .. "K"
+  else
+    sz= sz
+  end
+  return sz
+end
+
 function M.getimage(sel_jpg)
   if do_terminal then
     local datetime = os.date("%Y%m%d-%H%M%S-")
@@ -47,13 +64,18 @@ function M.getimage(sel_jpg)
     timer:start(100, 100, function()
       vim.schedule(function()
         timeout = timeout + 1
-        local file = io.open(image_path, "r")
+        local file = io.open(image_path, "rb")
         if file then
-          file:close()
           timer:stop()
+          print('save one image:', image_path)
+          local sha256 = require("sha2")
+          local data = file:read("*all")
+          file:close()
+          local hash = sha256.sha256(data)
           local file = io.open(project_dir:joinpath('saved_images', '_.md')['filename'], 'a')
           local image_rel_path = image_name .. '.' .. imagetype
-          file:write(string.format('![%s](%s)', image_rel_path, image_rel_path))
+          local fsize = f['getfsize'](image_path)
+          file:write(string.format('![%s-(%d)%s{%s}](%s)\n', image_rel_path, fsize, human_readable_fsize(fsize), hash, image_rel_path))
           file:close()
           if ft ~= 'markdown' then
             return
