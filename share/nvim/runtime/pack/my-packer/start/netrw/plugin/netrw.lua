@@ -6,6 +6,8 @@ local c = vim.cmd
 local o = vim.opt
 local s = vim.keymap.set
 
+g.netrw_lua = vim.fn['expand']('<sfile>')
+
 local netrw_exe = function(cmd)
   if not vim.g.loaded_config_netrw then
     vim.g.loaded_config_netrw = 1

@@ -21,3 +21,5 @@ output*
 *.pdf
 *.docx
 saved_images
+!copy2clip.exe
+!recyclebin.exe

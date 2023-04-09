@@ -5,6 +5,14 @@ if not sta then
 end
 
 local g = vim.g
+
+local Path = require("plenary.path")
+
+local p = Path:new(g.netrw_lua)
+g.netrw_recyclebin = p:parent():parent():joinpath('autoload', 'recyclebin.exe')['filename']
+g.copy2clip = p:parent():parent():joinpath('autoload', 'copy2clip.exe')['filename']
+
+local g = vim.g
 local f = vim.fn
 local c = vim.cmd
 local o = vim.opt
@@ -584,11 +592,12 @@ local delete_sel_list = function(payload)
   end
   if index_of({'y', 'Y', 'yes', 'Yes', 'YES'}, res) then
     for i, v in ipairs(g.netrw_sel_list) do
-      if Path:new(v):is_dir() then
-        f['system'](string.format('rd /s /q "%s"', v))
-      else
-        f['system'](string.format('del "%s"', v))
-      end
+      -- if Path:new(v):is_dir() then
+      --   f['system'](string.format('rd /s /q "%s"', v))
+      -- else
+      --   f['system'](string.format('del "%s"', v))
+      -- end
+      f['system'](string.format('%s "%s"', g.netrw_recyclebin, v))
     end
     empty_sel_list()
   else
@@ -653,6 +662,14 @@ local copy_sel_list = function(payload)
   end
 end
 
+local copy_2_clip = function(payload)
+  files = ""
+  for i, v in ipairs(g.netrw_sel_list) do
+    files = files .. " " .. '"' .. v .. '"'
+  end
+  f['system'](string.format('%s%s', g.copy2clip, files))
+end
+
 local create = function(payload)
   local name = get_fname(payload)
   if name == '' then
@@ -703,6 +720,7 @@ netrw.setup{
     ['dD'] = function(payload) delete_sel_list(payload) end,
     ['dM'] = function(payload) move_sel_list(payload) end,
     ['dC'] = function(payload) copy_sel_list(payload) end,
+    ['dY'] = function(payload) copy_2_clip(payload) end,
     ['da'] = function(payload) create(payload) end,
   },
 }
