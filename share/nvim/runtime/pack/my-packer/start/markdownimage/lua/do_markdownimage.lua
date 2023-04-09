@@ -73,7 +73,7 @@ function M.getimage(sel_jpg)
           image_format = (imagetype == 'jpg') and 'jpeg' or 'png'
           f['append'](linenr, string.format('![%s](data:image/%s;base64,%s)', image_rel_path, image_format, encoded))
         end
-        if timeout > 6 then
+        if timeout > 60 then
           print('get image timeout 6s')
           timer:stop()
         end
