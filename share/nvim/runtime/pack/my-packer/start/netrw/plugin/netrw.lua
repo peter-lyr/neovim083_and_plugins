@@ -83,6 +83,7 @@ a.nvim_create_autocmd({"BufEnter"}, {
 
 local ignore_list = {
   '.git/',
+  '.svn/',
 }
 
 a.nvim_create_autocmd({"CursorMoved"}, {
