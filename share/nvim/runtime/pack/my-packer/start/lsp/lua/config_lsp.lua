@@ -25,8 +25,12 @@ mason.setup({
 mason_lspconfig.setup({
   ensure_installed = {
     "clangd",
+    "pyright",
   }
 })
 
 lspconfig.clangd.setup({
+})
+
+lspconfig.pyright.setup({
 })
