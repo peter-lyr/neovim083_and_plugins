@@ -9,10 +9,12 @@ local sdkcbp_exe = function(cmd)
     sta, do_sdkcbp = pcall(require, 'do_sdkcbp')
     if not sta then
       print('no do_sdkcbp')
+      do_sdkcbp = nil
       return
     end
   end
   if not do_sdkcbp then
+    print('no do_sdkcbp again')
     return
   end
   do_sdkcbp.do_sdkcbp(cmd)
