@@ -4,8 +4,6 @@ import sys
 
 rootdir = sys.argv[1]
 
-projFileNames = []
-
 patt1 = re.compile('directory="(.+)"')
 patt2 = re.compile('<File name="(.+?)"')
 with open(os.path.join(rootdir, 'CMakeLists.txt'), 'wb') as ff:

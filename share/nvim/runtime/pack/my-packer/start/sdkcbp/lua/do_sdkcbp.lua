@@ -58,7 +58,7 @@ function M.traverse_folder(project, abspath)
   end
 end
 
-function M.find_cbp(dtarget)
+function M.find_cbp(dtargets)
   local fname = a['nvim_buf_get_name'](0)
   local path = Path:new(fname)
   if not path:exists() then
@@ -75,9 +75,12 @@ function M.find_cbp(dtarget)
     dname = path
     local cnt = 100000
     while 1 do
-      local app = dname:joinpath(dtarget)
-      if app:is_dir() then
-        M.traverse_folder(M.project, dname['filename'])
+      for _, dtarget in ipairs(dtargets) do
+        local dpath = dname:joinpath(dtarget)
+        if dpath:is_dir() then
+          M.traverse_folder(M.project, dname['filename'])
+          break
+        end
       end
       if M.project == string.gsub(dname.filename, '\\', '/') then
         break
@@ -92,10 +95,22 @@ function M.find_cbp(dtarget)
 end
 
 function M.cmake_app()
-  local app_cbp = M.cbp_files[1]
+  if #M.cbp_files == 1 then
+    app_cbp = M.cbp_files[1]
+  else
+    vim.ui.select(M.cbp_files, { prompt = 'select one of them' }, function(choice, idx)
+      -- print(choice, idx)
+      app_cbp = M.cbp_files[idx]
+    end)
+  end
   if string.match(app_cbp, 'app/projects') then
     c(string.format([[AsyncRun chcp 65001 && python "%s" "%s" %s]], g.cmake_app_py, M.project, 'app'))
   end
+end
+
+function M.cmake_others()
+  local app_cbp = M.cbp_files[1]
+  c(string.format([[AsyncRun chcp 65001 && python "%s" "%s"]], g.cmake_app_py, M.project))
 end
 
 function M.do_sdkcbp(cmd)
@@ -107,22 +122,14 @@ function M.do_sdkcbp(cmd)
   end
   M.cbp_files = {}
   M.searched_folders = {}
-  M.find_cbp('app')
+  M.find_cbp({'app'})
   if #M.cbp_files == 0 then
-    M.find_cbp('boot')
-    if #M.cbp_files == 0 then
-      M.find_cbp('spiloader')
-      if #M.cbp_files == 0 then
-        M.find_cbp('masklib')
-      elseif #M.cbp_files == 1 then
-      else
-      end
-    elseif #M.cbp_files == 1 then
-    else
+    M.find_cbp({'boot', 'spiloader'})
+    if #M.cbp_files == 1 then
+      M.cmake_others()
     end
-  elseif #M.cbp_files == 1 then
-    M.cmake_app()
   else
+    M.cmake_app()
   end
 end
 
