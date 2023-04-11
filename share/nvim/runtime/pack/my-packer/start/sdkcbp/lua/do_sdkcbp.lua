@@ -55,7 +55,7 @@ M.searched_folders = {}
 
 function M.traverse_folder(abspath)
   local path = Path:new(abspath)
-  local entries = Scan.scan_dir(path.filename, { hidden = 1, depth = 1, add_dirs = true })
+  local entries = Scan.scan_dir(path.filename, { hidden = false, depth = 1, add_dirs = true })
   for _, entry in ipairs(entries) do
     local entry_path = Path:new(entry)
     local entry_path_name = entry_path.filename
