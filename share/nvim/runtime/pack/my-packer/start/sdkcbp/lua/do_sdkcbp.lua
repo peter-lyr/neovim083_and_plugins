@@ -11,10 +11,12 @@ local s = vim.keymap.set
 
 M.searched_folders = {}
 M.cbp_files = {}
-M.no_projectroot = false
 
 local Path = require("plenary.path")
 local Scan = require("plenary.scandir")
+
+local sdkcbp_dir = Path:new(g.sdkcbp_lua):parent():parent()['filename']
+g.cmake_app_py = Path:new(sdkcbp_dir):joinpath('autoload', 'cmake_app.py')['filename']
 
 function index_of(arr, val)
   if not arr then
@@ -49,42 +51,35 @@ function M.traverse_folder(project, abspath)
       end
     else
       if string.match(entry_path_name, '%.([^%.]+)$') == 'cbp' then
+        entry_path_name = string.gsub(entry_path_name, '\\', '/')
         table.insert(M.cbp_files, entry_path_name)
       end
     end
   end
 end
 
-function M.find_cbp()
+function M.find_cbp(dtarget)
   local fname = a['nvim_buf_get_name'](0)
   local path = Path:new(fname)
   if not path:exists() then
-    return {}
+    return
   end
   if path:is_file() then
     if string.match(fname, '%.([^%.]+)$') == 'cbp' then
-      return {fname}
+      fname = string.gsub(fname, '\\', '/')
+      table.insert(M.cbp_files, fname)
+      return
     else
       dname = path:parent()
     end
-    local project = f['projectroot#get'](fname)
-    if #project == 0 then
-      print('no projectroot:', fname)
-      M.no_projectroot = true
-      return {}
-    end
     dname = path
-    M.searched_folders = {}
-    M.cbp_files = {}
-    M.no_projectroot = false
-    local project = string.gsub(project, '\\', '/')
     local cnt = 100000
     while 1 do
-      local app = dname:joinpath('app')
+      local app = dname:joinpath(dtarget)
       if app:is_dir() then
-        M.traverse_folder(project, dname['filename'])
+        M.traverse_folder(M.project, dname['filename'])
       end
-      if project == string.gsub(dname.filename, '\\', '/') then
+      if M.project == string.gsub(dname.filename, '\\', '/') then
         break
       end
       dname = dname:parent()
@@ -94,16 +89,40 @@ function M.find_cbp()
       cnt = #dname.filename
     end
   end
-  return M.cbp_files
+end
+
+function M.cmake_app()
+  local app_cbp = M.cbp_files[1]
+  if string.match(app_cbp, 'app/projects') then
+    c(string.format([[AsyncRun chcp 65001 && python "%s" "%s" %s]], g.cmake_app_py, M.project, 'app'))
+  end
 end
 
 function M.do_sdkcbp(cmd)
-  M.find_cbp()
-  if M.no_projectroot then
-    return
+  local fname = a['nvim_buf_get_name'](0)
+  M.project = f['projectroot#get'](fname)
+  M.project = string.gsub(M.project, '\\', '/')
+  if #M.project == 0 then
+    print('no projectroot:', fname)
   end
+  M.cbp_files = {}
+  M.searched_folders = {}
+  M.find_cbp('app')
   if #M.cbp_files == 0 then
+    M.find_cbp('boot')
+    if #M.cbp_files == 0 then
+      M.find_cbp('spiloader')
+      if #M.cbp_files == 0 then
+        M.find_cbp('masklib')
+      elseif #M.cbp_files == 1 then
+      else
+      end
+    elseif #M.cbp_files == 1 then
+    else
+    end
   elseif #M.cbp_files == 1 then
+    M.cmake_app()
+  else
   end
 end
 
