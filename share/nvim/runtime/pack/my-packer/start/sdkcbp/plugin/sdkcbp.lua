@@ -2,6 +2,7 @@ local s = vim.keymap.set
 local c = vim.cmd
 local g = vim.g
 
+g.sdkcbp_lua = vim.fn['expand']('<sfile>')
 
 local sdkcbp_exe = function(cmd)
   if not g.loaded_do_sdkcbp then
