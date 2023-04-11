@@ -4,6 +4,7 @@ import sys
 import time
 from multiprocessing import Pool
 
+
 absdir = os.path.dirname(os.path.realpath(__file__))
 
 def time_consuming(f):
@@ -181,9 +182,9 @@ def convert_html_to_docx(html_f, docx_f):
     os.system(cmd)
 
 def get_other_paths(md_p):
-    html_p = md_p.split(".")[0] + '.html'
-    pdf_p = md_p.split(".")[0] + '.pdf'
-    docx_p = md_p.split(".")[0] + '.docx'
+    html_p = '.'.join(md_p.split(".")[:-1]) + '.html'
+    pdf_p = '.'.join(md_p.split(".")[:-1]) + '.pdf'
+    docx_p = '.'.join(md_p.split(".")[:-1]) + '.docx'
     return html_p, pdf_p, docx_p
 
 def render_html_file(html_p):
@@ -252,11 +253,11 @@ def main(md_p):
         render_html_file(html_p)
     image2base64(html_p)
     csslink2style(html_p)
-    print("html done!")
+    print("html done!", html_p)
     convert_html_to_pdf(html_p, pdf_p)
-    print("pdf done!")
+    print("pdf done!", pdf_p)
     convert_html_to_docx(html_p, docx_p)
-    print("docx done!")
+    print("docx done!", docx_p)
 
 
 if __name__ == '__main__':
