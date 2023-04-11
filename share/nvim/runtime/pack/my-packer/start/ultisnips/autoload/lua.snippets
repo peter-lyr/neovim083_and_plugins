@@ -1,8 +1,8 @@
 snippet prd "printf integer"
-print("$1: 0x%x(%d)\n", $1, $1);
+print(string.format("$1: 0x%x(%d)", $1, $1));
 endsnippet
 
 snippet prs "printf string"
-print("$1: %s\n", $1);
+print(string.format("$1: %s", $1));
 endsnippet
 
