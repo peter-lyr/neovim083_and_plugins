@@ -6,7 +6,8 @@
         "${3rd}/luassert/library",
         "${3rd}/luv/library",
         "${3rd}/OpenResty/library",
-        "${3rd}/skynet/library"
+        "${3rd}/skynet/library",
+        "${3rd}/luassert/library"
     ],
     "runtime.version": "LuaJIT",
     "runtime.special": {
