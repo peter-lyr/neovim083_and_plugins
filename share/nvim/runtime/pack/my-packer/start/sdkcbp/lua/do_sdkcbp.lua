@@ -77,7 +77,10 @@ function M.find_cbp()
     local project = string.gsub(project, '\\', '/')
     local cnt = 100000
     while 1 do
-      M.traverse_folder(project, dname['filename'])
+      local app = dname:joinpath('app')
+      if app:is_dir() then
+        M.traverse_folder(project, dname['filename'])
+      end
       if project == string.gsub(dname.filename, '\\', '/') then
         break
       end
