@@ -24,3 +24,5 @@ saved_images
 !copy2clip.exe
 !recyclebin.exe
 *.zip
+**/log
+*.json
