@@ -11,6 +11,7 @@ local s = vim.keymap.set
 
 M.searched_folders = {}
 M.cbp_files = {}
+M.no_projectroot = false
 
 local Path = require("plenary.path")
 local Scan = require("plenary.scandir")
@@ -69,11 +70,13 @@ function M.find_cbp()
     local project = f['projectroot#get'](fname)
     if #project == 0 then
       print('no projectroot:', fname)
+      M.no_projectroot = true
       return {}
     end
     dname = path
     M.searched_folders = {}
     M.cbp_files = {}
+    M.no_projectroot = false
     local project = string.gsub(project, '\\', '/')
     local cnt = 100000
     while 1 do
@@ -95,7 +98,13 @@ function M.find_cbp()
 end
 
 function M.do_sdkcbp(cmd)
-  show_array(M.find_cbp())
+  M.find_cbp()
+  if M.no_projectroot then
+    return
+  end
+  if #M.cbp_files == 0 then
+  elseif #M.cbp_files == 1 then
+  end
 end
 
 return M
