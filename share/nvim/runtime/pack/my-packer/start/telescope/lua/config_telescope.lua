@@ -37,6 +37,7 @@ telescope.setup({
       '.git/',
       '.cache/',
       'build/',
+      '%.js',
       '%.asc',
       '%.hex',
       -- 'map.txt',
