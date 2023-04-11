@@ -26,6 +26,7 @@ mason_lspconfig.setup({
   ensure_installed = {
     "clangd",
     "pyright",
+    "lua_ls",
   }
 })
 
@@ -70,6 +71,24 @@ lspconfig.pyright.setup({
       'requirements.txt',
       'Pipfile',
       'pyrightconfig.json',
+      '.git',
+      '.svn',
+    }
+    return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
+  end,
+})
+
+lspconfig.lua_ls.setup({
+  capabilities = capabilities,
+  root_dir = function(fname)
+    local root_files = {
+      '.luarc.json',
+      '.luarc.jsonc',
+      '.luacheckrc',
+      '.stylua.toml',
+      'stylua.toml',
+      'selene.toml',
+      'selene.yml',
       '.git',
       '.svn',
     }
