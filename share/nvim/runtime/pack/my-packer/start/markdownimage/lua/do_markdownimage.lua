@@ -73,6 +73,7 @@ function M.getimage(sel_jpg)
     timer:start(100, 100, function()
       vim.schedule(function()
         timeout = timeout + 1
+        print(require("plenary.path"):new(pipe_txt['filename']):_read())
         local pipe_file = io.open(pipe_txt['filename'], "r")
         local pipe_content = pipe_file:read("*all")
         local find = string.find(pipe_content, 'success')
