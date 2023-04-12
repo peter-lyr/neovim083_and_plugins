@@ -12,6 +12,7 @@ g.markdown2pdfhtmldocx_dir = p6:parent():parent()['filename']
 local p6 = Path:new(g.markdown2pdfhtmldocx_dir)
 
 g.markdown2pdfhtmldocx_py = p6:joinpath('autoload', 'main.py')['filename']
+g.markdown2pdfhtmldocx_recyclebin_exe = p6:joinpath('autoload', 'recyclebin.exe')['filename']
 
 do_terminal = nil
 sta, do_terminal = pcall(require, 'do_terminal')
@@ -73,7 +74,7 @@ function M.do_markdown2pdfhtmldocx(cmd)
     local cnt = 0
     for _, v in ipairs(files) do
       cnt = cnt + 1
-      local curcmd = 'del ' .. v
+      local curcmd = g.markdown2pdfhtmldocx_recyclebin_exe .. ' "' .. v .. '"'
       f['system'](curcmd)
     end
     print('delete', cnt, 'file(s)')
