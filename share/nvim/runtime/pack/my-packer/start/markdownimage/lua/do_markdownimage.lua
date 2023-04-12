@@ -11,7 +11,7 @@ local Path = require("plenary.path")
 local markdownimage_dir = Path:new(g.markdownimage_lua):parent():parent()['filename']
 g.get_clipboard_image_ps1 = Path:new(markdownimage_dir):joinpath('autoload', 'GetClipboardImage.ps1')['filename']
 
-local pipe_txt = Path:new(f['expand']('$TEMP')):joinpath('image_pipe.txt')
+local pipe_txt_path = Path:new(f['expand']('$TEMP')):joinpath('image_pipe.txt')
 
 local sta, do_terminal = pcall(require, 'do_terminal')
 if not sta then
@@ -35,8 +35,19 @@ local human_readable_fsize = function(sz)
   return sz
 end
 
+function rep(path)
+  local path, _ = string.gsub(path, '/', '\\')
+  return path
+end
+
 function M.getimage(sel_jpg)
   if do_terminal then
+    local fname = a['nvim_buf_get_name'](0)
+    local projectroot_path = Path:new(f['projectroot#get'](fname))
+    if projectroot_path.filename == '' then
+      print([[not projectroot:]], fname)
+      return
+    end
     local datetime = os.date("%Y%m%d-%H%M%S-")
     local imagetype = sel_jpg == 1 and 'jpg' or 'png'
     local image_name = f['input'](string.format('Input %s image name (no extension needed!): ', imagetype), datetime)
@@ -45,86 +56,61 @@ function M.getimage(sel_jpg)
       return
     end
     local linenr = f['line']('.')
-    local ft = o.ft:get()
-    local project_dir = Path:new(f['projectroot#get'](a['nvim_buf_get_name'](0)))
-    local image_path = 'C:\\images'
-    if project_dir:is_dir() then
-      image_path = project_dir:joinpath('saved_images')['filename']
+    local absolute_image_dir_path = projectroot_path:joinpath('saved_images')
+    if not absolute_image_dir_path:exists() then
+      absolute_image_dir_path:mkdir()
+      print("created ->", rep(absolute_image_dir_path.filename))
     end
-    local image_path = Path:new(image_path)
-    if not image_path:exists() then
-      image_path:mkdir()
-      print("created ->", image_path)
-    end
-    local image_path = image_path:joinpath(image_name)['filename']
-    local exi = f['filereadable'](image_path)
-    if exi ~= 0 then
-      print("existed ->", image_path)
+    local only_image_name = image_name .. '.' .. imagetype
+    local raw_image_path = absolute_image_dir_path:joinpath(only_image_name)
+    if raw_image_path:exists() then
+      print("existed ->", rep(raw_image_path.filename))
       return
     end
-    print("get image ->", image_path)
-    f['writefile']({''}, pipe_txt['filename'])
-    cmd = string.format('%s "%s" %d "%s"', g.get_clipboard_image_ps1, image_path, sel_jpg, pipe_txt['filename'])
+    print("get image ->", rep(raw_image_path.filename))
+    pipe_txt_path:write('', 'w')
+    cmd = string.format('%s "%s" %d "%s"', g.get_clipboard_image_ps1, rep(raw_image_path.filename), sel_jpg, rep(pipe_txt_path.filename))
     do_terminal.send_cmd('powershell', cmd, 0)
     local timer = vim.loop.new_timer()
     local timeout = 0
-    local image_path = image_path .. '.' .. imagetype
-    local get_ok = 0
     timer:start(100, 100, function()
       vim.schedule(function()
         timeout = timeout + 1
-        print(require("plenary.path"):new(pipe_txt['filename']):_read())
-        local pipe_file = io.open(pipe_txt['filename'], "r")
-        local pipe_content = pipe_file:read("*all")
+        local pipe_content = pipe_txt_path:_read()
         local find = string.find(pipe_content, 'success')
-        if find or get_ok == 1 then
-          local file, err = io.open(image_path, "rb")
-          if not file then
-            print(err);
-            get_ok = 1
-          else
-            timer:stop()
-            print('save one image:', image_path)
-            local sha256 = require("sha2")
-            local data = file:read("*all")
-            file:close()
-            local hash = sha256.sha256(data)
-            local file = io.open(project_dir:joinpath('saved_images', '_.md')['filename'], 'a')
-            local image_rel_path = image_name .. '.' .. imagetype
-            local fsize = f['getfsize'](image_path)
-            file:write(string.format('![%s-(%d)%s{%s}](%s)\n', image_rel_path, fsize, human_readable_fsize(fsize), hash, image_rel_path))
-            file:close()
-            if ft ~= 'markdown' then
-              return
-            end
-            local image_reduce_path = image_path .. '.' .. imagetype
-            os.execute(string.format('ffmpeg -y -loglevel quiet -i "%s" -q 23 %s', image_path, image_reduce_path))
-            local sta, base64 = pcall(require, 'base64')
-            if not sta then
-              print('get image: no base64')
-              return
-            end
-            local file = io.open(image_reduce_path, "rb")
-            local content = file:read("*a")
-            local image_reduce_size = f['getfsize'](image_reduce_path)
-            file:close()
-            os.execute(string.format('del "%s"', image_reduce_path))
-            image_format = (imagetype == 'jpg') and 'jpeg' or 'png'
-            if image_reduce_size < fsize then
-              encoded = base64.encode(content)
-              f['append'](linenr, string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', image_rel_path, human_readable_fsize(fsize), human_readable_fsize(image_reduce_size), human_readable_fsize(#encoded), hash, image_format, encoded))
-            else
-              local file = io.open(image_path, "rb")
-              local content = file:read("*a")
-              encoded = base64.encode(content)
-              file:close()
-              f['append'](linenr, string.format('![%s-%s-%s-{%s}](data:image/%s;base64,%s)', image_rel_path, human_readable_fsize(fsize), human_readable_fsize(#encoded), hash, image_format, encoded))
-            end
-          end
-        end
-        if timeout > 60 then
-          print('get image timeout 6s')
+        if find then
+          raw_image_data = raw_image_path:_read()
           timer:stop()
+          print('save one image:', rep(raw_image_path.filename))
+          local sha256 = require("sha2")
+          local absolute_image_hash = sha256.sha256(raw_image_data)
+          local _md_path = absolute_image_dir_path:joinpath('_.md')
+          _md_path:write(string.format('![%s-(%d)%s{%s}](%s)\n', only_image_name, #raw_image_data, human_readable_fsize(#raw_image_data), absolute_image_hash, only_image_name), 'a')
+          local reduce_image_path = Path:new(raw_image_path .. '.' .. imagetype)
+          local ft = o.ft:get()
+          if ft ~= 'markdown' then
+            return
+          end
+          f['system'](string.format('ffmpeg -y -loglevel quiet -i "%s" -q 23 %s', rep(raw_image_path.filename), rep(reduce_image_path.filename)))
+          local sta, base64 = pcall(require, 'base64')
+          if not sta then
+            print('get image: no base64')
+            return
+          end
+          local reduce_image_data = reduce_image_path:_read()
+          f['system'](string.format('del "%s"', rep(reduce_image_path.filename)))
+          local image_format = sel_jpg == 1 and 'jpeg' or 'png'
+          if #reduce_image_data < #raw_image_data then
+            encoded = base64.encode(reduce_image_data)
+            f['append'](linenr, string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name, human_readable_fsize(#raw_image_data), human_readable_fsize(#reduce_image_data), human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
+          else
+            encoded = base64.encode(raw_image_data)
+            f['append'](linenr, string.format('![%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name, human_readable_fsize(#raw_image_data), human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
+          end
+        if timeout > 30 then
+          print('get image timeout 3s')
+          timer:stop()
+        end
         end
       end)
     end)
