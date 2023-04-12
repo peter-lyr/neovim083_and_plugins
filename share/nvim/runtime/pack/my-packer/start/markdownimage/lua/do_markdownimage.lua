@@ -77,8 +77,9 @@ function M.getimage(sel_jpg)
         local pipe_content = pipe_file:read("*all")
         local find = string.find(pipe_content, 'success')
         if find or get_ok == 1 then
-          local file = io.open(image_path, "rb")
+          local file, err = io.open(image_path, "rb")
           if not file then
+            print(err);
             get_ok = 1
           else
             timer:stop()
