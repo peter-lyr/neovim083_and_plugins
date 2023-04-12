@@ -3,6 +3,7 @@ local M = {}
 local g = vim.g
 local c = vim.cmd
 local a = vim.api
+local f = vim.fn
 
 local Path = require("plenary.path")
 
@@ -38,7 +39,8 @@ local filetypes = {
 
 function scandir(directory)
   local files = {}
-  for file in io.popen("dir \"" .. directory .. "\" /b"):lines() do
+  local result = require("plenary.scandir").scan_dir(directory, { depth = 1, hidden = 1 })
+  for _, file in ipairs(result) do
     local extension = file:gsub("^.*%.([^.]+)$", "%1")
     if index_of(filetypes, extension) then
       table.insert(files, file)
@@ -66,14 +68,13 @@ function M.do_markdown2pdfhtmldocx(cmd)
     end
   elseif cmd == 'delete' then
     local curdir = get_dname(a['nvim_buf_get_name'](0))
-    local curdir = string.gsub(curdir, '/', '\\')
+    curdir = string.gsub(curdir, '/', '\\')
     local files = scandir(curdir)
     local cnt = 0
-    for i, v in ipairs(files) do
+    for _, v in ipairs(files) do
       cnt = cnt + 1
-      local curfile = curdir .. '\\' .. v
-      local curcmd = 'del "' .. curfile .. '"'
-      os.execute(curcmd)
+      local curcmd = 'del ' .. v
+      f['system'](curcmd)
     end
     print('delete', cnt, 'file(s)')
   end
