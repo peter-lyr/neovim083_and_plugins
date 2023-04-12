@@ -1,8 +1,12 @@
-snippet prd "printf integer"
-print(string.format("$1: 0x%x(%d)", $1, $1));
+snippet pri "print string"
+print([[$1]])
 endsnippet
 
-snippet prs "printf string"
-print(string.format("$1: %s", $1));
+snippet prd "print integer var"
+print(string.format([[$1: 0x%x(%d)]], $1, $1))
+endsnippet
+
+snippet prs "print string var"
+print(string.format([[$1: %s]], $1))
 endsnippet
 
