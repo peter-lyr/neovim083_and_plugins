@@ -18,4 +18,4 @@ local bufferswitch_exe = function(cmd)
 end
 
 
-s('n', '\\a', function() bufferswitch_exe('') end, { silent = true})
+s('n', '\\\\a', function() bufferswitch_exe('') end, { silent = true})
