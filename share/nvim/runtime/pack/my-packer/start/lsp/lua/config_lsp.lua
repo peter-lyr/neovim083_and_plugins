@@ -82,13 +82,13 @@ lspconfig.lua_ls.setup({
   capabilities = capabilities,
   root_dir = function(fname)
     local root_files = {
-      '.luarc.json',
-      '.luarc.jsonc',
-      '.luacheckrc',
-      '.stylua.toml',
-      'stylua.toml',
-      'selene.toml',
-      'selene.yml',
+      -- '.luarc.json',
+      -- '.luarc.jsonc',
+      -- '.luacheckrc',
+      -- '.stylua.toml',
+      -- 'stylua.toml',
+      -- 'selene.toml',
+      -- 'selene.yml',
       '.git',
       '.svn',
     }
