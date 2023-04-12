@@ -1,4 +1,5 @@
 local f = vim.fn
+local s = vim.keymap.set
 
 local sta, mason = pcall(require, "mason")
 if not sta then
@@ -93,5 +94,45 @@ lspconfig.lua_ls.setup({
       '.svn',
     }
     return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
+  end,
+})
+
+
+local a = vim.api
+local c = vim.cmd
+local b = vim.lsp.buf
+local d = vim.diagnostic
+
+
+s('n', '[f', d.open_float)
+s('n', ']f', d.setloclist)
+s('n', '[d', d.goto_prev)
+s('n', ']d', d.goto_next)
+
+
+s('n', '<leader>qq', function() c('LspStart') end)
+s('n', '<leader>qw', function() c('LspRestart') end)
+s('n', '<leader>qe', function() c('LspStop') end)
+s('n', '<leader>qt', function() c('LspInfo') end)
+
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = a.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+    local opts = { buffer = ev.buf }
+    s('n', '<leader>hg', b.declaration, opts)
+    s('n', '<leader>hd', b.definition, opts)
+    s('n', '<leader>hh', b.hover, opts)
+    s('n', '<leader>hi', b.implementation, opts)
+    s('n', '<leader>hs', b.signature_help, opts)
+    s('n', '<leader>hr', b.references, opts)
+    s('n', '<leader>qd', b.type_definition, opts)
+    s('n', '<leader>qa', b.add_workspace_folder, opts)
+    s('n', '<leader>qr', b.remove_workspace_folder, opts)
+    s('n', '<leader>ql', function() print(vim.inspect(b.list_workspace_folders())) end, opts)
+    s('n', '<leader>qn', b.rename, opts)
+    s('n', '<leader>qf', function() b.format { async = true } end, opts)
+    s({'n', 'v'}, '<leader>qc', b.code_action, opts)
   end,
 })
