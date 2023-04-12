@@ -717,7 +717,7 @@ netrw.setup{
     ['dn'] = function(payload) search_fname(payload, 'down') end,
     ['\''] = function(payload) sel_toggle_cur(payload) end,
     ['"'] = function(payload) sel_toggle_all(payload) end,
-    ['(s-cr)'] = function(payload) sel_all(payload) end,
+    ['|'] = function(payload) sel_all(payload) end,
     ['dE'] = function(payload) empty_sel_list(payload) end,
     ['dD'] = function(payload) delete_sel_list(payload) end,
     ['dM'] = function(payload) move_sel_list(payload) end,
