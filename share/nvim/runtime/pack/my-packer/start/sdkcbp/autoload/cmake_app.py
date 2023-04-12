@@ -2,9 +2,9 @@ import os
 import re
 import sys
 
-rootdir = sys.argv[1]
+rootdir = sys.argv[1].replace('\\', '/')
 
-projectName = sys.argv[2]
+projectName = sys.argv[2].replace('\\', '/')
 
 projFileNames = []
 
@@ -39,7 +39,7 @@ with open(os.path.join(rootdir, 'CMakeLists.txt'), 'wb') as ff:
       ff.write(("file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/%s/*.c)\n" % xl).encode('utf-8'))
       ff.write(("file(GLOB_RECURSE ASM_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/%s/*.S)\n" % xl).encode('utf-8'))
       ff.write(b"add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${ASM_SOURCE_FILES})\n")
-      bb = ['target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/%s)' % aa.replace(rootdir, '').strip('\\').strip('/').replace('\\', '/') for aa in val]
+      bb = ['target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/%s)' % aa.replace('\\', '/').replace(rootdir, '').strip('\\').strip('/').replace('\\', '/') for aa in val]
       ff.write(('\n'.join(bb).encode('utf-8')) + b'\n\n')
     elif key.split('.')[0].split('\\')[0] == 'libs':
       xl = '/'.join(key.split('\\')[0:2])
@@ -47,7 +47,7 @@ with open(os.path.join(rootdir, 'CMakeLists.txt'), 'wb') as ff:
       ff.write(("file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/%s/*.c)\n" % xl).encode('utf-8'))
       ff.write(("file(GLOB_RECURSE ASM_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/%s/*.S)\n" % xl).encode('utf-8'))
       ff.write(("add_library(%s STATIC ${SOURCE_FILES} ${ASM_SOURCE_FILES})\n" % libname).encode('utf-8'))
-      bb = ['target_include_directories(%s PUBLIC ${PROJECT_SOURCE_DIR}/%s)' % (libname, aa.replace(rootdir, '').strip('\\').strip('/').replace('\\', '/')) for aa in val]
+      bb = ['target_include_directories(%s PUBLIC ${PROJECT_SOURCE_DIR}/%s)' % (libname, aa.replace('\\', '/').replace(rootdir, '').strip('\\').strip('/').replace('\\', '/')) for aa in val]
       ff.write(('\n'.join(bb).encode('utf-8')) + b'\n')
       ff.write(("target_link_libraries(${PROJECT_NAME} %s)\n\n" % libname).encode('utf-8'))
 
