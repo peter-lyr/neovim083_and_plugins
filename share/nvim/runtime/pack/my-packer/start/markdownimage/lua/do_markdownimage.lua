@@ -15,22 +15,22 @@ local pipe_txt_path = Path:new(f['expand']('$TEMP')):joinpath('image_pipe.txt')
 
 local sta, do_terminal = pcall(require, 'do_terminal')
 if not sta then
-  print'no do_terminal in markdownimage'
+  print 'no do_terminal in markdownimage'
 end
 
 local human_readable_fsize = function(sz)
   if sz >= 1073741824 then
-    sz = string.format("%.1f",sz/1073741824.0) .. "G"
+    sz = string.format("%.1f", sz / 1073741824.0) .. "G"
   elseif sz >= 10485760 then
-    sz = string.format("%d",sz/1048576) .. "M"
+    sz = string.format("%d", sz / 1048576) .. "M"
   elseif sz >= 1048576 then
-    sz = string.format("%.1f",sz/1048576.0) .. "M"
+    sz = string.format("%.1f", sz / 1048576.0) .. "M"
   elseif sz >= 10240 then
-    sz = string.format("%d",sz/1024) .. "K"
+    sz = string.format("%d", sz / 1024) .. "K"
   elseif sz >= 1024 then
-    sz = string.format("%.1f",sz/1024.0) .. "K"
+    sz = string.format("%.1f", sz / 1024.0) .. "K"
   else
-    sz= sz
+    sz = sz
   end
   return sz
 end
@@ -69,7 +69,8 @@ function M.getimage(sel_jpg)
     end
     print("get image ->", rep(raw_image_path.filename))
     pipe_txt_path:write('', 'w')
-    cmd = string.format('%s "%s" %d "%s"', g.get_clipboard_image_ps1, rep(raw_image_path.filename), sel_jpg, rep(pipe_txt_path.filename))
+    cmd = string.format('%s "%s" %d "%s"', g.get_clipboard_image_ps1, rep(raw_image_path.filename), sel_jpg,
+      rep(pipe_txt_path.filename))
     do_terminal.send_cmd('powershell', cmd, 0)
     local timer = vim.loop.new_timer()
     local timeout = 0
@@ -85,13 +86,17 @@ function M.getimage(sel_jpg)
           local sha256 = require("sha2")
           local absolute_image_hash = sha256.sha256(raw_image_data)
           local _md_path = absolute_image_dir_path:joinpath('_.md')
-          _md_path:write(string.format('![%s-(%d)%s{%s}](%s)\n', only_image_name, #raw_image_data, human_readable_fsize(#raw_image_data), absolute_image_hash, only_image_name), 'a')
+          _md_path:write(
+            string.format('![%s-(%d)%s{%s}](%s)\n', only_image_name, #raw_image_data,
+              human_readable_fsize(#raw_image_data),
+              absolute_image_hash, only_image_name), 'a')
           local reduce_image_path = Path:new(raw_image_path .. '.' .. imagetype)
           local ft = o.ft:get()
           if ft ~= 'markdown' then
             return
           end
-          f['system'](string.format('ffmpeg -y -loglevel quiet -i "%s" -q 23 %s', rep(raw_image_path.filename), rep(reduce_image_path.filename)))
+          f['system'](string.format('ffmpeg -y -loglevel quiet -i "%s" -q 23 %s', rep(raw_image_path.filename),
+            rep(reduce_image_path.filename)))
           local sta, base64 = pcall(require, 'base64')
           if not sta then
             print('get image: no base64')
@@ -102,15 +107,21 @@ function M.getimage(sel_jpg)
           local image_format = sel_jpg == 1 and 'jpeg' or 'png'
           if #reduce_image_data < #raw_image_data then
             encoded = base64.encode(reduce_image_data)
-            f['append'](linenr, string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name, human_readable_fsize(#raw_image_data), human_readable_fsize(#reduce_image_data), human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
+            f['append'](linenr,
+              string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name,
+                human_readable_fsize(#raw_image_data), human_readable_fsize(#reduce_image_data),
+                human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
           else
             encoded = base64.encode(raw_image_data)
-            f['append'](linenr, string.format('![%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name, human_readable_fsize(#raw_image_data), human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
+            f['append'](linenr,
+              string.format('![%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name,
+                human_readable_fsize(#raw_image_data), human_readable_fsize(#encoded), absolute_image_hash, image_format,
+                encoded))
           end
-        if timeout > 30 then
-          print('get image timeout 3s')
-          timer:stop()
-        end
+          if timeout > 30 then
+            print('get image timeout 3s')
+            timer:stop()
+          end
         end
       end)
     end)
