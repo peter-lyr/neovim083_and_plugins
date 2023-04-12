@@ -7,4 +7,5 @@ EXIT /b
 SETLOCAL
 CALL :find_dp0
 
-endLocal & goto #_undefined_# 2>NUL || title %COMSPEC% & "C:\Users\llydr\Desktop\neovim083_and_plugins\share\nvim\runtime\my-neovim-data\mason\packages\lua-language-server\bin\lua-language-server.exe" %*
+endLocal & goto #_undefined_# 2>NUL || title %COMSPEC% & "D:\Desktop\neovim083_and_plugins\share\nvim\runtime\my-neovim-data\mason\packages\lua-language-server\bin\lua-language-server.exe" %*
+REM  endLocal & goto #_undefined_# 2>NUL || title %COMSPEC% & "C:\Users\llydr\Desktop\neovim083_and_plugins\share\nvim\runtime\my-neovim-data\mason\packages\lua-language-server\bin\lua-language-server.exe" %*
