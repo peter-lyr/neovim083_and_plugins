@@ -641,8 +641,9 @@ end
 --- Add the folder at path to the workspace folders. If {path} is
 --- not provided, the user will be prompted for a path using |input()|.
 function M.add_workspace_folder(workspace_folder)
+  local aa, _ = string.gsub(vim.fn.expand('%:p:h'), '\\', '/')
   workspace_folder = workspace_folder
-    or npcall(vim.fn.input, 'Workspace Folder: ', vim.fn.expand('%:p:h'), 'dir')
+    or npcall(vim.fn.input, 'Workspace Folder: ', aa, 'dir')
   api.nvim_command('redraw')
   if not (workspace_folder and #workspace_folder > 0) then
     return
@@ -678,8 +679,9 @@ end
 --- {path} is not provided, the user will be prompted for
 --- a path using |input()|.
 function M.remove_workspace_folder(workspace_folder)
+  local aa, _ = string.gsub(vim.fn.expand('%:p:h'), '\\', '/')
   workspace_folder = workspace_folder
-    or npcall(vim.fn.input, 'Workspace Folder: ', vim.fn.expand('%:p:h'))
+    or npcall(vim.fn.input, 'Workspace Folder: ', aa)
   api.nvim_command('redraw')
   if not (workspace_folder and #workspace_folder > 0) then
     return
