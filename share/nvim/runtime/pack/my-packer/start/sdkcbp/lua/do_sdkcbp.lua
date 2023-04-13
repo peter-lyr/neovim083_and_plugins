@@ -36,6 +36,11 @@ function show_array(arr)
   end
 end
 
+function rep(path)
+  local path, _ = string.gsub(path, '\\', '/')
+  return path
+end
+
 function M.traverse_folder(project, abspath)
   local path = Path:new(abspath)
   local entries = Scan.scan_dir(path.filename, { hidden = false, depth = 1, add_dirs = true })
@@ -45,13 +50,13 @@ function M.traverse_folder(project, abspath)
     if entry_path:is_dir() then
       if not index_of(M.searched_folders, entry_path_name) then
         table.insert(M.searched_folders, entry_path_name)
-        if string.find(string.gsub(entry_path_name, '\\', '/'), project) then
+        if string.find(rep(entry_path_name), project) then
           M.traverse_folder(project, entry_path_name)
         end
       end
     else
       if string.match(entry_path_name, '%.([^%.]+)$') == 'cbp' then
-        entry_path_name = string.gsub(entry_path_name, '\\', '/')
+        entry_path_name = rep(entry_path_name)
         table.insert(M.cbp_files, entry_path_name)
       end
     end
@@ -66,7 +71,7 @@ function M.find_cbp(dtargets)
   end
   if path:is_file() then
     if string.match(fname, '%.([^%.]+)$') == 'cbp' then
-      fname = string.gsub(fname, '\\', '/')
+      fname = rep(fname)
       table.insert(M.cbp_files, fname)
       return
     else
@@ -82,7 +87,7 @@ function M.find_cbp(dtargets)
           break
         end
       end
-      if M.project == string.gsub(dname.filename, '\\', '/') then
+      if M.project == rep(dname.filename) then
         break
       end
       dname = dname:parent()
@@ -94,6 +99,17 @@ function M.find_cbp(dtargets)
   end
 end
 
+function M.split_string(inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+  local t = {}
+  for str in string.gmatch(inputstr, "(.-)"..sep) do
+    table.insert(t, str)
+  end
+  return t
+end
+
 function M.cmake_app()
   if #M.cbp_files == 1 then
     app_cbp = M.cbp_files[1]
@@ -103,20 +119,23 @@ function M.cmake_app()
       app_cbp = M.cbp_files[idx]
     end)
   end
+  local ll = M.split_string(app_cbp, 'app/projects')
+  local mm = table.concat(ll, 'app/projects')
   if string.match(app_cbp, 'app/projects') then
-    c(string.format([[AsyncRun chcp 65001 && python "%s" "%s" %s]], g.cmake_app_py, M.project, 'app'))
+    c(string.format([[AsyncRun chcp 65001 && python "%s" "%s" %s]], g.cmake_app_py, mm, 'app'))
   end
 end
 
 function M.cmake_others()
-  local app_cbp = M.cbp_files[1]
-  c(string.format([[AsyncRun chcp 65001 && python "%s" "%s"]], g.cmake_app_py, M.project))
+  local other_cbp = M.cbp_files[1]
+  local path = Path:new(other_cbp)
+  c(string.format([[AsyncRun chcp 65001 && python "%s" "%s"]], g.cmake_app_py, path:parent().filename))
 end
 
 function M.do_sdkcbp(cmd)
   local fname = a['nvim_buf_get_name'](0)
   M.project = f['projectroot#get'](fname)
-  M.project = string.gsub(M.project, '\\', '/')
+  M.project = rep(M.project)
   if #M.project == 0 then
     print('no projectroot:', fname)
   end
