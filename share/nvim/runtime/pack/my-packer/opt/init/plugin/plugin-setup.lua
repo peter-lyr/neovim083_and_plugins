@@ -55,7 +55,7 @@ local plugins = function(use)
   use({"tpope/vim-fugitive", opt = true})
   use({"sindrets/diffview.nvim", opt = true})
 
-  use("kyazdani42/nvim-web-devicons")
+  use("nvim-tree/nvim-web-devicons")
 
   use("ahmedkhalf/project.nvim")
   use("dbakker/vim-projectroot")
