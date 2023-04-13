@@ -130,7 +130,20 @@ vim.api.nvim_create_autocmd('LspAttach', {
     s('n', '<leader><leader>fd', b.type_definition, opts)
     s('n', '<leader>fa', b.add_workspace_folder, opts)
     s('n', '<leader>fr', b.remove_workspace_folder, opts)
-    s('n', '<leader>fl', function() print(vim.inspect(b.list_workspace_folders())) end, opts)
+    s('n', '<leader>fl', function()
+      function reverse_table(tab)
+        local size = #tab
+        local new_table = {}
+        for i,v in ipairs(tab) do
+          new_table[size-i+1] = v
+        end
+        return new_table
+      end
+      vim.ui.select(reverse_table(b.list_workspace_folders()), { prompt = 'netrw open' }, function(choice, idx)
+        c'leftabove vsplit'
+        c('Explore ' .. choice)
+      end)
+    end, opts)
     s('n', '<leader>fn', b.rename, opts)
     s('n', '<leader>ff', function() b.format { async = true } end, opts)
     s({ 'n', 'v' }, '<leader>fc', b.code_action, opts)
