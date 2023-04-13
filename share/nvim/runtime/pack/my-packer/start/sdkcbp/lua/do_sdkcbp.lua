@@ -120,6 +120,7 @@ function M.cmake_app()
       app_cbp = M.cbp_files[idx]
     end)
   end
+  print(app_cbp)
   local ll = M.split_string(app_cbp, 'app/projects')
   local mm = table.concat(ll, 'app/projects')
   local nn = string.match(app_cbp, mm .. 'app/projects/(.-)/')
@@ -130,6 +131,7 @@ end
 
 function M.cmake_others()
   local other_cbp = M.cbp_files[1]
+  print(other_cbp)
   local path = Path:new(other_cbp)
   c(string.format([[AsyncRun chcp 65001 && python "%s" "%s"]], g.cmake_others_py, path:parent().filename))
 end
