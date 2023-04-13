@@ -110,10 +110,10 @@ s('n', '[d', d.goto_prev)
 s('n', ']d', d.goto_next)
 
 
-s('n', '<leader>qq', function() c('LspStart') end)
-s('n', '<leader>qw', function() c('LspRestart') end)
-s('n', '<leader>qe', function() c('LspStop') end)
-s('n', '<leader>qt', function() c('LspInfo') end)
+s('n', '<leader>fS', function() c('LspStart') end)
+s('n', '<leader>fE', function() c('LspRestart') end)
+s('n', '<leader>fD', function() c('LspStop') end)
+s('n', '<leader>fF', function() c('LspInfo') end)
 
 
 vim.api.nvim_create_autocmd('LspAttach', {
