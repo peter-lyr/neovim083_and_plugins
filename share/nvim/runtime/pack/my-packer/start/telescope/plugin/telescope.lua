@@ -35,6 +35,7 @@ local telescope_exe = function(cmd)
 end
 
 
+s({'n', 'v'}, '<a-/>', function() telescope_exe("search_history") end, {silent = true})
 s({'n', 'v'}, '<a-c>', function() telescope_exe("command_history") end, {silent = true})
 s({'n', 'v'}, '<a-C>', function() telescope_exe("commands") end, {silent = true})
 
@@ -55,9 +56,17 @@ s({'n', 'v'}, '<a-x>', function() telescope_exe("quickfix") end, {silent = true}
 s({'n', 'v'}, '<a-X>', function() telescope_exe("quickfixhistory") end, {silent = true})
 
 s({'n', 'v'}, '<a-\'>a', function() telescope_exe("builtin") end, {silent = true})
-s({'n', 'v'}, '<a-\'>h', function() telescope_exe("help_tags") end, {silent = true})
+s({'n', 'v'}, '<a-\'>b', function() telescope_exe("lsp_document_symbols") end, {silent = true})
 s({'n', 'v'}, '<a-\'>c', function() telescope_exe("colorscheme") end, {silent = true})
-
+s({'n', 'v'}, '<a-\'>d', function() telescope_exe("diagnostics") end, {silent = true})
+s({'n', 'v'}, '<a-\'>f', function() telescope_exe("filetypes") end, {silent = true})
+s({'n', 'v'}, '<a-\'>h', function() telescope_exe("help_tags") end, {silent = true})
+s({'n', 'v'}, '<a-\'>j', function() telescope_exe("jumplist") end, {silent = true})
+s({'n', 'v'}, '<a-\'>m', function() telescope_exe("keymaps") end, {silent = true})
+s({'n', 'v'}, '<a-\'>o', function() telescope_exe("vim_options") end, {silent = true})
+s({'n', 'v'}, '<a-\'>p', function() telescope_exe("planets") end, {silent = true})
+s({'n', 'v'}, '<a-\'>r', function() telescope_exe("lsp_references") end, {silent = true})
+s({'n', 'v'}, '<a-\'>z', function() telescope_exe("current_buffer_fuzzy_find") end, {silent = true})
 
 s({'n', 'v'}, '<a-s-k>', function() telescope_exe("projects") end, {silent = true})
 
