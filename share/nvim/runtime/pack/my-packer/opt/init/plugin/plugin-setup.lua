@@ -99,6 +99,8 @@ local plugins = function(use)
   use("SirVer/ultisnips")
   use("quangnguyen30192/cmp-nvim-ultisnips")
 
+  use("folke/which-key.nvim")
+
 end
 
 return packer.startup(function(use)
