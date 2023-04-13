@@ -121,8 +121,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
     local opts = { buffer = ev.buf }
-    s('n', '<leader>hg', b.declaration, opts)
+    s('n', 'K', b.definition, opts)
     s('n', '<leader>hd', b.definition, opts)
+    s('n', '<leader>hg', b.declaration, opts)
     s('n', '<leader>hh', b.hover, opts)
     s('n', '<leader>hi', b.implementation, opts)
     s('n', '<leader>hs', b.signature_help, opts)
