@@ -34,9 +34,11 @@ telescope.setup({
       }
     },
     file_ignore_patterns = {
-      '.git/',
-      '.cache/',
-      'build/',
+      '.svn',
+      '.vs',
+      '.git',
+      '.cache',
+      'build',
       '%.js',
       '%.asc',
       '%.hex',
