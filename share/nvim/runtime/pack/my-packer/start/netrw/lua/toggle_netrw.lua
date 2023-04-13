@@ -73,7 +73,7 @@ function M.get_dname()
   local fname = string.gsub(a['nvim_buf_get_name'](0), "\\", '/')
   local path = Path:new(fname)
   if path:is_file() then
-    return path:parent()
+    return path:parent().filename
   end
   return ''
 end
@@ -116,6 +116,27 @@ local is_hide_en = function()
   return false
 end
 
+function rep(path)
+  local path, _ = string.gsub(path, '\\', '/')
+  return path
+end
+
+function get_paths(dname)
+  local path = Path:new(dname)
+  local paths = {}
+  local cnt = 9999
+  while 1 do
+    local name = path.filename
+    if cnt < #name then
+      break
+    end
+    cnt = #name
+    table.insert(paths, rep(name))
+    path = path:parent()
+  end
+  return paths
+end
+
 g.netrw_alt_fname = ''
 
 function M.toggle(mode)
@@ -140,7 +161,7 @@ function M.toggle(mode)
         c'bd'
       end
     else
-      if mode == 'cur_fname' or mode == 'cwd' then
+      if mode == 'sel' or mode == 'cur_fname' or mode == 'cwd' then
         if not is_winfixwidth() then
           new_unfix = 1
         else
@@ -218,6 +239,15 @@ function M.toggle(mode)
     elseif mode == 'cwd' then
       open_netrw()
       c(string.format('Explore %s', f['getcwd']()))
+    elseif mode == 'sel' then
+      local dname, _ = rep(M.get_dname())
+      local paths = get_paths(dname)
+      if #paths then
+        vim.ui.select(paths, { prompt = 'netrw open' }, function(choice, idx)
+          open_netrw()
+          c('Explore ' .. choice)
+        end)
+      end
     else
       open_netrw()
       c'Explore'
