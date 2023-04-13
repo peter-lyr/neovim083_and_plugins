@@ -51,8 +51,8 @@ s({'n', 'v'}, '<a-;>j', function() telescope_exe("git_status") end, {silent = tr
 s({'n', 'v'}, '<a-l>', function() telescope_exe("live_grep") end, {silent = true})
 s({'n', 'v'}, '<a-i>', function() telescope_exe("grep_string") end, {silent = true})
 
-s({'n', 'v'}, '<a-q>', function() telescope_exe("quickfix") end, {silent = true})
-s({'n', 'v'}, '<a-Q>', function() telescope_exe("quickfixhistory") end, {silent = true})
+s({'n', 'v'}, '<a-x>', function() telescope_exe("quickfix") end, {silent = true})
+s({'n', 'v'}, '<a-X>', function() telescope_exe("quickfixhistory") end, {silent = true})
 
 s({'n', 'v'}, '<a-\'>a', function() telescope_exe("builtin") end, {silent = true})
 s({'n', 'v'}, '<a-\'>h', function() telescope_exe("help_tags") end, {silent = true})
