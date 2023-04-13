@@ -121,8 +121,9 @@ function M.cmake_app()
   end
   local ll = M.split_string(app_cbp, 'app/projects')
   local mm = table.concat(ll, 'app/projects')
+  local nn = string.match(app_cbp, mm .. 'app/projects/(.-)/')
   if string.match(app_cbp, 'app/projects') then
-    c(string.format([[AsyncRun chcp 65001 && python "%s" "%s" %s]], g.cmake_app_py, mm, 'app'))
+    c(string.format([[AsyncRun chcp 65001 && python "%s" "%s" %s]], g.cmake_app_py, mm, nn))
   end
 end
 
