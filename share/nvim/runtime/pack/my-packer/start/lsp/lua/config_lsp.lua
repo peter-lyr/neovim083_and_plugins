@@ -134,6 +134,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     s('n', '<leader>ql', function() print(vim.inspect(b.list_workspace_folders())) end, opts)
     s('n', '<leader>qn', b.rename, opts)
     s('n', '<leader><leader>qf', function() b.format { async = true } end, opts)
-    s({'n', 'v'}, '<leader>qc', b.code_action, opts)
+    s({ 'n', 'v' }, '<leader>qc', b.code_action, opts)
   end,
 })
