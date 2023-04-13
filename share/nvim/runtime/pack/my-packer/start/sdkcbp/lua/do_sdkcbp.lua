@@ -17,6 +17,7 @@ local Scan = require("plenary.scandir")
 
 local sdkcbp_dir = Path:new(g.sdkcbp_lua):parent():parent()['filename']
 g.cmake_app_py = Path:new(sdkcbp_dir):joinpath('autoload', 'cmake_app.py')['filename']
+g.cmake_others_py = Path:new(sdkcbp_dir):joinpath('autoload', 'cmake_others.py')['filename']
 
 function index_of(arr, val)
   if not arr then
@@ -130,7 +131,7 @@ end
 function M.cmake_others()
   local other_cbp = M.cbp_files[1]
   local path = Path:new(other_cbp)
-  c(string.format([[AsyncRun chcp 65001 && python "%s" "%s"]], g.cmake_app_py, path:parent().filename))
+  c(string.format([[AsyncRun chcp 65001 && python "%s" "%s"]], g.cmake_others_py, path:parent().filename))
 end
 
 function M.do_sdkcbp(cmd)
