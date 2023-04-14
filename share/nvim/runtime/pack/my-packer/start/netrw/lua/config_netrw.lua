@@ -18,6 +18,12 @@ local c = vim.cmd
 local o = vim.opt
 local a = vim.api
 
+local rep = function(path)
+  local path, _ = string.gsub(path, '\\\\', '/')
+  local path, _ = string.gsub(path, '\\', '/')
+  return path
+end
+
 local get_dname = function(payload)
   f['netrw#Call']("NetrwBrowseChgDir", 1, f['netrw#Call']("NetrwGetWord"), 1)
   if not payload or payload['type'] == 0 then
@@ -596,7 +602,7 @@ local delete_sel_list = function(payload)
       --   f['system'](string.format('del "%s"', v))
       -- end
       f['system'](string.format('%s "%s"', g.netrw_recyclebin, v))
-      pcall(c, "bw! " .. v)
+      pcall(c, "bw! " .. rep(v))
     end
     empty_sel_list()
   else
@@ -625,7 +631,7 @@ local move_sel_list = function(payload)
       else
         f['system'](string.format('move "%s" "%s"', v, target))
       end
-      pcall(c, "bw! " .. v)
+      pcall(c, "bw! " .. rep(v))
     end
     empty_sel_list()
   else
@@ -692,7 +698,7 @@ local delete = function(payload)
     f['netrw#Call']("NetrwLocalRm", Path:new(dtarget):parent().filename)
   else
     f['netrw#Call']("NetrwLocalRm", dtarget)
-    pcall(c, "bw! " .. string.gsub(Path:new(dtarget):joinpath(payload.node).filename, '\\\\', '\\'))
+    pcall(c, "bw! " .. rep(Path:new(dtarget):joinpath(payload.node).filename))
   end
 end
 
