@@ -15,21 +15,34 @@ local gitsigns_exe = function(cmd, refresh)
   if not do_gitsigns then
     return
   end
-  do_gitsigns.cmd(cmd, refresh)
+  do_gitsigns.cmd("Gitsigns " .. cmd, refresh)
 end
 
 
 local s = vim.keymap.set
+local a = vim.api
 
+a.nvim_create_user_command('GSigns', function(params)
+  local fargs = params['fargs']
+  local arg1 = ''
+  local arg2 = ''
+  for i, v in ipairs(params['fargs']) do
+    if i < #fargs then
+      arg1 = arg1 .. ' ' .. v
+    else
+      arg2 = v
+    end
+  end
+  gitsigns_exe(arg1, arg2)
+end, { nargs = "*", })
 
-s({'n', 'v'}, '<leader>gr', function() gitsigns_exe("Gitsigns reset_hunk", 1) end, {silent = true})
-s({'n', 'v'}, '<leader>gR', function() gitsigns_exe("Gitsigns reset_buffer", 1) end, {silent = true})
-s({'n', 'v'}, '<leader>gE', function() gitsigns_exe("Git reset HEAD", 1) end, {silent = true})
-s({'n', 'v'}, '<leader>k', function() gitsigns_exe("Gitsigns prev_hunk", 0) end, {silent = true})
-s({'n', 'v'}, '<leader>j', function() gitsigns_exe("Gitsigns next_hunk", 0) end, {silent = true})
-s({'n', 'v'}, '<leader>gp', function() gitsigns_exe("Gitsigns preview_hunk", 0) end, {silent = true})
-s({'n', 'v'}, '<leader>gx', function() gitsigns_exe("Gitsigns select_hunk", 0) end, {silent = true})
-s({'n', 'v'}, '<leader>gd', function() gitsigns_exe("Gitsigns diffthis", 0) end, {silent = true})
-s({'n', 'v'}, '<leader>gD', function() gitsigns_exe("Gitsigns diffthis HEAD~1", 0) end, {silent = true})
-s({'n', 'v'}, '<leader>gtd', function() gitsigns_exe("Gitsigns toggle_deleted", 0) end, {silent = true})
-s({'n', 'v'}, '<leader>gtb', function() gitsigns_exe("Gitsigns toggle_current_line_blame", 0) end, {silent = true})
+s({ 'n', 'v' }, '<leader>gr', ":GSigns reset_hunk 1<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gR', ":GSigns reset_buffer 1<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>k', ":GSigns prev_hunk 0<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>j', ":GSigns next_hunk 0<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gp', ":GSigns preview_hunk 0<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gx', ":GSigns select_hunk 0<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gd', ":GSigns diffthis 0<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gD', ":GSigns diffthis HEAD~1 0<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gtd', ":GSigns toggle_deleted 0<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gtb', ":GSigns toggle_current_line_blame 0<cr>", { silent = true })
