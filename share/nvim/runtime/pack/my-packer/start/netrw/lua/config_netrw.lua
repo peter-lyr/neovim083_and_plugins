@@ -702,6 +702,19 @@ local delete = function(payload)
   end
 end
 
+local rename = function(payload)
+  if not payload then
+    return
+  end
+  local dtarget = get_dtarget(payload)
+  if payload.type == 0 then
+    f['netrw#Call']("NetrwLocalRename", Path:new(dtarget):parent().filename)
+  else
+    f['netrw#Call']("NetrwLocalRename", dtarget)
+    pcall(c, "bw! " .. rep(Path:new(dtarget):joinpath(payload.node).filename))
+  end
+end
+
 netrw.setup {
   use_devicons = true,
   mappings = {
@@ -748,5 +761,6 @@ netrw.setup {
     ['da'] = function(payload) create(payload) end,
     ['ds'] = function(payload) create_dir(payload) end,
     ['D'] = function(payload) delete(payload) end,
+    ['R'] = function(payload) rename(payload) end,
   },
 }
