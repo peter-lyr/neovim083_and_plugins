@@ -1,5 +1,6 @@
 local g = vim.g
 local c = vim.cmd
+local a = vim.api
 local s = vim.keymap.set
 
 
@@ -32,7 +33,10 @@ local diffview_exe = function(cmd)
   end
 end
 
+a.nvim_create_user_command('Diffview', function(params)
+  diffview_exe(unpack(params['fargs']))
+end, { nargs = "*", })
 
-s({'n', 'v'}, '<leader>gi', function() diffview_exe("filehistory") end, {silent = true})
-s({'n', 'v'}, '<leader>go', function() diffview_exe("open") end, {silent = true})
-s({'n', 'v'}, '<leader>gq', function() diffview_exe("quit") end, {silent = true})
+s({'n', 'v'}, '<leader>gi', ':Diffview filehistory<cr>', {silent = true})
+s({'n', 'v'}, '<leader>go', ':Diffview open<cr>', {silent = true})
+s({'n', 'v'}, '<leader>gq', ':Diffview quit<cr>', {silent = true})
