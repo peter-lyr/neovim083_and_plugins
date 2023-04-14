@@ -1,4 +1,5 @@
 local g = vim.g
+local a = vim.api
 local c = vim.cmd
 local s = vim.keymap.set
 
@@ -20,8 +21,11 @@ local markdownpreview_exe = function(cmd)
   do_markdownpreview.do_markdownpreview(cmd)
 end
 
+a.nvim_create_user_command('MPreview', function(params)
+  markdownpreview_exe(unpack(params['fargs']))
+end, { nargs = "*", })
 
-s({'n', 'v'}, '<f3>', function() markdownpreview_exe("MarkdownPreviewToggle") end, {silent = true})
+s({'n', 'v'}, '<f3>', ":MPreview MarkdownPreviewToggle<cr>", {silent = true})
 
 
 g.mkdp_theme = 'light'
