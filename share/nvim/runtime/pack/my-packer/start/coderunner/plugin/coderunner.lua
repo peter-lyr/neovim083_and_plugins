@@ -1,4 +1,5 @@
 local c = vim.cmd
+local a = vim.api
 local s = vim.keymap.set
 
 
@@ -13,15 +14,21 @@ local coderunner_exe = function(cmd)
     config_coderunner.setup({
       filetype = {
         python = "python -u",
-        c = "cd $dir && gcc $fileName -Wall -s -ffunction-sections -fdata-sections -Wl,--gc-sections -O3 -o $fileNameWithoutExt && strip -s $dir/$fileNameWithoutExt.exe && upx --best $dir/$fileNameWithoutExt.exe && $dir/$fileNameWithoutExt"
+        c = "cd $dir && " ..
+            "gcc $fileName -Wall -s -ffunction-sections -fdata-sections -Wl,--gc-sections -O3 -o $fileNameWithoutExt && " ..
+            "strip -s $dir/$fileNameWithoutExt.exe && " ..
+            "upx --best $dir/$fileNameWithoutExt.exe && " .. "$dir/$fileNameWithoutExt"
       },
     })
   end
   if not config_coderunner then
     return
   end
-  c'RunCode'
+  c 'RunCode'
 end
 
+a.nvim_create_user_command('CodeRunner', function(params)
+  coderunner_exe(unpack(params['fargs']))
+end, { nargs = "*", })
 
-s({'n', 'v'}, '<leader>rr', function() coderunner_exe("") end, {silent = true})
+s({ 'n', 'v' }, '<leader>rr', ':CodeRunner<cr>', { silent = true })
