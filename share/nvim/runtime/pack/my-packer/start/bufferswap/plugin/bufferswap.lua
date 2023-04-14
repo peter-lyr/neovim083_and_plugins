@@ -1,4 +1,5 @@
 local s = vim.keymap.set
+local a = vim.api
 local g = vim.g
 
 local bufferswap_exe = function(cmd)
@@ -16,5 +17,8 @@ local bufferswap_exe = function(cmd)
   do_bufferswap.do_bufferswap(cmd)
 end
 
+a.nvim_create_user_command('BufferSwap', function(params)
+  bufferswap_exe()
+end, { nargs = "*", })
 
-s('n', '<f11>', function() bufferswap_exe('') end, { silent = true})
+s('n', '<f11>', ':BufferSwap<cr>', { silent = true })
