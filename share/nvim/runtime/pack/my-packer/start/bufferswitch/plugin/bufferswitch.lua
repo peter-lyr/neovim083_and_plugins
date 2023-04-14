@@ -1,4 +1,5 @@
 local s = vim.keymap.set
+local a = vim.api
 local g = vim.g
 
 
@@ -17,5 +18,8 @@ local bufferswitch_exe = function(cmd)
   do_bufferswitch.do_bufferswitch(cmd)
 end
 
+a.nvim_create_user_command('BufferSwitch', function(params)
+  bufferswitch_exe(unpack(params['fargs']))
+end, { nargs = "*", })
 
-s('n', '\\\\a', function() bufferswitch_exe('') end, { silent = true})
+s('n', '\\\\a', ':BufferSwitch<cr>', { silent = true })
