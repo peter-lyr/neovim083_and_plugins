@@ -112,7 +112,7 @@ s('n', ']d', d.goto_next)
 
 s('n', '<leader>fS', function() c('LspStart') end)
 s('n', '<leader>fE', function() c('LspRestart') end)
-s('n', '<leader>fD', function() c('LspStop') end)
+s('n', '<leader>fD', function() c([[call feedkeys(":LspStop ")]]) end)
 s('n', '<leader>fF', function() c('LspInfo') end)
 
 
