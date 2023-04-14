@@ -9,8 +9,8 @@ local g = vim.g
 local Path = require("plenary.path")
 
 local p = Path:new(g.netrw_lua)
-g.netrw_recyclebin = p:parent():parent():joinpath('autoload', 'recyclebin.exe')['filename']
-g.copy2clip = p:parent():parent():joinpath('autoload', 'copy2clip.exe')['filename']
+g.netrw_recyclebin = p:parent():parent():joinpath('autoload', 'recyclebin.exe').filename
+g.copy2clip = p:parent():parent():joinpath('autoload', 'copy2clip.exe').filename
 
 local g = vim.g
 local f = vim.fn
@@ -69,7 +69,7 @@ local get_dtarget = function(payload)
   local fname = string.gsub(fname, "/", "\\")
   local path = Path:new(fname)
   if path:is_file() then
-    local fname = path:parent()['filename']
+    local fname = path:parent().filename
     local fname = string.gsub(fname, "/", "\\")
     return fname .. '\\'
   end
@@ -553,7 +553,7 @@ local sel_all = function(payload)
     target = get_fname(payload)
   end
   local path = Path:new(target)
-  target = path:parent()['filename']
+  target = path:parent().filename
   target = string.gsub(target, "/", "\\")
   local scandir = require "plenary.scandir"
   local result = scandir.scan_dir(target, { depth = 1, hidden = 1, add_dirs = 1 })
