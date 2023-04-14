@@ -43,6 +43,7 @@ telescope.setup({
       '%.js',
       '%.asc',
       '%.hex',
+      'CMakeLists.txt',
       -- 'map.txt',
       -- '%.lst',
     },
