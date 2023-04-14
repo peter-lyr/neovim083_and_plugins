@@ -20,7 +20,6 @@ local quickfix_exe = function()
     local sta, bqf = pcall(require, "bqf")
     if sta then
       bqf.setup({
-        auto_enable = true,
         auto_resize_height = true,
         preview = {
           win_height = 28,
@@ -28,14 +27,12 @@ local quickfix_exe = function()
           wrap = true,
         },
       })
-      vim.cmd([[
-      hi BqfPreviewBorder guifg=#50a14f ctermfg=71
-      hi link BqfPreviewRange Search
-      ]])
-    else
-      print('qqqqqqq')
     end
   end
+  c([[
+hi BqfPreviewBorder guifg=#50a14f ctermfg=71
+hi link BqfPreviewRange Search
+]])
   if not do_quickfix then
     return
   end
