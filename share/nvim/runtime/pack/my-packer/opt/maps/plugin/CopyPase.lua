@@ -22,7 +22,7 @@ s({ 'n', 'v' }, '<leader>y', '<esc>:let @+ = expand("%:t")<cr>', opt)
 s({ 'n', 'v' }, '<leader>gy', '<esc>:let @+ = substitute(nvim_buf_get_name(0), "/", "\\\\", "g")<cr>', opt)
 
 local buf_leave = function()
-  g.word = fn['expand']('<cword>')
+  g.word = f['expand']('<cword>')
 end
 
 a.nvim_create_autocmd({ "BufLeave" }, {
