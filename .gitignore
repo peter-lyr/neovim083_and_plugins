@@ -2,7 +2,13 @@
 **/my-neovim-data/*
 !**/my-neovim-data/treesitter-parser
 !**/my-neovim-data/mason
-**/packer/opt
+**/packer/opt/*
+!**/packer/opt/cmp-nvim-ultisnips
+!**/packer/opt/cmp-path
+!**/packer/opt/ultisnips
+!**/packer/opt/cmp-buffer
+!**/packer/opt/cmp-cmdline
+!**/packer/opt/cmp-nvim-lsp
 **/packer/start/*
 !**/packer/start/netrw.nvim
 !**/packer/start/plenary.nvim
