@@ -1,4 +1,5 @@
 local g = vim.g
+local a = vim.api
 local s = vim.keymap.set
 
 g.gitpush_lua = vim.fn['expand']('<sfile>')
@@ -19,11 +20,14 @@ local gitpush_exe = function(cmd)
   do_gitpush.do_gitpush(cmd)
 end
 
+a.nvim_create_user_command('GitPush', function(params)
+  gitpush_exe(unpack(params['fargs']))
+end, { nargs = "*", })
 
-s({'n', 'v'}, '<leader>g1', function() gitpush_exe("add_commit_push") end, {silent = true})
-s({'n', 'v'}, '<leader>g2', function() gitpush_exe("commit_push") end, {silent = true})
-s({'n', 'v'}, '<leader>g3', function() gitpush_exe("just_push") end, {silent = true})
-s({'n', 'v'}, '<leader>g4', function() gitpush_exe("add_commit") end, {silent = true})
-s({'n', 'v'}, '<leader>g5', function() gitpush_exe("just_commit") end, {silent = true})
-s({'n', 'v'}, '<leader>gI', function() gitpush_exe("git_init") end, {silent = true})
-s({'n', 'v'}, '<leader>g<f1>', function() os.execute('start cmd /c "git log --all --graph --decorate --oneline && pause"') end, {silent = true})
+s({ 'n', 'v' }, '<leader>g1', ":GitPush add_commit_push<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>g2', ":GitPush commit_push<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>g3', ":GitPush just_push<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>g4', ":GitPush add_commit<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>g5', ":GitPush just_commit<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>gI', ":GitPush git_init<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>g<f1>', ":!git log --all --graph --decorate --oneline && pause<cr>", { silent = true })
