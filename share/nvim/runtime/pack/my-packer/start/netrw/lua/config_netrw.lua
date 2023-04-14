@@ -698,7 +698,10 @@ local delete = function(payload)
     f['netrw#Call']("NetrwLocalRm", Path:new(dtarget):parent().filename)
   else
     f['netrw#Call']("NetrwLocalRm", dtarget)
-    pcall(c, "bw! " .. rep(Path:new(dtarget):joinpath(payload.node).filename))
+    local path = Path:new(dtarget):joinpath(payload.node)
+    if not path:exists() then
+      pcall(c, "bw! " .. rep(path.filename))
+    end
   end
 end
 
@@ -711,7 +714,10 @@ local rename = function(payload)
     f['netrw#Call']("NetrwLocalRename", Path:new(dtarget):parent().filename)
   else
     f['netrw#Call']("NetrwLocalRename", dtarget)
-    pcall(c, "bw! " .. rep(Path:new(dtarget):joinpath(payload.node).filename))
+    local path = Path:new(dtarget):joinpath(payload.node)
+    if not path:exists() then
+      pcall(c, "bw! " .. rep(path.filename))
+    end
   end
 end
 
