@@ -27,5 +27,5 @@ a.nvim_create_user_command('MarkdownImage', function(params)
   markdownimage_exe(unpack(params['fargs']))
 end, { nargs = "*", })
 
-s({'n', 'v'}, '\\<f3>', ':MarkdownImage getimage sel_jpg<cr>', {silent = true})
-s({'n', 'v'}, '\\\\<f3>', ':MarkdownImage getimage sel_png<cr>', {silent = true})
+s({ 'n', 'v' }, '\\<f3>', ':MarkdownImage getimage sel_jpg<cr>', { silent = true })
+s({ 'n', 'v' }, '\\\\<f3>', ':MarkdownImage getimage sel_png<cr>', { silent = true })
