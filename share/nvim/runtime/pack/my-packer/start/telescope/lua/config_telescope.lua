@@ -42,6 +42,8 @@ telescope.setup({
       '%.js',
       '%.asc',
       '%.hex',
+      '%.o',
+      '%.a',
       -- 'map.txt',
       -- '%.lst',
     },
