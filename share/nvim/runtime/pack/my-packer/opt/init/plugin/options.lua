@@ -26,4 +26,4 @@ o.iskeyword = '@,48-57,_,192-255'
 o.fileformats = 'dos'
 o.foldmethod = "indent"
 o.foldlevel = 99
-o.signcolumn = "auto"
+o.signcolumn = "auto:9"
