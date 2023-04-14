@@ -1,4 +1,5 @@
 local g = vim.g
+local a = vim.api
 local c = vim.cmd
 local s = vim.keymap.set
 
@@ -22,6 +23,9 @@ local markdownimage_exe = function(cmd, arg1)
   end
 end
 
+a.nvim_create_user_command('MarkdownImage', function(params)
+  markdownimage_exe(unpack(params['fargs']))
+end, { nargs = "*", })
 
-s({'n', 'v'}, '\\<f3>', function() markdownimage_exe('getimage', 1) end, {silent = true})
-s({'n', 'v'}, '\\\\<f3>', function() markdownimage_exe('getimage', 0) end, {silent = true})
+s({'n', 'v'}, '\\<f3>', ':MarkdownImage getimage sel_jpg<cr>', {silent = true})
+s({'n', 'v'}, '\\\\<f3>', ':MarkdownImage getimage sel_png<cr>', {silent = true})

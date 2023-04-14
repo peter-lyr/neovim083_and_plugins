@@ -49,7 +49,7 @@ function M.getimage(sel_jpg)
       return
     end
     local datetime = os.date("%Y%m%d-%H%M%S-")
-    local imagetype = sel_jpg == 1 and 'jpg' or 'png'
+    local imagetype = sel_jpg == 'sel_jpg' and 'jpg' or 'png'
     local image_name = f['input'](string.format('Input %s image name (no extension needed!): ', imagetype), datetime)
     if #image_name == 0 then
       print('get image canceled!')
@@ -69,7 +69,7 @@ function M.getimage(sel_jpg)
     end
     print("get image ->", rep(raw_image_path.filename))
     pipe_txt_path:write('', 'w')
-    cmd = string.format('%s "%s" %d "%s"', g.get_clipboard_image_ps1, rep(raw_image_path.filename), sel_jpg,
+    cmd = string.format('%s "%s" "%s" "%s"', g.get_clipboard_image_ps1, rep(raw_image_path.filename), sel_jpg,
       rep(pipe_txt_path.filename))
     do_terminal.send_cmd('powershell', cmd, 0)
     local timer = vim.loop.new_timer()
@@ -104,7 +104,7 @@ function M.getimage(sel_jpg)
           end
           local reduce_image_data = reduce_image_path:_read()
           f['system'](string.format('del "%s"', rep(reduce_image_path.filename)))
-          local image_format = sel_jpg == 1 and 'jpeg' or 'png'
+          local image_format = sel_jpg == 'sel_jpg' and 'jpeg' or 'png'
           if #reduce_image_data < #raw_image_data then
             encoded = base64.encode(reduce_image_data)
             f['append'](linenr,
