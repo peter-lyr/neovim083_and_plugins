@@ -53,7 +53,7 @@ local get_fname_tail = function(fname)
     if #fname[#fname] > 0 then
       return fname[#fname]
     else
-      return fname[#fname-1]
+      return fname[#fname - 1]
     end
   end
   return ''
@@ -106,14 +106,14 @@ local preview = function(payload)
       return 1
     end
   else
-    c[[ call feedkeys("\<cr>") ]]
+    c [[ call feedkeys("\<cr>") ]]
   end
   return nil
 end
 
 local preview_go = function(payload)
   if preview(payload) then
-    c[[ wincmd p ]]
+    c [[ wincmd p ]]
   end
 end
 
@@ -139,7 +139,7 @@ end
 
 local is_hide_en = function()
   local cnt = 0
-  for i=1, f['winnr']('$') do
+  for i = 1, f['winnr']('$') do
     if f['getbufvar'](f['winbufnr'](i), '&buftype') ~= 'nofile' then
       cnt = cnt + 1
     end
@@ -157,12 +157,12 @@ local open = function(payload, direction)
     return
   end
   if payload['type'] == 0 then
-    c[[ call feedkeys("\<cr>") ]]
+    c [[ call feedkeys("\<cr>") ]]
     return
   end
   local fname = get_fname(payload)
   if direction == 'tab' then
-    c[[ tabnew ]]
+    c [[ tabnew ]]
   else
     if is_winfixwidth() then
       local cur_winid = f['win_getid']()
@@ -172,7 +172,7 @@ local open = function(payload, direction)
         return
       end
       if #wnrs == 1 then
-        c[[ wincmd v ]]
+        c [[ wincmd v ]]
         c(string.format("e %s", fname))
         return
       else
@@ -184,27 +184,27 @@ local open = function(payload, direction)
     end
     if o.ft:get() == 'netrw' then
       if is_hide_en() then
-        c'hide'
+        c 'hide'
       end
       if f['win_gotoid'](g.netrw_back_winid) == 0 then
         print('99999j4j')
       end
     end
     if direction == 'up' then
-      c[[ leftabove new ]]
+      c [[ leftabove new ]]
     elseif direction == 'down' then
-      c[[ new ]]
+      c [[ new ]]
     elseif direction == 'left' then
-      c[[ leftabove vnew ]]
+      c [[ leftabove vnew ]]
     elseif direction == 'right' then
-      c[[ vnew ]]
+      c [[ vnew ]]
     end
   end
   c(string.format("e %s", fname))
 end
 
 local updir = function()
-  c[[ call feedkeys("-") ]]
+  c [[ call feedkeys("-") ]]
 end
 
 local copy_fname = function(payload)
@@ -245,7 +245,7 @@ local toggle_dir = function(payload)
     return nil
   end
   if payload['type'] == 0 then
-    c[[ call feedkeys("\<cr>") ]]
+    c [[ call feedkeys("\<cr>") ]]
   end
 end
 
@@ -307,7 +307,7 @@ local unfold_all = function(payload, start)
     return
   end
   local lnr0 = (start == 0 or start == 3) and 0 or f['line']('.')
-  local lnr00 =  f['line']('.')
+  local lnr00 = f['line']('.')
   local lnr = lnr0 - 1
   local only_one = start == 2 and true or false
   local only_one_go = false
@@ -364,15 +364,15 @@ local unfold_all = function(payload, start)
       end
       if unfold then
         c(string.format('norm %dgg', lnr))
-        local res = get_dname({ type = 0})
+        local res = get_dname({ type = 0 })
         if #res > 0 then
-          res =string.gsub(res, '\\', '/')
+          res = string.gsub(res, '\\', '/')
         end
         f['netrw#LocalBrowseCheck'](res)
         if not all then
           cnt = cnt + 1
           if cnt > 10 then
-            c[[ec 'unfold 10']]
+            c [[ec 'unfold 10']]
             c(string.format([[norm %dgg]], lnr00))
             return
           end
@@ -436,7 +436,7 @@ local go_parent = function(payload)
     return
   end
   local _, space_cnt0 = string.find(line0, '(%s+)')
-  for i=lnr0-1, 1, -1 do
+  for i = lnr0 - 1, 1, -1 do
     local line = f['getline'](i)
     local _, space_cnt = string.find(line, '(%s+)')
     if space_cnt and space_cnt < space_cnt0 then
@@ -458,7 +458,7 @@ local go_sibling = function(payload, dir)
   end
   local _, space_cnt0 = string.find(line0, '(%s+)')
   if dir == 'up' then
-    for i=lnr0-1, 1, -1 do
+    for i = lnr0 - 1, 1, -1 do
       local line = f['getline'](i)
       local _, space_cnt = string.find(line, '(%s+)')
       if not space_cnt then
@@ -470,7 +470,7 @@ local go_sibling = function(payload, dir)
       end
     end
   else
-    for i=lnr0+1, f['line']('$') do
+    for i = lnr0 + 1, f['line']('$') do
       local line = f['getline'](i)
       local _, space_cnt = string.find(line, '(%s+)')
       if not space_cnt then
@@ -507,11 +507,11 @@ local appendIfNotExists = function(t, s)
   local cwd = f['getcwd']()
   if not idx then
     table.insert(t, s)
-    c(string.format([[ec 'attach: %s']], string.sub(s, #cwd+2, #s)))
+    c(string.format([[ec 'attach: %s']], string.sub(s, #cwd + 2, #s)))
   else
     table.remove(t, idx)
     s = string.gsub(s, f['getcwd'](), '')
-    c(string.format([[ec 'detach: %s']], string.sub(s, #cwd+2, #s)))
+    c(string.format([[ec 'detach: %s']], string.sub(s, #cwd + 2, #s)))
   end
   return t
 end
@@ -525,7 +525,7 @@ local sel_toggle_cur = function(payload)
     name = get_dname(payload)
   end
   g.netrw_sel_list = appendIfNotExists(g.netrw_sel_list, name)
-  c'norm j'
+  c 'norm j'
 end
 
 local sel_toggle_all = function(payload)
@@ -575,7 +575,7 @@ local empty_sel_list = function(payload)
 end
 
 local delete_sel_list = function(payload)
-  local res = f['input']("Confirm deletion " .. #g.netrw_sel_list .. " [N/y] " ,"y")
+  local res = f['input']("Confirm deletion " .. #g.netrw_sel_list .. " [N/y] ", "y")
   local index_of = function(arr, val)
     if not arr then
       return nil
@@ -587,7 +587,7 @@ local delete_sel_list = function(payload)
     end
     return nil
   end
-  if index_of({'y', 'Y', 'yes', 'Yes', 'YES'}, res) then
+  if index_of({ 'y', 'Y', 'yes', 'Yes', 'YES' }, res) then
     for i, v in ipairs(g.netrw_sel_list) do
       -- if Path:new(v):is_dir() then
       --   f['system'](string.format('rd /s /q "%s"', v))
@@ -598,13 +598,13 @@ local delete_sel_list = function(payload)
     end
     empty_sel_list()
   else
-    c"echomsg 'canceled'"
+    c "echomsg 'canceled'"
   end
 end
 
 local move_sel_list = function(payload)
   local target = get_dtarget(payload)
-  local res = f['input'](target .. "\nConfirm movment " .. #g.netrw_sel_list .. " [N/y] " ,"y")
+  local res = f['input'](target .. "\nConfirm movment " .. #g.netrw_sel_list .. " [N/y] ", "y")
   local index_of = function(arr, val)
     if not arr then
       return nil
@@ -616,23 +616,23 @@ local move_sel_list = function(payload)
     end
     return nil
   end
-  if index_of({'y', 'Y', 'yes', 'Yes', 'YES'}, res) then
+  if index_of({ 'y', 'Y', 'yes', 'Yes', 'YES' }, res) then
     for i, v in ipairs(g.netrw_sel_list) do
       if Path:new(v):is_dir() then
-        f['system'](string.format('move "%s" "%s"', string.sub(v, 1, #v-1), target))
+        f['system'](string.format('move "%s" "%s"', string.sub(v, 1, #v - 1), target))
       else
         f['system'](string.format('move "%s" "%s"', v, target))
       end
     end
     empty_sel_list()
   else
-    c"echomsg 'canceled'"
+    c "echomsg 'canceled'"
   end
 end
 
 local copy_sel_list = function(payload)
   local target = get_dtarget(payload)
-  local res = f['input'](target .. "\nConfirm copy " .. #g.netrw_sel_list .. " [N/y] " ,"y")
+  local res = f['input'](target .. "\nConfirm copy " .. #g.netrw_sel_list .. " [N/y] ", "y")
   local index_of = function(arr, val)
     if not arr then
       return nil
@@ -644,18 +644,18 @@ local copy_sel_list = function(payload)
     end
     return nil
   end
-  if index_of({'y', 'Y', 'yes', 'Yes', 'YES'}, res) then
+  if index_of({ 'y', 'Y', 'yes', 'Yes', 'YES' }, res) then
     for i, v in ipairs(g.netrw_sel_list) do
       if Path:new(v):is_dir() then
         local tname = get_fname_tail(v)
-        f['system'](string.format('xcopy "%s" "%s%s\\" /s /e /f', string.sub(v, 1, #v-1), target, tname))
+        f['system'](string.format('xcopy "%s" "%s%s\\" /s /e /f', string.sub(v, 1, #v - 1), target, tname))
       else
         f['system'](string.format('copy "%s" "%s"', v, target))
       end
     end
     empty_sel_list()
   else
-    c"echomsg 'canceled'"
+    c "echomsg 'canceled'"
   end
 end
 
@@ -680,7 +680,7 @@ local create_dir = function(payload)
   c(string.format([[call feedkeys(':silent !cd "%s" && md ')]], string.gsub(dtarget, "/", "\\")))
 end
 
-netrw.setup{
+netrw.setup {
   use_devicons = true,
   mappings = {
     ['(f1)'] = function(payload) test(payload) end,
