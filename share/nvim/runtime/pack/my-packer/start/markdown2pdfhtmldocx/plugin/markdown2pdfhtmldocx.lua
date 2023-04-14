@@ -1,4 +1,5 @@
 local g = vim.g
+local a = vim.api
 local o = vim.opt
 local c = vim.cmd
 local s = vim.keymap.set
@@ -23,6 +24,9 @@ local markdown2pdfhtmldocx_exe = function(cmd)
   end
 end
 
+a.nvim_create_user_command('Markdown2PdfHtmlDocx', function(params)
+  markdown2pdfhtmldocx_exe(unpack(params['fargs']))
+end, { nargs = "*", })
 
-s({'n', 'v'}, '\\1', function() markdown2pdfhtmldocx_exe("create") end, {silent = true})
-s({'n', 'v'}, '\\2', function() markdown2pdfhtmldocx_exe("delete") end, {silent = true})
+s({ 'n', 'v' }, '\\1', ":Markdown2PdfHtmlDocx create<cr>", { silent = true })
+s({ 'n', 'v' }, '\\2', ":Markdown2PdfHtmlDocx delete<cr>", { silent = true })
