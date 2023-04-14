@@ -1,5 +1,6 @@
 local s = vim.keymap.set
 local g = vim.g
+local a = vim.api
 
 local buffernew_exe = function(cmd)
   if not g.loaded_do_buffernew then
@@ -20,15 +21,22 @@ local buffernew_exe = function(cmd)
   end
 end
 
-s({'n', 'v'}, '<leader>ba', '<c-w>s', {silent = true})
-s({'n', 'v'}, '<leader>bb', '<cmd>:new<cr>', {silent = true})
-s({'n', 'v'}, '<leader>bc', '<c-w>v', {silent = true})
-s({'n', 'v'}, '<leader>bd', '<cmd>:vnew<cr>', {silent = true})
-s({'n', 'v'}, '<leader>be', '<c-w>s<c-w>t', {silent = true})
-s({'n', 'v'}, '<leader>bf', '<cmd>:tabnew<cr>', {silent = true})
-s({'n', 'v'}, '<leader>bg', function() buffernew_exe('copy_fpath') end, {silent = true})
-s({'n', 'v'}, '<leader>bi', function() buffernew_exe('here') end, {silent = true})
-s({'n', 'v'}, '<leader>bk', function() buffernew_exe('up') end, {silent = true})
-s({'n', 'v'}, '<leader>bj', function() buffernew_exe('down') end, {silent = true})
-s({'n', 'v'}, '<leader>bh', function() buffernew_exe('left') end, {silent = true})
-s({'n', 'v'}, '<leader>bl', function() buffernew_exe('right') end, {silent = true})
+a.nvim_create_user_command('BufferNew', function(params)
+  buffernew_exe(unpack(params['fargs']))
+end, { nargs = "*", })
+
+local opt = {silent = true}
+
+s({'n', 'v'}, '<leader>ba', '<c-w>s', opt)
+s({'n', 'v'}, '<leader>bb', '<cmd>:new<cr>', opt)
+s({'n', 'v'}, '<leader>bc', '<c-w>v', opt)
+s({'n', 'v'}, '<leader>bd', '<cmd>:vnew<cr>', opt)
+s({'n', 'v'}, '<leader>be', '<c-w>s<c-w>t', opt)
+s({'n', 'v'}, '<leader>bf', '<cmd>:tabnew<cr>', opt)
+
+s({'n', 'v'}, '<leader>bg', ':BufferNew copy_fpath<cr>', opt)
+s({'n', 'v'}, '<leader>bi', ':BufferNew here<cr>', opt)
+s({'n', 'v'}, '<leader>bk', ':BufferNew up<cr>', opt)
+s({'n', 'v'}, '<leader>bj', ':BufferNew down<cr>', opt)
+s({'n', 'v'}, '<leader>bh', ':BufferNew left<cr>', opt)
+s({'n', 'v'}, '<leader>bl', ':BufferNew right<cr>', opt)
