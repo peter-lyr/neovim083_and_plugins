@@ -57,7 +57,7 @@ s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = tru
 s({'n', 'v'}, '<leader><leader>l', function() netrw_exe("fix_unfix") end, {silent = true})
 s({'n', 'v'}, '<leader>;', function() netrw_exe("toggle_search_fname") end, {silent = true})
 s({'n', 'v'}, '<leader><leader>;', function() netrw_exe("toggle_search_cwd") end, {silent = true})
-s({'n', 'v'}, '<leader><leader><leader>;', function() netrw_exe("toggle_search_sel") end, {silent = true})
+s({'n', 'v'}, '<leader>\'', function() netrw_exe("toggle_search_sel") end, {silent = true})
 
 local bufenter_netrw = function()
   if o.ft:get() == 'netrw' then
