@@ -98,7 +98,7 @@ local mapclear_buffer = function()
   p(d, 'n', 'v', o)
   p(d, 'n', 'x', o)
   p(d, {'n', 'v'}, '<Del>', o)
-  -- p(d, {'n', 'v'}, 'D', o)
+  p(d, {'n', 'v'}, 'D', o)
   -- p(d, {'n', 'v'}, 'R', o)
 
 end
