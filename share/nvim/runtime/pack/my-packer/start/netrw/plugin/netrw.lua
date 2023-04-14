@@ -53,11 +53,15 @@ g.netrw_timefmt = "%Y-%m-%d %H:%M:%S %a"
 g.netrw_liststyle = 1
 g.netrw_sort_by = 'exten'
 
-s({'n', 'v'}, '<leader>l', function() netrw_exe("toggle_fix") end, {silent = true})
-s({'n', 'v'}, '<leader><leader>l', function() netrw_exe("fix_unfix") end, {silent = true})
-s({'n', 'v'}, '<leader>;', function() netrw_exe("toggle_search_fname") end, {silent = true})
-s({'n', 'v'}, '<leader><leader>;', function() netrw_exe("toggle_search_cwd") end, {silent = true})
-s({'n', 'v'}, '<leader>\'', function() netrw_exe("toggle_search_sel") end, {silent = true})
+a.nvim_create_user_command('Netrw', function(params)
+  netrw_exe(unpack(params['fargs']))
+end, { nargs = "*", })
+
+s({'n', 'v'}, '<leader>l', ":Netrw toggle_fix<cr>", {silent = true})
+s({'n', 'v'}, '<leader><leader>l', ":Netrw fix_unfix<cr>", {silent = true})
+s({'n', 'v'}, '<leader>;', ":Netrw toggle_search_fname<cr>", {silent = true})
+s({'n', 'v'}, '<leader><leader>;', ":Netrw toggle_search_cwd<cr>", {silent = true})
+s({'n', 'v'}, '<leader>\'', ":Netrw toggle_search_sel<cr>", {silent = true})
 
 local bufenter_netrw = function()
   if o.ft:get() == 'netrw' then
