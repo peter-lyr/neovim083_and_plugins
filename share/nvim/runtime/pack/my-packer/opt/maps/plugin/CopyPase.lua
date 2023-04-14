@@ -1,3 +1,6 @@
+local a = vim.api
+local f = vim.fn
+local g = vim.g
 local s = vim.keymap.set
 
 s({ 'n', 'v' }, '<a-y>', '"+y')
@@ -13,13 +16,15 @@ s({ 'n', 'v' }, '<a-z>', '"zy')
 s({ 'c', 'i' }, '<a-z>', '<c-r>z')
 s({ 't', }, '<a-z>', '<c-\\><c-n>"zpi')
 
-s({ 'n', 'v' }, '<leader>y', '<esc>:let @+ = expand("%:t")<cr>', { silent = true })
-s({ 'n', 'v' }, '<leader>gy', '<esc>:let @+ = substitute(nvim_buf_get_name(0), "/", "\\\\", "g")<cr>', { silent = true })
+local opt = { silent = true }
+
+s({ 'n', 'v' }, '<leader>y', '<esc>:let @+ = expand("%:t")<cr>', opt)
+s({ 'n', 'v' }, '<leader>gy', '<esc>:let @+ = substitute(nvim_buf_get_name(0), "/", "\\\\", "g")<cr>', opt)
 
 local buf_leave = function()
-  vim.g.word = vim.fn['expand']('<cword>')
+  g.word = fn['expand']('<cword>')
 end
 
-vim.api.nvim_create_autocmd({ "BufLeave" }, {
+a.nvim_create_autocmd({ "BufLeave" }, {
   callback = buf_leave,
 })
