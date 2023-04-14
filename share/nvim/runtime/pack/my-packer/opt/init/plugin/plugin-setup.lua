@@ -91,17 +91,19 @@ local plugins = function(use)
 
   use({"iamcco/markdown-preview.nvim", run = function() vim.fn["mkdp#util#install"]() end })
 
-  use({'hrsh7th/cmp-nvim-lsp', opt = true})
-  use({'hrsh7th/cmp-buffer', opt = true})
-  use({'hrsh7th/cmp-path', opt = true})
   use({'hrsh7th/nvim-cmp', opt = true})
-  use({'hrsh7th/cmp-cmdline', opt = true})
-  use({"SirVer/ultisnips", opt = true})
-  use({"quangnguyen30192/cmp-nvim-ultisnips", opt = true})
+  -- use({'hrsh7th/cmp-nvim-lsp', opt = true}) -- 不再更新官方修改
+  -- use({'hrsh7th/cmp-buffer', opt = true}) -- 不再更新官方修改
+  -- use({'hrsh7th/cmp-path', opt = true}) -- 不再更新官方修改
+  -- use({'hrsh7th/cmp-cmdline', opt = true}) -- 不再更新官方修改
+  -- use({"SirVer/ultisnips", opt = true}) -- 不再更新官方修改
+  -- use({"quangnguyen30192/cmp-nvim-ultisnips", opt = true}) -- 不再更新官方修改
 
   use("folke/which-key.nvim")
 
   use({"kevinhwang91/nvim-bqf", opt = true})
+
+  use("azabiong/vim-highlighter")
 
 end
 
