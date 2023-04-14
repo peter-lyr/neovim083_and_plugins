@@ -83,6 +83,7 @@ local test = function(payload)
   -- - extension: the file extension if the node under the cursor is a file
   -- - type: the type of node under the cursor (0 = dir, 1 = file, 2 = symlink)
   -- print(vim.inspect(payload))
+  print('node:', payload.node)
   print('fname:', get_fname(payload))
   print('dname:', get_dname(payload))
   print('dtarg:', get_dtarget(payload))
@@ -595,6 +596,7 @@ local delete_sel_list = function(payload)
       --   f['system'](string.format('del "%s"', v))
       -- end
       f['system'](string.format('%s "%s"', g.netrw_recyclebin, v))
+      pcall(c, "bw! " .. v)
     end
     empty_sel_list()
   else
@@ -623,6 +625,7 @@ local move_sel_list = function(payload)
       else
         f['system'](string.format('move "%s" "%s"', v, target))
       end
+      pcall(c, "bw! " .. v)
     end
     empty_sel_list()
   else
@@ -680,6 +683,19 @@ local create_dir = function(payload)
   c(string.format([[call feedkeys(':silent !cd "%s" && md ')]], string.gsub(dtarget, "/", "\\")))
 end
 
+local delete = function(payload)
+  if not payload then
+    return
+  end
+  local dtarget = get_dtarget(payload)
+  if payload.type == 0 then
+    f['netrw#Call']("NetrwLocalRm", Path:new(dtarget):parent().filename)
+  else
+    f['netrw#Call']("NetrwLocalRm", dtarget)
+    pcall(c, "bw! " .. string.gsub(Path:new(dtarget):joinpath(payload.node).filename, '\\\\', '\\'))
+  end
+end
+
 netrw.setup {
   use_devicons = true,
   mappings = {
@@ -725,5 +741,6 @@ netrw.setup {
     ['dY'] = function(payload) copy_2_clip(payload) end,
     ['da'] = function(payload) create(payload) end,
     ['ds'] = function(payload) create_dir(payload) end,
+    ['D'] = function(payload) delete(payload) end,
   },
 }
