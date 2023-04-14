@@ -1,4 +1,5 @@
 local s = vim.keymap.set
+local a = vim.api
 local c = vim.cmd
 local g = vim.g
 
@@ -18,38 +19,42 @@ local tortoisesvn_exe = function(cmd, root, yes)
   do_tortoisesvn.do_tortoisesvn(cmd, root, yes)
 end
 
+a.nvim_create_user_command('TortoiseSvn', function(params)
+  tortoisesvn_exe(unpack(params['fargs']))
+end, { nargs = "*", })
+
 local opt = {silent = true}
 
-s({'n', 'v'}, '<leader>vo', function() tortoisesvn_exe('settings', 'cur', 1) end, opt)
+s({'n', 'v'}, '<leader>vo', ':TortoiseSvn settings cur yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vd', function() tortoisesvn_exe('diff', 'cur', 1) end, opt)
-s({'n', 'v'}, '<leader>vD', function() tortoisesvn_exe('diff', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vd', ':TortoiseSvn diff cur yes<cr>', opt)
+s({'n', 'v'}, '<leader>vD', ':TortoiseSvn diff root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vb', function() tortoisesvn_exe('blame', 'cur', 1) end, opt)
+s({'n', 'v'}, '<leader>vb', ':TortoiseSvn blame cur yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vw', function() tortoisesvn_exe('repobrowser', 'cur', 1) end, opt)
-s({'n', 'v'}, '<leader>vW', function() tortoisesvn_exe('repobrowser', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vw', ':TortoiseSvn repobrowser cur yes<cr>', opt)
+s({'n', 'v'}, '<leader>vW', ':TortoiseSvn repobrowser root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vs', function() tortoisesvn_exe('repostatus', 'cur', 1) end, opt)
-s({'n', 'v'}, '<leader>vS', function() tortoisesvn_exe('repostatus', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vs', ':TortoiseSvn repostatus cur yes<cr>', opt)
+s({'n', 'v'}, '<leader>vS', ':TortoiseSvn repostatus root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vr', function() tortoisesvn_exe('rename', 'cur', 1) end, opt)
+s({'n', 'v'}, '<leader>vr', ':TortoiseSvn rename cur yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vR', function() tortoisesvn_exe('remove', 'cur', 1) end, opt)
+s({'n', 'v'}, '<leader>vR', ':TortoiseSvn remove cur yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vv', function() tortoisesvn_exe('revert', 'cur', 1) end, opt)
-s({'n', 'v'}, '<leader>vV', function() tortoisesvn_exe('revert', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vv', ':TortoiseSvn revert cur yes<cr>', opt)
+s({'n', 'v'}, '<leader>vV', ':TortoiseSvn revert root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>va', function() tortoisesvn_exe('add', 'cur', 1) end, opt)
-s({'n', 'v'}, '<leader>vA', function() tortoisesvn_exe('add', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>va', ':TortoiseSvn add cur yes<cr>', opt)
+s({'n', 'v'}, '<leader>vA', ':TortoiseSvn add root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vc', function() tortoisesvn_exe('commit', 'cur', 1) end, opt)
-s({'n', 'v'}, '<leader>vC', function() tortoisesvn_exe('commit', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vc', ':TortoiseSvn commit cur yes<cr>', opt)
+s({'n', 'v'}, '<leader>vC', ':TortoiseSvn commit root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vu', function() tortoisesvn_exe('update', 'root', 0) end, opt)
-s({'n', 'v'}, '<leader>vU', function() tortoisesvn_exe('update /rev', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vu', ':TortoiseSvn update root no<cr>', opt)
+s({'n', 'v'}, '<leader>vU', ':TortoiseSvn update /rev root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vl', function() tortoisesvn_exe('log', 'cur', 1) end, opt)
-s({'n', 'v'}, '<leader>vL', function() tortoisesvn_exe('log', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vl', ':TortoiseSvn log cur yes<cr>', opt)
+s({'n', 'v'}, '<leader>vL', ':TortoiseSvn log root yes<cr>', opt)
 
-s({'n', 'v'}, '<leader>vk', function() tortoisesvn_exe('checkout', 'root', 1) end, opt)
+s({'n', 'v'}, '<leader>vk', ':TortoiseSvn checkout root yes<cr>', opt)
