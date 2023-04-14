@@ -1,4 +1,5 @@
 local s = vim.keymap.set
+local a = vim.api
 local g = vim.g
 
 local bufferclean_exe = function()
@@ -16,4 +17,8 @@ local bufferclean_exe = function()
   do_bufferclean.do_bufferclean()
 end
 
-s({'n', 'v'}, '<leader>hh', bufferclean_exe, {silent = true})
+a.nvim_create_user_command('BufferClean', function(params)
+  bufferclean_exe()
+end, { nargs = "*", })
+
+s({'n', 'v'}, '<leader>hh', ':BufferClean<cr>', {silent = true})
