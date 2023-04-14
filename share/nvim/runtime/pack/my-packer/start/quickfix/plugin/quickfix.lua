@@ -1,5 +1,6 @@
 local g = vim.g
 local a = vim.api
+local c = vim.cmd
 local s = vim.keymap.set
 
 local quickfix_exe = function()
@@ -10,6 +11,29 @@ local quickfix_exe = function()
     if not sta then
       print('no do_quickfix')
       return
+    end
+    sta, nvim_bqf = pcall(c, 'packadd nvim-bqf')
+    if not sta then
+      print('no nvim-bqf')
+      return
+    end
+    local sta, bqf = pcall(require, "bqf")
+    if sta then
+      bqf.setup({
+        auto_enable = true,
+        auto_resize_height = true,
+        preview = {
+          win_height = 28,
+          win_vheight = 28,
+          wrap = true,
+        },
+      })
+      vim.cmd([[
+      hi BqfPreviewBorder guifg=#50a14f ctermfg=71
+      hi link BqfPreviewRange Search
+      ]])
+    else
+      print('qqqqqqq')
     end
   end
   if not do_quickfix then

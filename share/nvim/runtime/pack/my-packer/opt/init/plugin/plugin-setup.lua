@@ -101,6 +101,8 @@ local plugins = function(use)
 
   use("folke/which-key.nvim")
 
+  use({"kevinhwang91/nvim-bqf", opt = true})
+
 end
 
 return packer.startup(function(use)
