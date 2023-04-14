@@ -676,8 +676,8 @@ local create = function(payload)
 end
 
 local create_dir = function(payload)
-  local dname = get_dname(payload)
-  c(string.format([[call feedkeys(':!md %s')]], string.gsub(dname, "/", "\\")))
+  local dtarget = get_dtarget(payload)
+  c(string.format([[call feedkeys(':silent !cd "%s" && md ')]], string.gsub(dtarget, "/", "\\")))
 end
 
 netrw.setup{
