@@ -47,10 +47,10 @@ if not g.treesitter_loaded then
         incremental_selection = {
           enable = true,
           keymaps = {
-            init_selection = "<leader>qi",
-            node_incremental = "<leader>qi",
-            scope_incremental = "<leader>qu",
-            node_decremental = "<leader>qo",
+            init_selection = "qi",
+            node_incremental = "qi",
+            scope_incremental = "qu",
+            node_decremental = "qo",
           },
         },
         rainbow = {
