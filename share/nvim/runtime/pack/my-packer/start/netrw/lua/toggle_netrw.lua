@@ -148,6 +148,10 @@ function M.toggle(mode)
     c'ec "netrw not allowed on aerial"'
     return
   end
+  if o.ft:get():match('^DiffviewFile') then
+    c'ec "netrw not allowed on ^DiffviewFile"'
+    return
+  end
   if o.ft:get() ~= 'netrw' then
     g.netrw_back_winid = f['win_getid']()
   end
