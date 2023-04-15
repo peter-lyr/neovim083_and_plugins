@@ -40,6 +40,10 @@ if not g.treesitter_loaded then
         highlight = {
           enable = true,
           additional_vim_regex_highlighting = false,
+          disable = {
+            "markdown",
+            "markdown_inline"
+          },
         },
         indent = {
           enable = true,
