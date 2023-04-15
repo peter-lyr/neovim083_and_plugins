@@ -40,11 +40,10 @@ function M.do_bufferswap(cmd)
     end
     fname = f['join'](fnames, '/')
     local path = Path:new(fname)
-    if path:exists() then
-      c('e ' .. fname)
-    else
-      print('no exists ' .. fname)
+    if not path:exists() then
+      print('no exists ' .. fname:match('.+/(.-/.-)$'))
     end
+    c('e ' .. fname)
   elseif o.ft:get() == 'c' or o.ft:get() == 'cpp' then
     fnames = f['split'](fname, '\\.')
     if fnames[#fnames] == 'c' then
@@ -54,11 +53,10 @@ function M.do_bufferswap(cmd)
     end
     fname = f['join'](fnames, '.')
     local path = Path:new(fname)
-    if path:exists() then
-      c('e ' .. fname)
-    else
-      print('no exists ' .. fname)
+    if not path:exists() then
+      print('no exists ' .. fname:match('.+/(.-)$'))
     end
+    c('e ' .. fname)
   end
 end
 
