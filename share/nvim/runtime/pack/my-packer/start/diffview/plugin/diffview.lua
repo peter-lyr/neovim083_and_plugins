@@ -30,8 +30,16 @@ local diffview_exe = function(cmd)
     do_diffview.open()
   elseif cmd == 'quit' then
     do_diffview.quit()
+  elseif cmd == 'toggle_history_cnt' then
+    do_diffview.toggle_history_cnt()
+  elseif cmd == 'DiffviewRefresh' then
+    c'DiffviewRefresh'
+  elseif cmd == 'DiffviewToggleFiles' then
+    c'DiffviewToggleFiles'
   end
 end
+
+g.counttoggle = 1 -- 8
 
 a.nvim_create_user_command('Diffview', function(params)
   diffview_exe(unpack(params['fargs']))
@@ -40,3 +48,7 @@ end, { nargs = "*", })
 s({'n', 'v'}, '<leader>gi', ':Diffview filehistory<cr>', {silent = true})
 s({'n', 'v'}, '<leader>go', ':Diffview open<cr>', {silent = true})
 s({'n', 'v'}, '<leader>gq', ':Diffview quit<cr>', {silent = true})
+
+s({'n', 'v'}, '<leader>gT', ':Diffview toggle_history_cnt<cr>', {silent = true})
+s({'n', 'v'}, '<leader>ge', ':Diffview DiffviewRefresh<cr>', {silent = true})
+s({'n', 'v'}, '<leader>gl', ':Diffview DiffviewToggleFiles<cr>', {silent = true})
