@@ -4,6 +4,7 @@ local g = vim.g
 local f = vim.fn
 local c = vim.cmd
 local o = vim.opt
+local f = vim.fn
 local a = vim.api
 
 function M.filehistory()
