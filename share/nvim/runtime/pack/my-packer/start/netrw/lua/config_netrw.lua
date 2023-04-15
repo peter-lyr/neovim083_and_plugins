@@ -671,6 +671,7 @@ local copy_sel_list = function(payload)
       else
         f['system'](string.format('copy "%s" "%s"', v, target))
       end
+      f['netrw#Call']("NetrwRefresh", 1, f['netrw#Call']("NetrwBrowseChgDir", 1, './'))
     end
     empty_sel_list()
   else
