@@ -8,6 +8,7 @@ if not status2 then
   print('no telescope.actions')
   return
 end
+vim.cmd'autocmd User TelescopePreviewerLoaded setlocal number'
 telescope.setup({
   defaults = {
     layout_strategy = 'horizontal',
