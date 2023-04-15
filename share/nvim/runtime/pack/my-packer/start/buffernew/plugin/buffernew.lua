@@ -16,6 +16,8 @@ local buffernew_exe = function(cmd)
   end
   if cmd == 'copy_fpath' then
     do_buffernew.copy_fpath()
+  elseif cmd == 'copy_fpath_silent' then
+    do_buffernew.copy_fpath_silent()
   else
     do_buffernew.open(cmd)
   end

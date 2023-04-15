@@ -26,4 +26,8 @@ function M.copy_fpath()
   print(M.stack_fpath)
 end
 
+function M.copy_fpath_silent()
+  M.stack_fpath = a['nvim_buf_get_name'](0)
+end
+
 return M
