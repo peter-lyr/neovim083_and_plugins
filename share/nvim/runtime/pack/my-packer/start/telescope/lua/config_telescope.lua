@@ -10,6 +10,11 @@ if not status2 then
 end
 telescope.setup({
   defaults = {
+    layout_strategy = 'horizontal',
+    layout_config = {
+      height = 0.99,
+      width = 0.99,
+    },
     mappings = {
       i = {
         ['<a-m>'] = actions.close,
