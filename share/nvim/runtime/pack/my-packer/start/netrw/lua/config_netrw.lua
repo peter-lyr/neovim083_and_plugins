@@ -7,6 +7,7 @@ end
 local g = vim.g
 
 local Path = require("plenary.path")
+local Scan = require("plenary.scandir")
 
 local p = Path:new(g.netrw_lua)
 g.netrw_recyclebin = p:parent():parent():joinpath('autoload', 'recyclebin.exe').filename
@@ -601,8 +602,16 @@ local delete_sel_list = function(payload)
       -- else
       --   f['system'](string.format('del "%s"', v))
       -- end
+      local path = Path:new(v)
+      if path:is_dir() then
+        local entries = Scan.scan_dir(v, { hidden = true, depth = 10, add_dirs = false })
+        for _, entry in ipairs(entries) do
+          pcall(c, "bw! " .. rep(entry))
+        end
+      else
+        pcall(c, "bw! " .. rep(v))
+      end
       f['system'](string.format('%s "%s"', g.netrw_recyclebin, v:match('^(.-)\\*$')))
-      pcall(c, "bw! " .. rep(v))
     end
     empty_sel_list()
   else
