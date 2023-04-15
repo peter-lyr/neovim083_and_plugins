@@ -27,7 +27,10 @@ function M.copy_fpath()
 end
 
 function M.copy_fpath_silent()
-  M.stack_fpath = a['nvim_buf_get_name'](0)
+  local fname = a['nvim_buf_get_name'](0)
+  if #fname > 0 then
+    M.stack_fpath = fname
+  end
 end
 
 return M
