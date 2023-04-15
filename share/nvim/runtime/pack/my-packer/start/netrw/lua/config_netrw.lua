@@ -601,7 +601,7 @@ local delete_sel_list = function(payload)
       -- else
       --   f['system'](string.format('del "%s"', v))
       -- end
-      f['system'](string.format('%s "%s"', g.netrw_recyclebin, v))
+      f['system'](string.format('%s "%s"', g.netrw_recyclebin, v:match('^(.-)\\*$')))
       pcall(c, "bw! " .. rep(v))
     end
     empty_sel_list()
