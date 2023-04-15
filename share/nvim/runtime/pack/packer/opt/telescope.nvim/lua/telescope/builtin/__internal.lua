@@ -525,6 +525,10 @@ internal.oldfiles = function(opts)
     end, results)
   end
 
+  results = vim.tbl_filter(function(file)
+    return not Path:new(file):is_dir()
+  end, results)
+
   pickers
     .new(opts, {
       prompt_title = "Oldfiles",
