@@ -141,6 +141,11 @@ g.netrw_alt_fname = ''
 
 function M.toggle(mode)
   if o.diff:get() then
+    c'ec "netrw not allowed when diff on"'
+    return
+  end
+  if o.ft:get() == 'aerial' then
+    c'ec "netrw not allowed on aerial"'
     return
   end
   if o.ft:get() ~= 'netrw' then
