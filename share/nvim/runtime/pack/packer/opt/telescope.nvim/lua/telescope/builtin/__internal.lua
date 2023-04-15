@@ -529,11 +529,17 @@ internal.oldfiles = function(opts)
     return not Path:new(file):is_dir()
   end, results)
 
+  local new_results = {}
+  for _, v in ipairs(results) do
+    local fname, _ = string.gsub(v, '\\', '/')
+    table.insert(new_results, fname)
+  end
+
   pickers
     .new(opts, {
       prompt_title = "Oldfiles",
       finder = finders.new_table {
-        results = results,
+        results = new_results,
         entry_maker = opts.entry_maker or make_entry.gen_from_file(opts),
       },
       sorter = conf.file_sorter(opts),
