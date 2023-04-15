@@ -21,4 +21,4 @@ a.nvim_create_user_command('BufferSwap', function(params)
   bufferswap_exe()
 end, { nargs = "*", })
 
-s('n', '<leader><leader>qq', ':BufferSwap<cr>', { silent = true })
+s('n', '<leader>qq', ':BufferSwap<cr>', { silent = true })
