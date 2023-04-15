@@ -20,6 +20,7 @@ if not g.project_loaded then
       project_nvim.setup({
         manual_mode = false,
         datapath = datapath,
+        detection_methods = { "pattern", "lsp" },
         patterns = {
           ".cache",
           "build",
