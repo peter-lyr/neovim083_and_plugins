@@ -105,6 +105,8 @@ local plugins = function(use)
 
   use("azabiong/vim-highlighter")
 
+  use("honza/vim-snippets")
+
 end
 
 return packer.startup(function(use)
