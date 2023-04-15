@@ -1,9 +1,13 @@
+local o = vim.opt
 local g = vim.g
 local a = vim.api
 local c = vim.cmd
 local s = vim.keymap.set
 
-local quickfix_exe = function()
+local do_quickfix = nil
+local cnt = 0
+
+local function init()
   if not g.loaded_do_quickfix then
     g.loaded_do_quickfix = 1
     do_quickfix = nil
@@ -12,31 +16,35 @@ local quickfix_exe = function()
       print('no do_quickfix')
       return
     end
-    sta, nvim_bqf = pcall(c, 'packadd nvim-bqf')
-    if not sta then
-      print('no nvim-bqf')
-      return
-    end
-    local sta, bqf = pcall(require, "bqf")
-    if sta then
-      bqf.setup({
-        auto_resize_height = true,
-        preview = {
-          win_height = 28,
-          win_vheight = 28,
-          wrap = true,
-        },
-      })
-    end
   end
-  c([[
-hi BqfPreviewBorder guifg=#50a14f ctermfg=71
-hi link BqfPreviewRange Search
-]])
+  if cnt < 8 then
+    cnt = cnt + 1
+    print(string.format([[cnt: 0x%x(%d)]], cnt, cnt))
+    c([[
+      hi BqfPreviewBorder guifg=#50a14f ctermfg=71
+      hi link BqfPreviewRange Search
+    ]])
+  end
+end
+
+local quickfix_exe = function()
+  init()
   if not do_quickfix then
     return
   end
   do_quickfix.toggle()
+end
+
+if not g.quickfix_loaded then
+  g.quickfix_loaded = 1
+  g.quickfix_cursormoved = a.nvim_create_autocmd({"BufEnter"}, {
+    callback = function()
+      if o.ft:get() == 'qf' then
+        a.nvim_del_autocmd(g.quickfix_cursormoved)
+      end
+      init()
+    end,
+  })
 end
 
 a.nvim_create_user_command('QuickFix', function(params)

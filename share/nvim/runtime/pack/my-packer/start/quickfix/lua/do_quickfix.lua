@@ -25,4 +25,22 @@ function M.toggle()
   end
 end
 
+local sta, nvim_bqf = pcall(c, 'packadd nvim-bqf')
+if not sta then
+  print('no nvim-bqf')
+  return
+end
+
+local sta, bqf = pcall(require, "bqf")
+if sta then
+  bqf.setup({
+    auto_resize_height = true,
+    preview = {
+      win_height = 28,
+      win_vheight = 28,
+      wrap = true,
+    },
+  })
+end
+
 return M
