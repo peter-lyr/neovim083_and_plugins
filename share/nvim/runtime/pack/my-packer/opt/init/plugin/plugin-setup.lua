@@ -37,7 +37,7 @@ local plugins = function(use)
   use('EdenEast/nightfox.nvim')
   use('folke/tokyonight.nvim')
 
-  use({ 'nvim-telescope/telescope.nvim', branch = '0.1.x', opt = true })
+  -- use({ 'nvim-telescope/telescope.nvim', branch = '0.1.x', opt = true }) -- 不再更新官方修改
 
   use({"dstein64/vim-startuptime", opt = true})
 
