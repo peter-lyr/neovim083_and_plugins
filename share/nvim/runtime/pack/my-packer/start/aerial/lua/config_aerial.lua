@@ -8,6 +8,7 @@ aerial.setup({
   keymaps = {
     ["?"] = "actions.show_help",
     ["o"] = "actions.jump",
+    ["a"] = "actions.jump",
     ["<2-LeftMouse>"] = "actions.jump",
     ["<C-v>"] = "actions.jump_vsplit",
     ["<C-s>"] = "actions.jump_split",
@@ -19,7 +20,7 @@ aerial.setup({
     ["[["] = "actions.prev_up",
     ["]]"] = "actions.next_up",
     ["q"] = "actions.close",
-    ["a"] = "actions.tree_toggle",
+    -- ["a"] = "actions.tree_toggle",
     ["O"] = "actions.tree_toggle_recursive",
     ["zA"] = "actions.tree_toggle_recursive",
     ["l"] = "actions.tree_open",
