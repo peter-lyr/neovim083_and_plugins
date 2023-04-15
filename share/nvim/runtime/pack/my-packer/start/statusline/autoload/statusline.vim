@@ -1,21 +1,21 @@
 fu! statusline#color()
-  hi MyGroup0 gui=NONE guifg=#555555 guibg=NONE
+  hi MyGroup0  gui=NONE guifg=#3a3a3a guibg=NONE
 
   hi MyGroup1  gui=NONE guifg=NONE    guibg=NONE
   hi MyGroup2  gui=NONE guifg=gray    guibg=NONE
   hi MyGroup3  gui=NONE guifg=yellow  guibg=NONE
-  hi MyGroup4  gui=NONE guifg=#67013d guibg=NONE
-  hi MyGroup5  gui=NONE guifg=#874239 guibg=NONE
-  hi MyGroup6  gui=NONE guifg=#239874 guibg=NONE
+  hi MyGroup4  gui=NONE guifg=#67813d guibg=NONE
+  hi MyGroup5  gui=NONE guifg=#277279 guibg=NONE
+  hi MyGroup6  gui=NONE guifg=#739874 guibg=NONE
   hi MyGroup7  gui=NONE guifg=#923784 guibg=NONE
   hi MyGroup8  gui=NONE guifg=#87a4a2 guibg=NONE
-  hi MyGroup9  gui=NONE guifg=#781093 guibg=NONE
-  hi MyGroup10 gui=NONE guifg=#663853 guibg=NONE
-  hi MyGroup11 gui=NONE guifg=#c73227 guibg=NONE
-  hi MyGroup12 gui=NONE guifg=#87c347 guibg=NONE
-  hi MyGroup13 gui=NONE guifg=#27c322 guibg=NONE
-  hi MyGroup15 gui=bold guifg=#ff8822 guibg=NONE
-  hi MyGroup16 gui=NONE guifg=#aa5522 guibg=NONE
+  hi MyGroup9  gui=NONE guifg=#7890d3 guibg=NONE
+  hi MyGroup10 gui=NONE guifg=#668853 guibg=NONE
+  hi MyGroup11 gui=NONE guifg=#c77227 guibg=NONE
+  hi MyGroup12 gui=NONE guifg=#87a387 guibg=NONE
+  hi MyGroup13 gui=NONE guifg=#279372 guibg=NONE
+  hi MyGroup15 gui=bold guifg=#ff9933 guibg=NONE
+  hi MyGroup16 gui=NONE guifg=#996633 guibg=NONE
 
   hi StatusLine   gui=NONE guibg=NONE guifg=NONE
   hi StatusLineNC gui=NONE guibg=NONE guifg=gray
@@ -84,7 +84,7 @@ fu! s:inactive()
   let statusline .= '%#MyGroup0# %{strftime("%a")}%*'
   let statusline .= '%#MyGroup0# %{statusline#fileSize(@%)}%*'
   let statusline .= '%='
-  let statusline .= '%#MyGroup0# %{statusline#fileAbspathHead(@%)}%*'
+  let statusline .= '%#MyGroup8# %{statusline#fileAbspathHead(@%)}%*'
   let statusline .= '%#MyGroup16#%{statusline#fileAbspathTail(@%)} %*'
   let statusline .= '%='
   let statusline .= '%#MyGroup0#%m%r%y%*'
