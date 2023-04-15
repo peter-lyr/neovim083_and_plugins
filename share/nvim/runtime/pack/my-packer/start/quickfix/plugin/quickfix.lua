@@ -36,7 +36,7 @@ end
 
 if not g.quickfix_loaded then
   g.quickfix_loaded = 1
-  g.quickfix_cursormoved = a.nvim_create_autocmd({"BufEnter"}, {
+  g.quickfix_cursormoved = a.nvim_create_autocmd({"CursorMoved"}, {
     callback = function()
       if o.ft:get() == 'qf' then
         a.nvim_del_autocmd(g.quickfix_cursormoved)
