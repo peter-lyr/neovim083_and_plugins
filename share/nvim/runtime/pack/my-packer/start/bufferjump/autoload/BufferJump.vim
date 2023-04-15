@@ -72,17 +72,21 @@ fu! BufferJump#MaxWidth()
 endfu
 
 fu! BufferJump#WinFixHeight()
+  echomsg 'set winfixheight'
   set winfixheight
 endfu
 
 fu! BufferJump#NoWinFixHeight()
+  echomsg 'set nowinfixheight'
   set nowinfixheight
 endfu
 
 fu! BufferJump#WinFixWidth()
+  echomsg 'set winfixwidth'
   set winfixwidth
 endfu
 
 fu! BufferJump#NoWinFixWidth()
+  echomsg 'set nowinfixwidth'
   set nowinfixwidth
 endfu
