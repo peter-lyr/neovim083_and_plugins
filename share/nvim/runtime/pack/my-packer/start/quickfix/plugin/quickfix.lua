@@ -19,7 +19,6 @@ local function init()
   end
   if cnt < 8 then
     cnt = cnt + 1
-    print(string.format([[cnt: 0x%x(%d)]], cnt, cnt))
     c([[
       hi BqfPreviewBorder guifg=#50a14f ctermfg=71
       hi link BqfPreviewRange Search
