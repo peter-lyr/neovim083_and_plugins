@@ -9,6 +9,7 @@
 !**/packer/opt/cmp-buffer
 !**/packer/opt/cmp-cmdline
 !**/packer/opt/cmp-nvim-lsp
+!**/packer/opt/telescope.nvim
 **/packer/start/*
 !**/packer/start/netrw.nvim
 !**/packer/start/plenary.nvim
