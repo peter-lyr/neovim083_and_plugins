@@ -644,6 +644,7 @@ local move_sel_list = function(payload)
       pcall(c, "bw! " .. rep(v))
     end
     empty_sel_list()
+    f['netrw#Call']("NetrwRefresh", 1, f['netrw#Call']("NetrwBrowseChgDir", 1, './'))
   else
     c "echomsg 'canceled'"
   end
