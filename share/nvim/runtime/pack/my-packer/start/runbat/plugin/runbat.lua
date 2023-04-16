@@ -41,3 +41,4 @@ local opt = {silent = true}
 s({'n', 'v'}, '<leader><leader>rb', ':RunbaT sel<cr>', opt)
 s({'n', 'v'}, '<leader><leader>rpo', ':RunbaT proxy_on<cr>', opt)
 s({'n', 'v'}, '<leader><leader>rpf', ':RunbaT proxy_off<cr>', opt)
+s({'n', 'v'}, '<leader><leader>rpa', ':RunbaT path<cr>', opt)

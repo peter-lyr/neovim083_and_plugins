@@ -11,6 +11,7 @@ local Path = require("plenary.path")
 local runbat_path = Path:new(g.runbat_lua):parent():parent()
 local proxy_on_bat_path = runbat_path:joinpath('autoload', 'proxy_on.bat')
 local proxy_off_bat_path = runbat_path:joinpath('autoload', 'proxy_off.bat')
+local path_bat_path = runbat_path:joinpath('autoload', 'path.bat')
 
 M.run = function(params)
 
@@ -23,6 +24,8 @@ M.run = function(params)
     c('silent !start cmd /c ' .. proxy_on_bat_path.filename)
   elseif params[1] == 'proxy_off' then
     c('silent !start cmd /c ' .. proxy_off_bat_path.filename)
+  elseif params[1] == 'path' then
+    c('silent !start cmd /c ' .. path_bat_path.filename)
   end
 
 end
