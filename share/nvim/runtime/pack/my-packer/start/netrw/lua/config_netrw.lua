@@ -707,7 +707,11 @@ local delete = function(payload)
   end
   local dtarget = get_dtarget(payload)
   if payload.type == 0 then
+    local entries = Scan.scan_dir(dtarget, { hidden = true, depth = 10, add_dirs = false })
     f['netrw#Call']("NetrwLocalRm", Path:new(dtarget):parent().filename)
+    for _, entry in ipairs(entries) do
+      pcall(c, "bw! " .. rep(entry))
+    end
   else
     f['netrw#Call']("NetrwLocalRm", dtarget)
     local path = Path:new(dtarget):joinpath(payload.node)
@@ -723,7 +727,11 @@ local rename = function(payload)
   end
   local dtarget = get_dtarget(payload)
   if payload.type == 0 then
+    local entries = Scan.scan_dir(dtarget, { hidden = true, depth = 10, add_dirs = false })
     f['netrw#Call']("NetrwLocalRename", Path:new(dtarget):parent().filename)
+    for _, entry in ipairs(entries) do
+      pcall(c, "bw! " .. rep(entry))
+    end
   else
     f['netrw#Call']("NetrwLocalRename", dtarget)
     local path = Path:new(dtarget):joinpath(payload.node)
