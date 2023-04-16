@@ -57,7 +57,7 @@ local plugins = function(use)
 
   use("nvim-tree/nvim-web-devicons")
 
-  use("ahmedkhalf/project.nvim")
+  -- use("ahmedkhalf/project.nvim") -- 不再更新官方修改
   use("dbakker/vim-projectroot")
 
   use({"lukas-reineke/indent-blankline.nvim", opt = true})
