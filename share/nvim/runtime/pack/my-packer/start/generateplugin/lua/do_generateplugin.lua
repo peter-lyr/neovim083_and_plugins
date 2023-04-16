@@ -56,6 +56,10 @@ M.run = function(params)
     print('\ncanceled!')
     return
   end
+  if dirname == 'do' then
+    print('\nnot allowed: "do"!')
+    return
+  end
   local res = string.match(dirname, '^.*([^0-9a-zA-Z_]+).*$')
   if res then
     print('\n' .. dirname .. ' match "' .. res .. '", not allowed!')
