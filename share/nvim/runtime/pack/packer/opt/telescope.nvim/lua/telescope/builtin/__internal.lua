@@ -490,6 +490,18 @@ internal.loclist = function(opts)
     :find()
 end
 
+function index_of(arr, val)
+  if not arr then
+    return nil
+  end
+  for i, v in ipairs(arr) do
+    if vim.fn['tolower'](v) == vim.fn['tolower'](val) then
+      return i
+    end
+  end
+  return nil
+end
+
 internal.oldfiles = function(opts)
   opts = apply_cwd_only_aliases(opts)
   opts.include_current_session = vim.F.if_nil(opts.include_current_session, true)
@@ -532,7 +544,9 @@ internal.oldfiles = function(opts)
   local new_results = {}
   for _, v in ipairs(results) do
     local fname, _ = string.gsub(v, '\\', '/')
-    table.insert(new_results, fname)
+    if not index_of(new_results, fname) then
+      table.insert(new_results, fname)
+    end
   end
 
   pickers
