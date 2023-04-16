@@ -33,7 +33,7 @@ local function create_finder()
     separator = " ",
     items = {
       {
-        width = 30,
+        width = 60,
       },
       {
         remaining = true,
