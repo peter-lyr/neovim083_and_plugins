@@ -13,26 +13,29 @@ local start_path = generateplugin_path:parent()
 local do_generateplugin_lua_path = generateplugin_path:joinpath('lua', 'do_generateplugin.lua')
 local do_generateplugin_plugin_path = generateplugin_path:joinpath('plugin', 'generateplugin.lua')
 
-local generateplugin_setup_table = {
-}
-
 M.run = function(params)
   if not g.generateplugin_do_loaded then
     g.generateplugin_do_loaded = 1
-    sta, _ = pcall(c, ' packadd generateplugin-nvim')
-    if not sta then
-      print("no  packadd generateplugin-nvim")
-    end
-    sta, generateplugin_nvim = pcall(require, 'generateplugin_nvim')
-    if not sta then
-      print("no generateplugin_nvim")
-    else
-      generateplugin_nvim.setup(generateplugin_setup_table)
-    end
+
+    -- -- 以下自定义，可增加
+    -- sta, _ = pcall(c, ' packadd generateplugin-nvim')
+    -- if not sta then
+    --   print("no  packadd generateplugin-nvim")
+    -- end
+    -- sta, generateplugin_nvim = pcall(require, 'generateplugin_nvim')
+    -- if not sta then
+    --   print("no generateplugin_nvim")
+    -- else
+    --   local generateplugin_setup_table = {
+    --   }
+    --   generateplugin_nvim.setup(generateplugin_setup_table)
+    -- end
+    -- -- 以上自定义，可增加
+
   end
 
   -- 以下自定义，可删除
-  if params and #params > 0 then
+  if not params or #params > 0 and #params[1] == 'do' then
     return
   end
   function read(path, dirname)
@@ -80,7 +83,7 @@ M.run = function(params)
   if not luanamepath:exists() then
     luanamepath:write(do_generateplugin_lua_content, 'w')
   end
-  -- 以上自定义
+  -- 以上自定义，可删除
 
 end
 

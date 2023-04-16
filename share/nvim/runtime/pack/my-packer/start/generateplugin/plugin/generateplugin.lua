@@ -38,4 +38,4 @@ end, { nargs = "*", })
 
 local opt = {silent = true}
 
-s({'n', 'v'}, '<leader><leader><leader>z', ':GeneratePlugiN<cr>', opt)
+s({'n', 'v'}, '<leader><leader><leader>z', ':GeneratePlugiN do<cr>', opt)
