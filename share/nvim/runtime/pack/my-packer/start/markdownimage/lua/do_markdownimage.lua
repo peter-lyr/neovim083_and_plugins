@@ -112,6 +112,11 @@ function M.getimage(sel_jpg, append)
                 string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name,
                   human_readable_fsize(#raw_image_data), human_readable_fsize(#reduce_image_data),
                   human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
+            elseif append == 'no_append' then
+              f['append'](linenr,
+                string.format('![%s-%s-%s-%s-{%s}]()', only_image_name,
+                  human_readable_fsize(#raw_image_data), human_readable_fsize(#reduce_image_data),
+                  human_readable_fsize(#encoded), absolute_image_hash))
             end
           else
             encoded = base64.encode(raw_image_data)
@@ -121,6 +126,11 @@ function M.getimage(sel_jpg, append)
                   human_readable_fsize(#raw_image_data), human_readable_fsize(#encoded), absolute_image_hash,
                   image_format,
                   encoded))
+            elseif append == 'no_append' then
+              f['append'](linenr,
+                string.format('![%s-%s-%s-{%s}]()', only_image_name,
+                  human_readable_fsize(#raw_image_data), human_readable_fsize(#encoded), absolute_image_hash
+                ))
             end
           end
           if timeout > 30 then
