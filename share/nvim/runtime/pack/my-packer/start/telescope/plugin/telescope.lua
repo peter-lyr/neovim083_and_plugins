@@ -12,6 +12,17 @@ local telescope_exe = function(cmd)
     else
       g.bookmark_save_per_working_dir = 1
       g.bookmark_auto_save = 1
+      g.bookmark_no_default_key_mappings = 1
+      s({ 'n', 'v' }, 'ma', ':BookmarkShowAll<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mm', ':BookmarkToggle<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mi', ':BookmarkAnnotate<cr>', { silent = true })
+      s({ 'n', 'v' }, 'ms', ':BookmarkNext<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mw', ':BookmarkPrev<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mc', ':BookmarkClear<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mx', ':BookmarkClearAll<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mkk', ':BookmarkMoveUp<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mjj', ':BookmarkMoveDown<cr>', { silent = true })
+      s({ 'n', 'v' }, 'mg', ':BookmarkMoveToLine<cr>', { silent = true })
     end
     local sta, _ = pcall(c, 'packadd telescope.nvim')
     if not sta then
