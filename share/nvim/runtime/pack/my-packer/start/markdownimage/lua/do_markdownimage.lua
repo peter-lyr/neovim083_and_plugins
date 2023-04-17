@@ -40,7 +40,7 @@ function rep(path)
   return path
 end
 
-function M.getimage(sel_jpg)
+function M.getimage(sel_jpg, append)
   if do_terminal then
     local fname = a['nvim_buf_get_name'](0)
     local projectroot_path = Path:new(f['projectroot#get'](fname))
@@ -107,16 +107,21 @@ function M.getimage(sel_jpg)
           local image_format = sel_jpg == 'sel_jpg' and 'jpeg' or 'png'
           if #reduce_image_data < #raw_image_data then
             encoded = base64.encode(reduce_image_data)
-            f['append'](linenr,
-              string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name,
-                human_readable_fsize(#raw_image_data), human_readable_fsize(#reduce_image_data),
-                human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
+            if append == 'append' then
+              f['append'](linenr,
+                string.format('![%s-%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name,
+                  human_readable_fsize(#raw_image_data), human_readable_fsize(#reduce_image_data),
+                  human_readable_fsize(#encoded), absolute_image_hash, image_format, encoded))
+            end
           else
             encoded = base64.encode(raw_image_data)
-            f['append'](linenr,
-              string.format('![%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name,
-                human_readable_fsize(#raw_image_data), human_readable_fsize(#encoded), absolute_image_hash, image_format,
-                encoded))
+            if append == 'append' then
+              f['append'](linenr,
+                string.format('![%s-%s-%s-{%s}](data:image/%s;base64,%s)', only_image_name,
+                  human_readable_fsize(#raw_image_data), human_readable_fsize(#encoded), absolute_image_hash,
+                  image_format,
+                  encoded))
+            end
           end
           if timeout > 30 then
             print('get image timeout 3s')
