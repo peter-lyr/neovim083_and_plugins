@@ -1,6 +1,6 @@
-if 1 then
-  return
-end
+-- if 1 then
+--   return
+-- end
 
 local fn = vim.fn
 
