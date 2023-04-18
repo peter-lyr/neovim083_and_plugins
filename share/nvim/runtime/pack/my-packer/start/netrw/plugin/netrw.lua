@@ -1,41 +1,42 @@
-local g = vim.g
-local w = vim.w
-local f = vim.fn
 local a = vim.api
-local c = vim.cmd
+local f = vim.fn
+local g = vim.g
 local o = vim.opt
 local s = vim.keymap.set
 
-g.netrw_lua = vim.fn['expand']('<sfile>')
+local sta
+
+g.netrw_lua = f['expand']('<sfile>')
 
 local netrw_exe = function(cmd)
-  if not vim.g.loaded_config_netrw then
-    vim.g.loaded_config_netrw = 1
-    local sta, _ = pcall(require, 'config_netrw')
+  if not g.loaded_config_netrw then
+    g.loaded_config_netrw = 1
+    local config_netrw
+    sta, config_netrw = pcall(require, 'config_netrw')
     if not sta then
-      print('no config_netrw')
+      print(config_netrw)
       return
     end
-    sta, toggle_netrw = pcall(require, 'toggle_netrw')
+    sta, Toggle_netrw = pcall(require, 'toggle_netrw')
     if not sta then
-      print('no toggle_netrw')
+      print(Toggle_netrw)
       return
     end
   end
-  if not toggle_netrw then
+  if not Toggle_netrw then
     return
   end
   g.netrw_leader_flag = 1
   if cmd == 'fix_unfix' then
-    toggle_netrw.fix_unfix('cwd')
+    Toggle_netrw.fix_unfix('cwd')
   elseif cmd == 'toggle_fix' then
-    toggle_netrw.toggle('fix')
+    Toggle_netrw.toggle('fix')
   elseif cmd == 'toggle_search_fname' then
-    toggle_netrw.toggle('cur_fname')
+    Toggle_netrw.toggle('cur_fname')
   elseif cmd == 'toggle_search_cwd' then
-    toggle_netrw.toggle('cwd')
+    Toggle_netrw.toggle('cwd')
   elseif cmd == 'toggle_search_sel' then
-    toggle_netrw.toggle('sel')
+    Toggle_netrw.toggle('sel')
   end
   g.netrw_leader_flag = 0
 end
@@ -57,11 +58,11 @@ a.nvim_create_user_command('Netrw', function(params)
   netrw_exe(unpack(params['fargs']))
 end, { nargs = "*", })
 
-s({'n', 'v'}, '<leader>l', ":Netrw toggle_fix<cr>", {silent = true})
-s({'n', 'v'}, '<leader><leader>l', ":Netrw fix_unfix<cr>", {silent = true})
-s({'n', 'v'}, '<leader>;', ":Netrw toggle_search_fname<cr>", {silent = true})
-s({'n', 'v'}, '<leader><leader>;', ":Netrw toggle_search_cwd<cr>", {silent = true})
-s({'n', 'v'}, '<leader>\'', ":Netrw toggle_search_sel<cr>", {silent = true})
+s({ 'n', 'v' }, '<leader>l', ":Netrw toggle_fix<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader><leader>l', ":Netrw fix_unfix<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>;', ":Netrw toggle_search_fname<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader><leader>;', ":Netrw toggle_search_cwd<cr>", { silent = true })
+s({ 'n', 'v' }, '<leader>\'', ":Netrw toggle_search_sel<cr>", { silent = true })
 
 local bufenter_netrw = function()
   if o.ft:get() == 'netrw' then
@@ -69,44 +70,21 @@ local bufenter_netrw = function()
       if o.winfixwidth:get() then
         if not g.bufferenter_do_netrw then
           g.bufferenter_do_netrw = 1
-          local sta, toggle_netrw = pcall(require, 'toggle_netrw')
+          sta, Toggle_netrw = pcall(require, 'toggle_netrw')
           if not sta then
-            print('no toggle_netrw')
+            print(Toggle_netrw)
             return
           end
         end
-        if not toggle_netrw then
+        if not Toggle_netrw then
           return
         end
-        toggle_netrw.netrw_fix_set_width()
+        Toggle_netrw.netrw_fix_set_width()
       end
     end
   end
 end
 
-a.nvim_create_autocmd({"BufEnter"}, {
+a.nvim_create_autocmd({ "BufEnter" }, {
   callback = bufenter_netrw,
-})
-
-local ignore_list = {
-  '.git/',
-  '.svn/',
-}
-
-a.nvim_create_autocmd({"CursorMoved"}, {
-  callback = function()
-    if o.ft:get() == 'netrw' then
-      netrw_list_hide = table.concat(ignore_list, ',')
-      netrw_list_hide2 = string.gsub(string.gsub(f['system']('cd ' .. f['netrw#Call']('NetrwGetCurdir', 1) .. ' && git config --local core.quotepath false & git ls-files --other --ignored --exclude-standard --directory'), '\n', ','), ',$', '')
-      if #netrw_list_hide2 > 0 then
-        netrw_list_hide = netrw_list_hide .. ',' .. netrw_list_hide2
-      end
-      if netrw_list_hide ~= g.netrw_list_hide then
-        g.netrw_list_hide = netrw_list_hide
-        if w.netrw_liststyle < 2 and g.netrw_hide == 1 then
-          c([[call feedkeys("..")]])
-        end
-      end
-    end
-  end,
 })

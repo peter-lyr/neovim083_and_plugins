@@ -1,10 +1,16 @@
 local sta, netrw = pcall(require, 'netrw')
 if not sta then
-  print('no netrw')
+  print(netrw)
   return
 end
 
+local a = vim.api
+local b = vim.b
+local c = vim.cmd
+local f = vim.fn
 local g = vim.g
+local o = vim.opt
+local w = vim.w
 
 local Path = require("plenary.path")
 local Scan = require("plenary.scandir")
@@ -13,15 +19,9 @@ local p = Path:new(g.netrw_lua)
 g.netrw_recyclebin = p:parent():parent():joinpath('autoload', 'recyclebin.exe').filename
 g.copy2clip = p:parent():parent():joinpath('autoload', 'copy2clip.exe').filename
 
-local g = vim.g
-local f = vim.fn
-local c = vim.cmd
-local o = vim.opt
-local a = vim.api
-
 local rep = function(path)
-  local path, _ = string.gsub(path, '\\\\', '/')
-  local path, _ = string.gsub(path, '\\', '/')
+  path, _ = string.gsub(path, '\\\\', '/')
+  path, _ = string.gsub(path, '\\', '/')
   return path
 end
 
@@ -47,16 +47,14 @@ local get_fname = function(payload)
   return ''
 end
 
-local Path = require("plenary.path")
-
 local get_fname_tail = function(fname)
-  local fname = string.gsub(fname, "/", "\\")
+  fname = string.gsub(fname, "/", "\\")
   local path = Path:new(fname)
   if path:is_file() then
-    local fname = path:_split()
+    fname = path:_split()
     return fname[#fname]
   elseif path:is_dir() then
-    local fname = path:_split()
+    fname = path:_split()
     if #fname[#fname] > 0 then
       return fname[#fname]
     else
@@ -67,17 +65,18 @@ local get_fname_tail = function(fname)
 end
 
 local get_dtarget = function(payload)
+  local fname
   local dname = get_dname(payload)
   if #dname > 0 then
-    local dname = string.gsub(dname, "/", "\\")
+    dname = string.gsub(dname, "/", "\\")
     return dname
   end
-  local fname = get_fname(payload)
-  local fname = string.gsub(fname, "/", "\\")
+  fname = get_fname(payload)
+  fname = string.gsub(fname, "/", "\\")
   local path = Path:new(fname)
   if path:is_file() then
-    local fname = path:parent().filename
-    local fname = string.gsub(fname, "/", "\\")
+    fname = path:parent().filename
+    fname = string.gsub(fname, "/", "\\")
     return fname .. '\\'
   end
   return ''
@@ -96,12 +95,8 @@ local test = function(payload)
   print('dtarg:', get_dtarget(payload))
 end
 
--- local list_style = function()
---   f['netrw#Call']("NetrwListStyle", 1)
--- end
-
 local preview = function(payload)
-  if not payload or vim.b.netrw_liststyle == 2 then
+  if not payload or b.netrw_liststyle == 2 then
     return nil
   end
   if o.ft:get() ~= 'netrw' then
@@ -125,7 +120,7 @@ local preview_go = function(payload)
   end
 end
 
-local is_winfixwidth = function(payload)
+local is_winfixwidth = function()
   if o.winfixwidth:get() then
     return 1
   end
@@ -157,8 +152,6 @@ local is_hide_en = function()
   end
   return false
 end
-
-local toggle_netrw = require('toggle_netrw')
 
 local open = function(payload, direction)
   if not payload then
@@ -246,7 +239,7 @@ local copy_fname_full = function(payload)
 end
 
 local toggle_dir = function(payload)
-  if not payload or vim.b.netrw_liststyle == 2 then
+  if not payload or b.netrw_liststyle == 2 then
     return nil
   end
   if o.ft:get() ~= 'netrw' then
@@ -258,7 +251,7 @@ local toggle_dir = function(payload)
 end
 
 local preview_file = function(payload)
-  if not payload or vim.b.netrw_liststyle == 2 then
+  if not payload or b.netrw_liststyle == 2 then
     return nil
   end
   if o.ft:get() ~= 'netrw' then
@@ -299,7 +292,28 @@ local system_start = function(payload)
   end
 end
 
-local hide = function(payload)
+local ignore_list = {
+  '.git/',
+  '.svn/',
+}
+
+local hide = function()
+  local netrw_list_hide = table.concat(ignore_list, ',')
+  local netrw_list_hide2 = string.gsub(
+  string.gsub(
+  f['system']('cd ' ..
+  f['netrw#Call']('NetrwGetCurdir', 1) ..
+  ' && git config --local core.quotepath false & git ls-files --other --ignored --exclude-standard --directory'), '\n',
+  ','), ',$', '')
+  if #netrw_list_hide2 > 0 then
+    netrw_list_hide = netrw_list_hide .. ',' .. netrw_list_hide2
+  end
+  if netrw_list_hide ~= g.netrw_list_hide then
+    g.netrw_list_hide = netrw_list_hide
+    if w.netrw_liststyle < 2 and g.netrw_hide == 1 then
+      c([[call feedkeys("..")]])
+    end
+  end
   f['netrw#Call']("NetrwHide", 1)
 end
 
@@ -310,8 +324,8 @@ local go_dir = function(payload)
   c(string.format("Explore %s", get_dtarget(payload)))
 end
 
-local unfold_all = function(payload, start)
-  if vim.w.netrw_liststyle ~= 3 then
+local unfold_all = function(start)
+  if w.netrw_liststyle ~= 3 then
     return
   end
   local lnr0 = (start == 0 or start == 3) and 0 or f['line']('.')
@@ -392,8 +406,8 @@ local unfold_all = function(payload, start)
   c(string.format([[norm %dgg]], lnr00))
 end
 
-local fold_all = function(payload)
-  if vim.w.netrw_liststyle ~= 3 then
+local fold_all = function()
+  if w.netrw_liststyle ~= 3 then
     return
   end
   local lnr = 0
@@ -433,8 +447,8 @@ local fold_all = function(payload)
   end
 end
 
-local go_parent = function(payload)
-  if vim.w.netrw_liststyle ~= 3 then
+local go_parent = function()
+  if w.netrw_liststyle ~= 3 then
     return
   end
   local lnr0 = f['line']('.')
@@ -454,8 +468,8 @@ local go_parent = function(payload)
   end
 end
 
-local go_sibling = function(payload, dir)
-  if vim.w.netrw_liststyle ~= 3 then
+local go_sibling = function(dir)
+  if w.netrw_liststyle ~= 3 then
     return
   end
   local lnr0 = f['line']('.')
@@ -492,7 +506,7 @@ local go_sibling = function(payload, dir)
   end
 end
 
-local search_fname = function(payload, dir)
+local search_fname = function(dir)
   c(string.format([[call search("%s", "%s")]], g.netrw_alt_fname, dir == 'up' and 'b' or ''))
 end
 
@@ -536,7 +550,7 @@ local sel_toggle_cur = function(payload)
   c 'norm j'
 end
 
-local sel_toggle_all = function(payload)
+local sel_toggle_all = function()
   if not g.netrw_sel_list or #g.netrw_sel_list == 0 then
     g.netrw_sel_list = g.netrw_sel_list_bak
     local show_array = function(arr)
@@ -569,20 +583,20 @@ local sel_all = function(payload)
   if #g.netrw_sel_list == 0 then
     g.netrw_sel_list_bak = {}
     for _, file in ipairs(result) do
-      local file, _ = string.gsub(file, '\\\\', '\\')
+      file, _ = string.gsub(file, '\\\\', '\\')
       g.netrw_sel_list = appendIfNotExists(g.netrw_sel_list, file)
     end
   else
-    sel_toggle_all(payload)
+    sel_toggle_all()
   end
 end
 
-local empty_sel_list = function(payload)
+local empty_sel_list = function()
   g.netrw_sel_list = {}
   g.netrw_sel_list_bak = {}
 end
 
-local delete_sel_list = function(payload)
+local delete_sel_list = function()
   local res = f['input']("Confirm deletion " .. #g.netrw_sel_list .. " [N/y] ", "y")
   local index_of = function(arr, val)
     if not arr then
@@ -596,7 +610,7 @@ local delete_sel_list = function(payload)
     return nil
   end
   if index_of({ 'y', 'Y', 'yes', 'Yes', 'YES' }, res) then
-    for i, v in ipairs(g.netrw_sel_list) do
+    for _, v in ipairs(g.netrw_sel_list) do
       -- if Path:new(v):is_dir() then
       --   f['system'](string.format('rd /s /q "%s"', v))
       -- else
@@ -635,7 +649,7 @@ local move_sel_list = function(payload)
     return nil
   end
   if index_of({ 'y', 'Y', 'yes', 'Yes', 'YES' }, res) then
-    for i, v in ipairs(g.netrw_sel_list) do
+    for _, v in ipairs(g.netrw_sel_list) do
       if Path:new(v):is_dir() then
         f['system'](string.format('move "%s" "%s"', string.sub(v, 1, #v - 1), target))
       else
@@ -665,7 +679,7 @@ local copy_sel_list = function(payload)
     return nil
   end
   if index_of({ 'y', 'Y', 'yes', 'Yes', 'YES' }, res) then
-    for i, v in ipairs(g.netrw_sel_list) do
+    for _, v in ipairs(g.netrw_sel_list) do
       if Path:new(v):is_dir() then
         local tname = get_fname_tail(v)
         f['system'](string.format('xcopy "%s" "%s%s\\" /s /e /f', string.sub(v, 1, #v - 1), target, tname))
@@ -680,9 +694,9 @@ local copy_sel_list = function(payload)
   end
 end
 
-local copy_2_clip = function(payload)
-  files = ""
-  for i, v in ipairs(g.netrw_sel_list) do
+local copy_2_clip = function()
+  local files = ""
+  for _, v in ipairs(g.netrw_sel_list) do
     files = files .. " " .. '"' .. v .. '"'
   end
   f['system'](string.format('%s%s', g.copy2clip, files))
@@ -755,8 +769,8 @@ netrw.setup {
     ['(leftmouse)'] = function(payload) toggle_dir(payload) end,
     ['(2-leftmouse)'] = function(payload) preview_file(payload) end,
     ['(s-tab)'] = function(payload) preview_go(payload) end,
-    ['(middlemouse)'] = function(payload) updir(payload) end,
-    ['q'] = function(payload) updir() end,
+    ['(middlemouse)'] = function() updir() end,
+    ['q'] = function() updir() end,
     ['o'] = function(payload) open(payload, 'here') end,
     ['do'] = function(payload) open(payload, 'here') end,
     ['dk'] = function(payload) open(payload, 'up') end,
@@ -769,27 +783,27 @@ netrw.setup {
     ['cd'] = function(payload) chg_dir(payload) end,
     ['X'] = function(payload) explorer(payload) end,
     ['x'] = function(payload) system_start(payload) end,
-    ['.'] = function(payload) hide(payload) end,
+    ['.'] = function() hide() end,
     ['a'] = function(payload) open(payload, 'here') end,
     ['O'] = function(payload) go_dir(payload) end,
-    ['pf'] = function(payload) unfold_all(payload, 0) end,
-    ['pr'] = function(payload) unfold_all(payload, 3) end,
-    ['pe'] = function(payload) unfold_all(payload, 1) end,
-    ['pd'] = function(payload) unfold_all(payload, 2) end,
-    ['pw'] = function(payload) fold_all(payload) end,
-    ['U'] = function(payload) go_parent(payload) end,
-    ['K'] = function(payload) go_sibling(payload, 'up') end,
-    ['J'] = function(payload) go_sibling(payload, 'down') end,
-    ['dp'] = function(payload) search_fname(payload, 'up') end,
-    ['dn'] = function(payload) search_fname(payload, 'down') end,
+    ['pf'] = function() unfold_all(0) end,
+    ['pr'] = function() unfold_all(3) end,
+    ['pe'] = function() unfold_all(1) end,
+    ['pd'] = function() unfold_all(2) end,
+    ['pw'] = function() fold_all() end,
+    ['U'] = function() go_parent() end,
+    ['K'] = function() go_sibling('up') end,
+    ['J'] = function() go_sibling('down') end,
+    ['dp'] = function() search_fname('up') end,
+    ['dn'] = function() search_fname('down') end,
     ['\''] = function(payload) sel_toggle_cur(payload) end,
-    ['"'] = function(payload) sel_toggle_all(payload) end,
+    ['"'] = function() sel_toggle_all() end,
     ['|'] = function(payload) sel_all(payload) end,
-    ['dE'] = function(payload) empty_sel_list(payload) end,
-    ['dD'] = function(payload) delete_sel_list(payload) end,
+    ['dE'] = function() empty_sel_list() end,
+    ['dD'] = function() delete_sel_list() end,
     ['dM'] = function(payload) move_sel_list(payload) end,
     ['dC'] = function(payload) copy_sel_list(payload) end,
-    ['dY'] = function(payload) copy_2_clip(payload) end,
+    ['dY'] = function() copy_2_clip() end,
     ['da'] = function(payload) create(payload) end,
     ['ds'] = function(payload) create_dir(payload) end,
     ['D'] = function(payload) delete(payload) end,
