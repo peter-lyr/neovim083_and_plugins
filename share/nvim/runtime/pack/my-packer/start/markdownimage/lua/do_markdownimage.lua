@@ -99,7 +99,7 @@ function M.getimage(params)
           if ft ~= 'markdown' then
             return
           end
-          f['system'](string.format('ffmpeg -y -loglevel quiet -i "%s" -q 23 %s', rep(raw_image_path.filename),
+          f['system'](string.format('ffmpeg -y -loglevel quiet -i "%s" -q 18 %s', rep(raw_image_path.filename),
             rep(reduce_image_path.filename)))
           local sta, base64 = pcall(require, 'base64')
           if not sta then
