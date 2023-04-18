@@ -5,12 +5,12 @@
 int main()
 {
     struct stat buf;
-    char *path = "C:\\Users\\llydr\\Desktop\\neovim083_and_plugins\\share\\nvim\\runtime\\pack\\my-packer\\start\\c\\autoload\\testisfile";
+    char *path = "C:\\test.md";
     if (stat(path, &buf) == -1)
     {
         printf("Failed to get file status.\n");
         system("pause");
-        return -1;
+        return 0;
     }
     if (S_ISDIR(buf.st_mode))
         printf("%s is a directory.\n", path);
