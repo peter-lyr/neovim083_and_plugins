@@ -40,7 +40,11 @@ function rep(path)
   return path
 end
 
-function M.getimage(sel_jpg, append)
+function M.getimage(params)
+  if #params ~= 2 then
+    return
+  end
+  local sel_jpg, append = unpack(params)
   if do_terminal then
     local fname = a['nvim_buf_get_name'](0)
     local projectroot_path = Path:new(f['projectroot#get'](fname))
@@ -58,7 +62,7 @@ function M.getimage(sel_jpg, append)
     local linenr = f['line']('.')
     local absolute_image_dir_path = projectroot_path:joinpath('saved_images')
     if not absolute_image_dir_path:exists() then
-      absolute_image_dir_path:mkdir()
+      f['system'](string.format('md "%s"', absolute_image_dir_path.filename))
       print("created ->", rep(absolute_image_dir_path.filename))
     end
     local only_image_name = image_name .. '.' .. imagetype
@@ -80,8 +84,8 @@ function M.getimage(sel_jpg, append)
         local pipe_content = pipe_txt_path:_read()
         local find = string.find(pipe_content, 'success')
         if find then
-          raw_image_data = raw_image_path:_read()
           timer:stop()
+          raw_image_data = raw_image_path:_read()
           print('save one image:', rep(raw_image_path.filename))
           local sha256 = require("sha2")
           local absolute_image_hash = sha256.sha256(raw_image_data)

@@ -5,7 +5,7 @@ local s = vim.keymap.set
 
 g.markdownimage_lua = vim.fn['expand']('<sfile>')
 
-local markdownimage_exe = function(cmd, arg1)
+local markdownimage_exe = function(params)
   if not g.loaded_do_markdownimage then
     g.loaded_do_markdownimage = 1
     do_markdownimage = nil
@@ -18,16 +18,14 @@ local markdownimage_exe = function(cmd, arg1)
   if not do_markdownimage then
     return
   end
-  if cmd == 'getimage' then
-    do_markdownimage.getimage(arg1) -- 1:jpg, 0:png
-  end
+  do_markdownimage.getimage(params)
 end
 
 a.nvim_create_user_command('MarkdownImage', function(params)
-  markdownimage_exe(unpack(params['fargs']))
+  markdownimage_exe(params['fargs'])
 end, { nargs = "*", })
 
-s({ 'n', 'v' }, '\\<f3>', ':MarkdownImage getimage sel_jpg append<cr>', { silent = true })
-s({ 'n', 'v' }, '\\\\<f3>', ':MarkdownImage getimage sel_png append<cr>', { silent = true })
-s({ 'n', 'v' }, '<leader><f3>', ':MarkdownImage getimage sel_jpg no_append<cr>', { silent = true })
-s({ 'n', 'v' }, '<leader><leader><f3>', ':MarkdownImage getimage sel_png no_append<cr>', { silent = true })
+s({ 'n', 'v' }, '\\<f3>', ':MarkdownImage sel_jpg append<cr>', { silent = true })
+s({ 'n', 'v' }, '\\\\<f3>', ':MarkdownImage sel_png append<cr>', { silent = true })
+s({ 'n', 'v' }, '<leader><f3>', ':MarkdownImage sel_jpg no_append<cr>', { silent = true })
+s({ 'n', 'v' }, '<leader><leader><f3>', ':MarkdownImage sel_png no_append<cr>', { silent = true })
