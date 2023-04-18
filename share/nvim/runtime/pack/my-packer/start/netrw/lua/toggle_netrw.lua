@@ -1,13 +1,13 @@
 local M = {}
 
-local g = vim.g
-local f = vim.fn
-local c = vim.cmd
-local o = vim.opt
 local a = vim.api
+local c = vim.cmd
+local f = vim.fn
+local g = vim.g
+local o = vim.opt
+local u = vim.ui
 
 M.split = 'left'
-M.step = 1
 
 function M._show_array(arr)
   for i, v in ipairs(arr) do
@@ -15,8 +15,7 @@ function M._show_array(arr)
   end
 end
 
--- Return the first index with the given value (or nil if not found).
-function index_of(arr, val)
+local index_of = function(arr, val)
   if not arr then
     return nil
   end
@@ -82,7 +81,7 @@ function M.get_fname_tail()
   local fname = string.gsub(a['nvim_buf_get_name'](0), "\\", '/')
   local path = Path:new(fname)
   if path:is_file() then
-    local fname = path:_split()
+    fname = path:_split()
     return fname[#fname]
   end
   return ''
@@ -93,19 +92,19 @@ local open_netrw = function()
     return
   end
   if M.split == 'up' then
-    c'leftabove split'
+    c 'leftabove split'
   elseif M.split == 'right' then
-    c'rightbelow vsplit'
+    c 'rightbelow vsplit'
   elseif M.split == 'down' then
-    c'rightbelow split'
+    c 'rightbelow split'
   elseif M.split == 'left' then
-    c'leftabove vsplit'
+    c 'leftabove vsplit'
   end
 end
 
 local is_hide_en = function()
   local cnt = 0
-  for i=1, f['winnr']('$') do
+  for i = 1, f['winnr']('$') do
     if f['getbufvar'](f['winbufnr'](i), '&buftype') ~= 'nofile' then
       cnt = cnt + 1
     end
@@ -116,12 +115,12 @@ local is_hide_en = function()
   return false
 end
 
-function rep(path)
-  local path, _ = string.gsub(path, '\\', '/')
+local rep = function(path)
+  path, _ = string.gsub(path, '\\', '/')
   return path
 end
 
-function get_paths(dname)
+local get_paths = function(dname)
   local path = Path:new(dname)
   local paths = {}
   local cnt = 9999
@@ -141,15 +140,15 @@ g.netrw_alt_fname = ''
 
 function M.toggle(mode)
   if o.diff:get() then
-    c'ec "netrw not allowed when diff on"'
+    c 'ec "netrw not allowed when diff on"'
     return
   end
   if o.ft:get() == 'aerial' then
-    c'ec "netrw not allowed on aerial"'
+    c 'ec "netrw not allowed on aerial"'
     return
   end
   if o.ft:get():match('^DiffviewFile') then
-    c'ec "netrw not allowed on ^DiffviewFile"'
+    c 'ec "netrw not allowed on ^DiffviewFile"'
     return
   end
   if o.ft:get() ~= 'netrw' then
@@ -159,7 +158,7 @@ function M.toggle(mode)
   if o.ft:get() ~= 'netrw' then
     g.netrw_alt_fname = fname
   end
-  new_unfix = nil
+  local new_unfix = nil
   local netrw_winids = M.get_netrw_winids()
   if netrw_winids then
     M.update_netrw_winids_fix(netrw_winids)
@@ -167,20 +166,20 @@ function M.toggle(mode)
       if is_hide_en() then
         a.nvim_win_hide(M.netrw_winids_unfix[1])
       else
-        c'bd'
+        c 'bd'
       end
     else
       if mode == 'sel' or mode == 'cur_fname' or mode == 'cwd' then
         if not is_winfixwidth() then
           new_unfix = 1
         else
-          c[[call feedkeys("\<space>l")]]
+          c [[call feedkeys("\<space>l")]]
         end
       else
         if #M.netrw_winids_fix > 0 then
-          back_fix = nil
+          local back_fix = nil
           local cur_winid = f['win_getid']()
-          cur_winid_idx_fix = index_of(M.netrw_winids_fix, cur_winid)
+          local cur_winid_idx_fix = index_of(M.netrw_winids_fix, cur_winid)
           if cur_winid_idx_fix then
             if #M.netrw_winids_fix > 1 then
               cur_winid_idx_fix = cur_winid_idx_fix + 1
@@ -198,13 +197,11 @@ function M.toggle(mode)
               a.nvim_win_set_width(0, 0)
             end
             if #M.netrw_winids_fix > 1 then
-              local netrw_winids = {}
               if f['win_gotoid'](g.netrw_back_winid) == 0 then
                 print('23423j4j')
               end
             else
-              local cur_winid = f['win_getid']()
-              c'wincmd p'
+              c 'wincmd p'
               if cur_winid == f['win_getid']() then
                 print('23423l23l32')
               end
@@ -216,7 +213,7 @@ function M.toggle(mode)
             f['win_gotoid'](M.netrw_winids_fix[cur_winid_idx_fix])
             if o.winfixwidth:get() then
               if f['win_screenpos'](0)[1] > 2 then
-                c'wincmd H'
+                c 'wincmd H'
               end
               M.netrw_fix_set_width()
             end
@@ -240,9 +237,9 @@ function M.toggle(mode)
           c(string.format([[call search(substitute("%s", '\.', '\\\.', 'g'))]], fname))
         end
       else
-        local fname = string.gsub(fullname, "\\", '/')
+        fname = string.gsub(fullname, "\\", '/')
         local path = Path:new(fname)
-        local fname = path:_split()
+        fname = path:_split()
         c(string.format([[ec "not exists: %s"]], fname[#fname]))
       end
     elseif mode == 'cwd' then
@@ -252,22 +249,22 @@ function M.toggle(mode)
       local dname, _ = rep(M.get_dname())
       local paths = get_paths(dname)
       if #paths then
-        vim.ui.select(paths, { prompt = 'netrw open' }, function(choice, idx)
+        u.select(paths, { prompt = 'netrw open' }, function(choice)
           open_netrw()
           c('Explore ' .. choice)
         end)
       end
     else
       open_netrw()
-      c'Explore'
+      c 'Explore'
     end
     M.netrw_fix_set_width()
   end
 end
 
 function M.netrw_fix_set_width()
-  res = 0
-  for i=1, f['line']('$') do
+  local res = 0
+  for i = 1, f['line']('$') do
     local line = f['getline'](i)
     if string.sub(line, 1, 1) ~= '"' then
       local width = f['strwidth'](line)
@@ -285,9 +282,12 @@ function M.fix_unfix(mode)
   if not netrw_winids then
     M.toggle(mode)
   end
-  local netrw_winids = M.get_netrw_winids()
+  netrw_winids = M.get_netrw_winids()
+  if not netrw_winids then
+    return
+  end
   local cur_winid = f['win_getid']()
-  cur_winid_idx = index_of(netrw_winids, cur_winid)
+  local cur_winid_idx = index_of(netrw_winids, cur_winid)
   if not cur_winid_idx then
     f['win_gotoid'](netrw_winids[1])
   end
@@ -297,7 +297,7 @@ function M.fix_unfix(mode)
     c('ec "netrw not fixed"')
   else
     o.winfixwidth = true
-    c'wincmd H'
+    c 'wincmd H'
     M.netrw_fix_set_width()
     c('ec "netrw fixed"')
   end
